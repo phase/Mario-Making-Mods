@@ -162,7 +162,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard 1.2 &middot; by StapleButter
-Site ran by [user=1], [user=4] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
+Site ran by [user=1], [user=3] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
