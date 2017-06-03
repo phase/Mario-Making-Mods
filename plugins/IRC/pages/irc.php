@@ -13,12 +13,8 @@ makeCrumbs([actionlink('irc') => __("IRC Page")]);
 $net = Settings::pluginget('ircserver');
 // The actual name of the channel without the beginning #
 $chan = Settings::pluginget('ircchannel');
-// The name prefix for anyone joining
-$bad = ["~", "&", "@", "?", "!", ".", ",", "=", "+", "%", "*", " "];
-$handle = str_replace(" ", "", $loguser['name']);
-$handle = str_replace($badchars, "_", $handle);
 // KiwiIRC Client
-$kiwilink = "//webchat.42net.org/?nick=".$handle."?#".$chan;
+$kiwilink = "//webchat.42net.org/?nick=".$loguser['name']."#".$chan;
 $kiwiclient = "<iframe src=\"".$kiwilink."\" style=\"border:0; width:100%; height:525px;\"><\iframe>";
 ?>
 <table class="outline">
@@ -33,7 +29,7 @@ Port: 6667<br><p>If your IRC client allows irc:// links, click <a href="irc://<?
 </td></tr>
 </table><br><br>
 <table class="outline"><tr class="header0"><th>IRC Client</th></tr>
-<tr class="cell0 center"><td><?php echo $kiwiclient; ?></td></tr></table>
+<tr class="cell0 center"><td><iframe src="<?php echo $wikilink ?>" style="border:0; width:100%; height:525px;"></iframe></td></tr></table>
 <br><br><table class="outline"><tr class="header0"><th>What is IRC?</th></tr>
 <tr class="cell0 center"><td>
 	IRC - Internet Relay Chat is a method to broadcast and receive live, synchronous, messages.
