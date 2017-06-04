@@ -25,8 +25,7 @@ require(__DIR__.'/lib/common.php');
 $layout_crumbs = '';
 $layout_actionlinks = '';
 
-if (isset($_GET['forcelayout']))
-{
+if (isset($_GET['forcelayout'])) {
 	setcookie('forcelayout', (int)$_GET['forcelayout'], time()+365*24*3600, URL_ROOT, "", false, true);
 	die(header('Location: '.$_SERVER['HTTP_REFERER']));
 }
@@ -58,10 +57,8 @@ ob_start();
 $layout_crumbs = "";
 
 $fakeerror = false;
-if ($loguser['flags'] & 0x2)
-{
-	if (rand(0,100) <= 75)
-	{
+if ($loguser['flags'] & 0x2) {
+	if (rand(0,100) <= 75) {
 		Alert("Could not load requested page: failed to connect to the database. Try again later.", 'Error');
 		$fakeerror = true;
 	}
@@ -161,8 +158,8 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 
 $layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard 1.2 &middot; by StapleButter
-Site ran by [user=1], [user=3] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
+'<img src="/img/poweredbyblarg.png" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
+Site ran by [user=1], [user=4] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
@@ -184,11 +181,11 @@ $perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' se
 	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
-	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
-	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
+	<link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="/css/common.css">
 	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php print resourceLink('css/font-awesome.min.css'); ?>">
-	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 	<script>
 		(function(document,navigator,standalone) {

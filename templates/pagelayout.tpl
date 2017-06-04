@@ -88,7 +88,7 @@
 					{foreach $headerlinks as $url=>$text}
 						<span class="navButton"><a href="{$url|escape}">{$text}</a></span>
 					{/foreach}
-					<span class="navButton"><a href="https://discord.gg/K5AJmDM">Discord</a></span>
+					<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>
 <!--				<div id="userMenuContainer" class="dropdownContainer">
 						<div id="userMenuButton" class="navButton">
 							<a href="/?page=wiki&id=Partnered_Forums">Affiliates</a>

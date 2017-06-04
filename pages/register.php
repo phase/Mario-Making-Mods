@@ -83,17 +83,20 @@ if($_POST['register']) {
 		$rUsers = Query("insert into {users} (id, name, password, pss, primarygroup, regdate, lastactivity, lastip, email, sex, theme) values ({0}, {1}, {2}, {3}, {4}, {5}, {5}, {6}, {7}, {8}, {9})", 
 			$uid, $_POST['name'], $sha, $newsalt, Settings::get('defaultGroup'), time(), $_SERVER['REMOTE_ADDR'], $_POST['email'], (int)$_POST['sex'], Settings::get("defaultTheme"));
 
-		//if($uid == 1)
-		//	Query("update {users} set primarygroup = {0} where id = 1", Settings::get('rootGroup'));
-
 		Report("New user: [b]".$_POST['name']."[/] (#".$uid.") -> [g]#HERE#?uid=".$uid);
 
 		$user = Fetch(Query("select * from {users} where id={0}", $uid));
 		$user['rawpass'] = $_POST['pass'];
 
+		if ($email != '') {
+			$gravatar = SqlEscape('https://www.gravatar.com/avatar/' . md5(strtolower(trim($_POST['email']))) . '?s=128');
+
+			// Save the gravatar to DB
+			Query("UPDATE {users} SET `picture`={0} WHERE `id`={1}", $gravatar, $uid);
+		}
+
 		$bucket = "newuser"; include(BOARD_ROOT."lib/pluginloader.php");
-		
-		
+
 		$rLogUser = Query("select id, pss, password from {users} where 1");
 		$matches = array();
 
@@ -114,19 +117,15 @@ if($_POST['register']) {
 		Query("INSERT INTO {threadsread} (id,thread,date) SELECT {0}, id, {1} FROM {threads} WHERE lastpostdate<={2} ON DUPLICATE KEY UPDATE date={1}", $uid, time(), time()-900);
 
 
-		if($_POST['autologin'])
-		{
+		if($_POST['autologin']) {
 			$sessionID = Shake();
 			setcookie("logsession", $sessionID, 0, URL_ROOT, "", false, true);
 			Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], 0);
 			die(header("Location: ".actionLink('profile', $user['id'], '', $user['name'])));
-		}
-		else
+		} else
 			die(header("Location: ".actionLink("login")));
 	}
-}
-else
-{
+} else {
 	$_POST['name'] = '';
 	$_POST['email'] = '';
 	$_POST['sex'] = 2;

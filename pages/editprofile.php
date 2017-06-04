@@ -13,13 +13,10 @@ if(isset($_POST['editusermode']) && $_POST['editusermode'] != 0)
 
 $editUserMode = false;
 
-if (HasPermission('admin.editusers'))
-{
+if (HasPermission('admin.editusers')) {
 	$userid = (isset($_GET['id'])) ? (int)$_GET['id'] : $loguserid;
 	$editUserMode = true;
-}
-else
-{
+} else {
 	CheckPermission('user.editprofile');
 	$userid = $loguserid;
 }
@@ -255,13 +252,11 @@ if($_POST['actionsave'])
 	$sets = array();
 	$pluginSettings = unserialize($user['pluginsettings']);
 			
-	foreach ($epFields as $catid => $cfields)
-	{
-		foreach ($cfields as $field => $item)
-		{
+	foreach ($epFields as $catid => $cfields) {
+		foreach ($cfields as $field => $item) {
 			if(substr($catid,0,8) == 'account.' && !$passwordEntered) 
 				continue;
-			
+
 			if($item['callback'])
 			{
 				$ret = $item['callback']($field, $item);
@@ -407,9 +402,16 @@ if($_POST['actionsave'])
 	}
 
 	$query .= join($sets, ", ")." WHERE id = ".$userid;
-	if(!$failed)
-	{
+	if(!$failed) {
 		RawQuery($query);
+
+		if(isset($_POST['removepicture'])) {
+			$email = FetchResult("SELECT `email` FROM {users} WHERE `id`={0}", $userid);
+			$gravatar = SqlEscape('https://www.gravatar.com/avatar/' . md5(strtolower(trim($email))) . '?s=128');
+
+			// Save the gravatar to DB
+			$why = Query("UPDATE {users} SET `picture`={0} WHERE `id`={1}", $gravatar, $userid);
+		}
 
 		$his = "[b]".$user['name']."[/]'s";
 		if($loguserid == $userid)
