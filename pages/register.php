@@ -9,7 +9,7 @@ if (!defined('BLARG')) die();
 require_once('lib/recaptchalib.php');
 
 //Recaptcha secret key
-$secret = "6LcBPSMUAAAAACx4ecmU9u8Eru_O60lInlqkPaQp";
+$secret = "{nope}";
 
 //Empty response
 $response = null;
