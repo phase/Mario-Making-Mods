@@ -86,6 +86,7 @@ $TagList = array
 	
 	'[user'		=>	TAG_GOOD | TAG_SELFCLOSING,
 	'[thread'	=>	TAG_GOOD | TAG_SELFCLOSING,
+	'[threads'	=>	TAG_GOOD | TAG_SELFCLOSING,
 	'[forum'	=>	TAG_GOOD | TAG_SELFCLOSING,
 	'[wiki'		=>	TAG_GOOD | TAG_SELFCLOSING,
 	

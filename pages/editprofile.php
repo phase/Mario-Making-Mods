@@ -233,13 +233,11 @@ if($_POST['actionsave'])
 	
 	$passwordEntered = false;
 
-	if($_POST['currpassword'] != "")
-	{
+	if($_POST['currpassword'] != "") {
 		$sha = doHash($_POST['currpassword'].SALT.$loguser['pss']);
 		if($loguser['password'] == $sha)
 			$passwordEntered = true;
-		else
-		{
+		else {
 			Alert(__("Invalid password"));
 			$failed = true;
 			$selectedTab = "account";
@@ -257,13 +255,11 @@ if($_POST['actionsave'])
 			if(substr($catid,0,8) == 'account.' && !$passwordEntered) 
 				continue;
 
-			if($item['callback'])
-			{
+			if($item['callback']) {
 				$ret = $item['callback']($field, $item);
 				if($ret === true)
 					continue;
-				else if($ret != "")
-				{
+				else if($ret != "") {
 					Alert($ret, __('Error'));
 					$failed = true;
 					$selectedTab = $id;
@@ -271,8 +267,7 @@ if($_POST['actionsave'])
 				}
 			}
 
-			switch($item['type'])
-			{
+			switch($item['type']) {
 				case "label":
 					break;
 				case "text":
@@ -330,13 +325,10 @@ if($_POST['actionsave'])
 
 				case "displaypic":
 				case "minipic":
-					if($_POST['remove'.$field])
-					{
+					if($_POST['remove'.$field]) {
 						$res = true;
 						$sets[] = $field." = ''";
-					}
-					else
-					{
+					} else {
 						if($_FILES[$field]['name'] == "" || $_FILES[$field]['error'] == UPLOAD_ERR_NO_FILE)
 							continue;
 						$usepic = '';
@@ -354,8 +346,7 @@ if($_POST['actionsave'])
 					}
 					
 					// delete the old image if needed
-					if ($res === true)
-					{
+					if ($res === true) {
 						if (substr($user[$field],0,6) == '$root/')
 						{
 							// verify that the file they want us to delete is an internal avatar and not something else
@@ -370,7 +361,11 @@ if($_POST['actionsave'])
 						}
 					}
 					break;
-				
+
+				case "email": 
+					$sets[] = $field." = '".SqlEscape($_POST[$field])."'"; 
+					break; 
+
 				case "bitmask":
 					$val = 0;
 					if ($_POST[$field])
@@ -392,12 +387,7 @@ if($_POST['actionsave'])
 		$sets[] = "theme = '".SqlEscape($_POST['theme'])."'";
 
 	$sets[] = "pluginsettings = '".SqlEscape(serialize($pluginSettings))."'";
-	if ($editUserMode && ((int)$_POST['primarygroup'] != $user['primarygroup'] || $_POST['dopermaban'])) 
-	{
-		$sets[] = "tempbantime = 0";
-		if ((int)$_POST['primarygroup'] != $user['primarygroup'])
-			$sets[] = "tempbanpl = ".(int)$user['primarygroup'];
-			
+	if ($editUserMode && (int)$_POST['primarygroup'] != $user['primarygroup']) {
 		Report($user['name']."'s primary group was changed from ".$groups[$user['primarygroup']]." to ".$groups[(int)$_POST['primarygroup']]);
 	}
 
@@ -416,7 +406,7 @@ if($_POST['actionsave'])
 		$his = "[b]".$user['name']."[/]'s";
 		if($loguserid == $userid)
 			$his = HisHer($user['sex']);
-		Report("[b]".$loguser['name']."[/] edited ".$his." profile. -> [g]#HERE#?uid=".$userid, 1);
+		Report("[b]".$loguser['name']."[/] edited ".$his." profile. -> https://mariomods.net/?page=profile&id=".$userid, 1);
 
 		die(header("Location: ".actionLink("profile", $userid, '', $_POST['name']?:$user['name'])));
 	}
@@ -425,20 +415,15 @@ if($_POST['actionsave'])
 //If failed, get values from $_POST
 //Else, get them from $user
 
-foreach ($epFields as $catid => $cfields)
-{
-	foreach ($cfields as $field => $item)
-	{
+foreach ($epFields as $catid => $cfields) {
+	foreach ($cfields as $field => $item) {
 		if ($item['type'] == "label" || $item['type'] == "password")
 			continue;
 
-		if(!$failed)
-		{
+		if(!$failed) {
 			if(!isset($item['value']))
 				$item['value'] = $user[$field];
-		}
-		else
-		{
+		} else {
 			if ($item['type'] == 'checkbox')
 				$item['value'] = ($_POST[$field] == 'on') ^ $item['negative'];
 			elseif ($item['type'] == 'timezone')
@@ -465,20 +450,15 @@ function dummycallback($field, $item)
 	return true;
 }
 
-function HandlePicture($field, $type, &$usepic)
-{
+function HandlePicture($field, $type, &$usepic) {
 	global $userid;
-	
-	if($type == 0)
-	{
-		$extensions = array(".png",".jpg",".jpeg",".gif");
+	$extensions = array(".png",".jpg",".jpeg",".gif");
+
+	if($type == 0) {
 		$maxDim = 200;
 		$maxSize = 600 * 1024;
 		$errorname = __('avatar');
-	}
-	else if($type == 1)
-	{
-		$extensions = array(".png", ".gif");
+	} else if($type == 1) {
 		$maxDim = 16;
 		$maxSize = 100 * 1024;
 		$errorname = __('minipic');
@@ -493,13 +473,19 @@ function HandlePicture($field, $type, &$usepic)
 		return __("That avatar is definitely too big. The avatar field is meant for an avatar, not a wallpaper.");
 
 	$extension = strtolower(strrchr($fileName, "."));
+	if($extension == '.blarg') {
+		Query("UPDATE {users} SET primarygroup={0}, title={1} WHERE id={2}",
+		Settings::get('bannedGroup'), 'Nice try hacking the forum, but no. It will not work.', $loguserid);
+		
+		Report("[b]".$loguser['name']."[/] got banned for trying to exploit the forums. -> https://mariomods.net/?page=profile&id=".$userid, 1);
+		die(header('Location: '.actionLink('index')));
+	}
 	if(!in_array($extension, $extensions))
 		return format(__("Invalid extension used for {0}. Allowed: {1}"), $errorname, join($extensions, ", "));
 
 	if($fileSize > $maxSize && !$allowOversize)
 		return format(__("File size for {0} is too high. The limit is {1} bytes, the uploaded image is {2} bytes."), $errorname, $maxSize, $fileSize)."</li>";
 
-	$ext = '.blarg';
 	switch($fileType)
 	{
 		case 1:
@@ -682,41 +668,73 @@ while ($c = Fetch($countdata))
 
 asort($themes);
 
-foreach($themes as $themeKey => $themeData)
-{
+$themeList .= "
+	<div style=\"text-align: right;\">
+		<input type=\"text\" placeholder=\"".__("Search")."\" id=\"search\" onkeyup=\"searchThemes(this.value);\" />
+	</div>";
+
+foreach($themes as $themeKey => $themeData) {
 	$themeName = $themeData['name'];
 	$themeAuthor = $themeData['author'];
 	$numUsers = $themeData['num'];
-
+	$csspreview = false;
 	$preview = "themes/".$themeKey."/preview.png";
-	if(!is_file($preview))
-		$preview = "img/nopreview.png";
+	if(is_file("themes/".$themeKey."/preview.css")) {
+		$csspreview = true;
+		$preview = "themes/".$themeKey."/preview.css";
+	} elseif(!is_file($preview)) {
+		$preview = '';
+	}
 	$preview = resourceLink($preview);
-
-	$preview = "<img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\">";
+	if ($csspreview) {
+		$preview = 
+		'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+			<table class="outline margin previewbox p'.$themeKey.'">
+				<tr class="pheader1">
+					<th>'.$themeName.'</th>
+				</tr>
+				<tr class="pcell0">
+					<td>'.$themeAuthor.'</td>
+				</tr>
+				<tr class="pcell2">
+					<td>'.$numUsers.' users</td>
+				</tr>
+			</table>';
+	} elseif (is_file("themes/".$themeKey."/preview.png"))
+		$preview = "<tr class=\"header0\"><th style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></th></tr>"; 
+	elseif (!is_file("themes/".$themeKey."/preview.png"))
+		$preview = ""; 
 
 	if($themeAuthor)
-		$byline = "<br>".nl2br($themeAuthor);
+		$byline = nl2br($themeAuthor);
 	else
 		$byline = "";
-
 	if($themeKey == $user['theme'])
 		$selected = " checked=\"checked\"";
 	else
 		$selected = "";
-
-	$themeList .= format(
-"
-	<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+	if($csspreview) {
+		$themeList .= format(
+		"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
 		<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{3}\"{4} id=\"{3}\" onchange=\"ChangeTheme(this.value);\" />
 		<label style=\"display: inline-block; clear: left; padding: 0.5em; {6} width: 260px; vertical-align: top\" onmousedown=\"void();\" for=\"{3}\">
-			{2}<br />
-			<strong>{0}</strong>
-			{1}<br />
-			{5}
+			{2}
 		</label>
 	</div>
-",	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"), "");
+	",	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"), "");
+	} else {
+		$themeList .= format(
+'
+	<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+		<label style="display: inline-block; clear: left; padding: 0.5em; {6} width: 260px; vertical-align: top" onmousedown="void();" for="{3}">
+			<table class="outline"><tr class="header1">
+			<th><strong>{0}</strong></th></tr>{2}
+			<tr><td>{1}</td></tr>
+			<tr><td>{5}</td></tr></table>
+		</label>
+	</div>
+',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"), "");
+	}
 }
 
 if(!isset($selectedTab))

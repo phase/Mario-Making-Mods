@@ -5,7 +5,7 @@
 			<th>&nbsp;</th>
 			<th style="width:16px;">&nbsp;</th>
 			<th style="width:60%;">Title</th>
-			{if $showforum}<th>Forum</th>{/if}
+			{if $showforum}<th style="width:20%;">Forum</th>{/if}
 			<th>Started by</th>
 			<th>Replies</th>
 			<th>Views</th>

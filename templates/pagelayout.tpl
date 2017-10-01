@@ -3,26 +3,8 @@
 <td id="main-header" colspan="2">
 	<table id="header" class="outline">
 		<tr>
-			<td class="cell0 left">
-				<table class="layout-table">
-				<tr>
-				<td>
+			<td class="cell0 center">
 					<a href="{actionLink page='home'}"><img id="theme_banner" src="{$layout_logopic}" alt="{$boardname}" title="{$boardname}"></a>
-				</td>
-				<td>
-					<table class="outline" id="headerInfo">
-						<tr class="header1"><th>{$poratitle}</th></tr>
-						<tr>
-							<td class="cell1 center">
-								{$layout_time} &mdash; {$layout_views}
-								{if $layout_birthdays}<br><br>{$layout_birthdays}{/if}
-								{if $poratext}<br><br>{$poratext}{/if}
-							</td>
-						</tr>
-					</table>
-				</td>
-				</tr>
-				</table>
 			</td>
 		</tr>
 		<tr class="header1">
@@ -39,7 +21,7 @@
 								<li><a href="{$url|escape}">{$text}</a></li>
 							{/foreach}
 							{if HasPermission('admin.viewadminpanel')}
-								<li><a href="/board/staff/">Staff Forums</a></li>
+								<li><a href="/?page=board&id=staff">Staff Forums</a></li>
 							{/if}
 							<li><a href="#" onclick="$('#logout').submit(); return false;">Log out</a></li>
 						</ul>
@@ -88,8 +70,8 @@
 					{foreach $headerlinks as $url=>$text}
 						<span class="navButton"><a href="{$url|escape}">{$text}</a></span>
 					{/foreach}
-					<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>
-<!--				<div id="userMenuContainer" class="dropdownContainer">
+					{$chat}
+					<!--				<div id="userMenuContainer" class="dropdownContainer">
 						<div id="userMenuButton" class="navButton">
 							<a href="/?page=wiki&id=Partnered_Forums">Affiliates</a>
 							<i class="icon-caret-down"></i>
@@ -103,7 +85,7 @@
 		</tr>
 		<tr class="cell0">
 			<td class="smallFonts center">
-				{$layout_onlineusers}
+				{$layout_onlineusers}{if $layout_birthdays}<br><br>{$layout_birthdays}{/if}
 			</td>
 		</tr>
 		<tr class="header1"><th id="header-sep"></th></tr>
@@ -140,13 +122,13 @@
 
 <td id="main-page">
 	<table id="page-container" class="layout-table">
-	<tr><td class="crumb-container">
+	<tr><td class="crumb-container crumbContTop">
 		{$smarty.capture.breadcrumbs}
 	</td></tr>
 	<tr><td class="contents-container">
 		{$layout_contents}
 	</td></tr>
-	<tr><td class="crumb-container">
+	<tr><td class="crumb-container crumbContBottom">
 		{$smarty.capture.breadcrumbs}
 	</td></tr>
 	</table>

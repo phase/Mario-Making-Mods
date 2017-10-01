@@ -1,16 +1,28 @@
 <?php
 
+// error_reporting(E_ALL);
+// ini_set("display_errors", "on");
+// ini_set("display_startup_errors", "on");
+
+// if ($_SERVER["HTTP_USER_AGENT"] == "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 OPR/45.0.2552.898" || $_SERVER["HTTP_USER_AGENT"] == "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) CriOS/59.0.3071.102 Mobile/14F89 Safari/602.1" || $_SERVER["REMOTE_ADDR"] == "109.152.71.106")
+//	die(file_get_contents("youareanidiot.html"));
+
+if (isset($_COOKIE["ninjabanned"]))
+	die(file_get_contents("youareanidiot.html"));
+
+//include(__DIR__."/toast.php");
+
 $starttime = microtime(true);
 define('BLARG', 1);
 
-if($_SERVER["REMOTE_ADDR"] != "127.0.0.1" || $_SERVER["REMOTE_ADDR"] != "::1") {
+/*if($_SERVER["REMOTE_ADDR"] != "127.0.0.1" || $_SERVER["REMOTE_ADDR"] != "::1") {
 	try { // Let's attempt to take CF-CONNECTING-IP header as the IP, because Cloudflare.
 		$_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
 	}
 	catch(Exception $e) {
 		// We really don't do nothing here. Just let's go ahead.
 	}
-}
+}*/
 
 
 // change this to change your board's default page
@@ -25,7 +37,8 @@ require(__DIR__.'/lib/common.php');
 $layout_crumbs = '';
 $layout_actionlinks = '';
 
-if (isset($_GET['forcelayout'])) {
+if (isset($_GET['forcelayout']))
+{
 	setcookie('forcelayout', (int)$_GET['forcelayout'], time()+365*24*3600, URL_ROOT, "", false, true);
 	die(header('Location: '.$_SERVER['HTTP_REFERER']));
 }
@@ -57,8 +70,10 @@ ob_start();
 $layout_crumbs = "";
 
 $fakeerror = false;
-if ($loguser['flags'] & 0x2) {
-	if (rand(0,100) <= 75) {
+if ($loguser['flags'] & 0x2)
+{
+	if (rand(0,100) <= 75)
+	{
 		Alert("Could not load requested page: failed to connect to the database. Try again later.", 'Error');
 		$fakeerror = true;
 	}
@@ -141,6 +156,12 @@ $layout_title = htmlspecialchars(Settings::get('boardname'));
 if($title != '')
 	$layout_title .= ' &raquo; '.$title;
 
+if($loguserid && $loguser['primarygroup'] >= 0)
+	$chat = '					<span class="navButton"><a href="/irc/">IRC</a></span>
+					<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>';
+else
+	$chat = '';
+
 
 //=======================
 // Board logo and theme
@@ -150,7 +171,7 @@ if (!file_exists(__DIR__.'/'.$layout_logopic))
 	$layout_logopic = 'img/logo.jpg';
 $layout_logopic = resourceLink($layout_logopic);
 
-$favicon = resourceLink('img/favicon.ico');
+$favicon = resourceLink('favicon.jpg');
 
 $themefile = "themes/$theme/style.css";
 if(!file_exists(__DIR__.'/'.$themefile))
@@ -158,8 +179,8 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 
 $layout_credits = 
-'<img src="/img/poweredbyblarg.png" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
-Site ran by [user=1], [user=4] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
+'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard 1.2 &middot; by StapleButter
+Site ran by [user=1], [user=2] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
@@ -180,11 +201,12 @@ $perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' se
 	<meta name="description" content="<?php print $metaStuff['description']; ?>">
 	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
-	<link rel="stylesheet" type="text/css" href="/css/common.css">
+	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
+	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
 	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
-	<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php print resourceLink('css/font-awesome.min.css'); ?>">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 	<script>
@@ -252,6 +274,7 @@ $perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' se
 		'layout_birthdays' => $layout_birthdays,
 		'layout_credits' => parseBBCode($layout_credits),
 		'mobileswitch' => $mobileswitch,
+		'chat' => $chat,
 		'perfdata' => $perfdata)); 
 ?>
 </body>

@@ -87,20 +87,6 @@ else if((int)$_GET['delete'] == 2)
 	$rPosts = Query("update {posts} set deleted=0 where id={0} limit 1", $pid);
 
 	die(header("Location: ".actionLink("post", $pid)));
-} else if((int)$_GET['delete'] == 3) {
-	if ($_GET['key'] != $loguser['token'])
-		Kill(__("No."));
-
-	if ($isFirstPost)
-		Kill(__("You may not delete a thread's first post."));
-
-	if(!HasPermission('mod.deleteposts', $fid)) {
-		if ($post['user'] != $loguserid || !HasPermission('user.deleteownposts'))
-			Kill(__("You are not allowed to delete this post."));
-
-		$_GET['reason'] = '';
-	}
-	$rPosts = Query("DELETE FROM {posts} where id={2} limit 1", $pid);
 }
 
 if ($post['deleted'])

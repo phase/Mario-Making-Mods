@@ -42,13 +42,46 @@ function actionLink($action, $id="", $args="", $urlname="") {
 }
 
 
+function oldactionLink($action, $id="", $args="", $urlname="")
+{
+	$boardroot = URL_ROOT;
+	if($boardroot == "")
+		$boardroot = "./";
+
+	// non-rewritten links
+	$res = "";
+
+	if($action != MAIN_PAGE)
+		$res .= "&page=$action";
+
+	if($id != "")
+		$res .= "&id=".urlencode($id);
+	if($args)
+		$res .= "&$args";
+
+	if($res == "")
+		return $boardroot;
+	else
+		return $boardroot."?".substr($res, 1);
+}
+
+
+
 function actionLinkTag($text, $action, $id='', $args="", $urlname="")
 {
 	return '<a href="'.htmlentities(actionLink($action, $id, $args, $urlname)).'">'.$text.'</a>';
 }
+function oldactionLinkTag($text, $action, $id='', $args="", $urlname="")
+{
+	return '<a href="'.htmlentities(oldactionLink($action, $id, $args, $urlname)).'">'.$text.'</a>';
+}
 function actionLinkTagItem($text, $action, $id='', $args="", $urlname="")
 {
 	return '<li><a href="'.htmlentities(actionLink($action, $id, $args, $urlname)).'">'.$text.'</a></li>';
+}
+function oldactionLinkTagItem($text, $action, $id='', $args="", $urlname="")
+{
+	return '<li><a href="'.htmlentities(oldactionLink($action, $id, $args, $urlname)).'">'.$text.'</a></li>';
 }
 
 function actionLinkTagConfirm($text, $prompt, $action, $id='', $args="")
@@ -234,8 +267,17 @@ function makeThreadLink($thread)
 		return $tags." ".$link;
 	else
 		return $link." ".$tags;
-
 }
+
+function makeThreadLinkNoTags($thread) {
+	$tags = ParseThreadTags($thread['title']);
+
+	$link = actionLinkTag($tags[0], 'thread', $thread['id'], '', HasPermission('forum.viewforum',$thread['forum'],true)?$tags[0]:'');
+	$tags = $tags[1];
+
+	return $link;
+}
+
 function makeFromUrl($url, $from)
 {
 	if($from == 0)

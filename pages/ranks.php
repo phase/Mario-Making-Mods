@@ -16,7 +16,7 @@ if(!isset($_GET['id']))
 		$rankset = array_keys($ranksetData);
 		$rankset = $rankset[0];
 	}
-	
+
 	die(header("Location: ".actionLink("ranks", $rankset)));
 }
 
@@ -75,9 +75,9 @@ for($i = 0; $i < count($ranks); $i++)
 		$members = '&nbsp;';
 	else
 		$members = join(', ', $members);
-		
+
 	$rdata['posts'] = $showRank ? $rank['num'] : '???';
-		
+
 	$rdata['numUsers'] = $total;
 	$rdata['users'] = $members;
 

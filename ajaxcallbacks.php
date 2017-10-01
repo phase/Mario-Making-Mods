@@ -4,6 +4,7 @@ define('BLARG', 1);
 $ajaxPage = true;
 include(__DIR__."/lib/common.php");
 header("Cache-Control: no-cache");
+header('Content-type: text/plain');
 
 getBirthdaysText(false);
 
@@ -96,7 +97,7 @@ function checkForImage(&$image, $external, $file)
 	}
 }
 
-	/*checkForImage($layout_logopic, true, "logos/logo_$theme.png");
+	checkForImage($layout_logopic, true, "logos/logo_$theme.png");
 	checkForImage($layout_logopic, true, "logos/logo_$theme.jpg");
 	checkForImage($layout_logopic, true, "logos/logo_$theme.gif");
 	checkForImage($layout_logopic, true, "logos/logo.png");
@@ -106,8 +107,7 @@ function checkForImage(&$image, $external, $file)
 	checkForImage($layout_logopic, false, "themes/$theme/logo.jpg");
 	checkForImage($layout_logopic, false, "themes/$theme/logo.gif");
 	checkForImage($layout_logopic, false, "themes/$theme/logo.png");
-	checkForImage($layout_logopic, false, "img/logo.png");*/
-	$layout_logopic = 'img/logo.png';
+	checkForImage($layout_logopic, false, "img/logo.png");
 
 	die(resourceLink($themeFile)."|".$layout_logopic);
 }

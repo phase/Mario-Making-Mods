@@ -14,6 +14,7 @@ $bbcodeCallbacks = array
 
 	"[user" => "bbcodeUser",
 	"[thread" => "bbcodeThread",
+	"[threads" => "bbcodeThreadNoTags",
 	"[forum" => "bbcodeForum",
 	"[wiki" => "bbcodeWiki",
 
@@ -64,7 +65,7 @@ function bbcodeURL($contents, $arg, $parenttag)
 
 function bbcodeURLAuto($match)
 {
-        $text = $match[0];
+		$text = $match[0];
 	// This is almost like lcfirst() from PHP 5.3.0
 	$match[0][0] = strtolower($text[0]);
 	if ($match[0][0] === "w") $match[0] = "http://$match[0]";
@@ -115,6 +116,24 @@ function bbcodeThread($contents, $arg, $parenttag)
 		{
 			$thread = Fetch($rThread);
 			$threadLinkCache[$id] = makeThreadLink($thread);
+		}
+		else
+			$threadLinkCache[$id] = "&lt;invalid thread ID&gt;";
+	}
+	return $threadLinkCache[$id];
+}
+
+function bbcodeThreadNoTags($contents, $arg, $parenttag)
+{
+	global $threadLinkCache, $loguser;
+	$id = (int)$arg;
+	if(!isset($threadLinkCache[$id]))
+	{
+		$rThread = Query("select t.id, t.title, t.forum from {threads} t where t.id={0} AND t.forum IN ({1c})", $id, ForumsWithPermission('forum.viewforum'));
+		if(NumRows($rThread))
+		{
+			$thread = Fetch($rThread);
+			$threadLinkCache[$id] = makeThreadLinkNoTags($thread);
 		}
 		else
 			$threadLinkCache[$id] = "&lt;invalid thread ID&gt;";
@@ -221,27 +240,27 @@ function bbcodeTableRowHeader($contents, $arg, $parenttag)
 
 function getYoutubeIdFromUrl($url) 
 {
-    $pattern =
-        '%^# Match any youtube URL
-        (?:https?://)?  # Optional scheme. Either http or https
-        (?:www\.)?      # Optional www subdomain
-        (?:             # Group host alternatives
-          youtu\.be/    # Either youtu.be,
-        | youtube\.com  # or youtube.com
-          (?:           # Group path alternatives
-            /embed/     # Either /embed/
-          | /v/         # or /v/
-          | /watch\?v=  # or /watch\?v=
-          )             # End path alternatives.
-        )               # End host alternatives.
-        ([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
-        $%x'
-        ;
-    $result = preg_match($pattern, $url, $matches);
-    if (false !== $result) {
-        return $matches[1];
-    }
-    return false;
+	$pattern =
+		'%^# Match any youtube URL
+		(?:https?://)?  # Optional scheme. Either http or https
+		(?:www\.)?	  # Optional www subdomain
+		(?:			 # Group host alternatives
+		  youtu\.be/	# Either youtu.be,
+		| youtube\.com  # or youtube.com
+		  (?:		   # Group path alternatives
+			/embed/	 # Either /embed/
+		  | /v/		 # or /v/
+		  | /watch\?v=  # or /watch\?v=
+		  )			 # End path alternatives.
+		)			   # End host alternatives.
+		([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
+		$%x'
+		;
+	$result = preg_match($pattern, $url, $matches);
+	if (false !== $result) {
+		return $matches[1];
+	}
+	return false;
 }
 
 function bbcodeYoutube($contents, $arg, $parenttag)
@@ -258,5 +277,7 @@ function bbcodeYoutube($contents, $arg, $parenttag)
 }
 
 function bbcodeWiki($contents, $arg, $parenttag) {
-	return '<a href="/wiki/'.$arg.'/">'.$arg.'</a>';
+	$correctlink = $arg;
+	str_ireplace(' ', '_', $arg);
+	return '<a href="/wiki/'.$arg.'/">'.$correctlink.'</a>';
 }

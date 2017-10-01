@@ -1,6 +1,9 @@
 <?php
 //  AcmlmBoard XD - Login page
 //  Access: guests
+
+include(BOARD_ROOT."toast.php");
+
 if (!defined('BLARG')) die();
 
 if($_POST['action'] == "logout")
@@ -25,12 +28,9 @@ elseif(isset($_POST['actionlogin']))
 	}
 	
 	// auth plugins
-	if (!$okay)
-		{ $bucket = 'login'; include(BOARD_ROOT.'lib/pluginloader.php'); }
-
-	if(!$okay)
-	{
-		Report("A visitor from [b]".$_SERVER['REMOTE_ADDR']."[/] tried to log in as [b]".$user['name']."[/].", 1);
+	if (!$okay) {
+		$bucket = 'login'; include(BOARD_ROOT.'lib/pluginloader.php');
+		Report("A visitor from [b]".$_SERVER['REMOTE_ADDR']."[/] tried to log in as [b]".$_POST['name']."[/].", 1);
 		Alert(__("Invalid user name or password."));
 	}
 	else

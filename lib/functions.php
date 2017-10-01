@@ -182,10 +182,15 @@ function Report($stuff, $hidden = 0, $severity = 0)
 	$full = GetFullURL();
 	$here = substr($full, 0, strrpos($full, "/"))."/";
 
-	/*if ($severity == 2)
-		$req = base64_encode(serialize($_REQUEST));
-	else*/
-		$req = 'NULL';
+	$req = 'NULL';
+
+	$data = array("content" => str_replace("#HERE#", $here, $stuff), "username" => "Forum logs");
+
+    $curl = curl_init("https://discordapp.com/api/webhooks/328657473642823681/F1vunPAc0_aVpUP0UW8OuMiFGVF8m2tzkR1m8vy-GVBSNH9KMP7-kC9Mj3tiyKELh2ee");
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    return curl_exec($curl);
 
 	Query("insert into {reports} (ip,user,time,text,hidden,severity,request)
 		values ({0}, {1}, {2}, {3}, {4}, {5}, {6})", $_SERVER['REMOTE_ADDR'], (int)$loguserid, time(), str_replace("#HERE#", $here, $stuff), $hidden, $severity, $req);
@@ -232,7 +237,7 @@ function BytesToSize($size, $retstring = '%01.2f&nbsp;%s')
 	}
 	if($sizestring == $sizes[0])
 		$retstring = '%01d %s'; // Bytes aren't normally fractional
-	return sechof($retstring, $size, $sizestring);
+	return sprintf($retstring, $size, $sizestring);
 }
 
 function makeThemeArrays()
@@ -276,12 +281,12 @@ function relativedate($date)
 	$diff = time() - $date;
 	if ($diff < 1) return 'right now';
 	if ($diff >= 3*86400) return formatdate($date);
-	
+
 	if ($diff < 60) { $num = $diff; $unit = 'second'; }
 	elseif ($diff < 3600) { $num = intval($diff/60); $unit = 'minute'; }
 	elseif ($diff < 86400) { $num = intval($diff/3600); $unit = 'hour'; }
 	else { $num = intval($diff/86400); $unit = 'day'; }
-	
+
 	return $num.' '.$unit.($num>1?'s':'').' ago';
 }
 
@@ -300,8 +305,8 @@ function getSexName($sex) {
 	return $sexes[$sex];
 }
 
-function formatIP($ip)
-{
+
+function formatIP($ip) {
 	global $loguser;
 
 	$res = $ip;
@@ -314,19 +319,17 @@ function formatIP($ip)
 		return $res;
 }
 
-function ip2long_better($ip)
-{ 
+function ip2long_better($ip) {
 	$v = explode('.', $ip); 
 	return ($v[0]*16777216)+($v[1]*65536)+($v[2]*256)+$v[3];
 }
 
 function long2ip_better($ip) {
-	return long2ip((float)$ip);
+   return long2ip((float)$ip);
 }
 
 //TODO: Optimize it so that it can be made with a join in online.php and other places.
-function IP2C($ip)
-{
+function IP2C($ip) {
 	global $dblink;
 	//This nonsense is because ips can be greater than 2^31, which will be interpreted as negative numbers by PHP.
 	$ipl = ip2long($ip);
@@ -335,7 +338,7 @@ function IP2C($ip)
 				 WHERE ip_from <= {0s} 
 				 ORDER BY ip_from DESC
 				 LIMIT 1", 
-				 sechof("%u", $ipl)));
+				 sprintf("%u", $ipl)));
 
 	if($r && $r["ip_to"] >= ip2long_better($ip))
 		return " <img src=\"".resourceLink("img/flags/".strtolower($r['cc']).".png")."\" alt=\"".$r['cc']."\" title=\"".$r['cc']."\" />";
@@ -343,8 +346,7 @@ function IP2C($ip)
 		return "";
 }
 
-function getBirthdaysText($ret = true)
-{
+function getBirthdaysText($ret = true) {
 	global $luckybastards, $loguser;
 	
 	$luckybastards = array();
@@ -352,14 +354,11 @@ function getBirthdaysText($ret = true)
 	
 	$rBirthdays = Query("select u.birthday, u.(_userfields) from {users} u where u.birthday > 0 and u.primarygroup!={0} order by u.name", Settings::get('bannedGroup'));
 	$birthdays = array();
-	while($user = Fetch($rBirthdays))
-	{
+	while($user = Fetch($rBirthdays)) {
 		$b = $user['birthday'];
-		if(gmdate("m-d", $b) == $today)
-		{
+		if(gmdate("m-d", $b) == $today) {
 			$luckybastards[] = $user['u_id'];
-			if ($ret)
-			{
+			if ($ret) {
 				$y = gmdate("Y") - gmdate("Y", $b);
 				$birthdays[] = UserLink(getDataPrefix($user, 'u_'))." (".$y.")";
 			}
@@ -374,20 +373,18 @@ function getBirthdaysText($ret = true)
 		return "";
 }
 
-function getKeywords($stuff)
-{
+function getKeywords($stuff) {
 	$common = array('the', 'and', 'that', 'have', 'for', 'not', 'this');
-	
+
 	$stuff = strtolower($stuff);
 	$stuff = str_replace('\'s', '', $stuff);
 	$stuff = preg_replace('@[^\w\s]+@', '', $stuff);
 	$stuff = preg_replace('@\s+@', ' ', $stuff);
-	
+
 	$stuff = explode(' ', $stuff);
 	$stuff = array_unique($stuff);
 	$finalstuff = '';
-	foreach ($stuff as $word)
-	{
+	foreach ($stuff as $word) {
 		if (strlen($word) < 3 && !is_numeric($word)) continue;
 		if (in_array($word, $common)) continue;
 		
@@ -397,8 +394,7 @@ function getKeywords($stuff)
 	return substr($finalstuff,0,-1);
 }
 
-function forumRedirectURL($redir)
-{
+function forumRedirectURL($redir) {
 	if ($redir[0] == ':')
 	{
 		$redir = explode(':', $redir);
@@ -409,8 +405,7 @@ function forumRedirectURL($redir)
 }
 
 
-function smarty_function_plural($params, $template)
-{
+function smarty_function_plural($params, $template) {
 	return Plural($params['num'], $params['what']);
 }
 

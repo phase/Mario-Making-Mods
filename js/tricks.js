@@ -62,6 +62,7 @@ function toggleSpoiler()
 {
 	var button = this.parentNode.children[0];
 	var div = this.parentNode.children[1];
+	$("#panel").slideToggle("slow");
 
 	if(div.className == "spoiled")
 	{
@@ -257,10 +258,10 @@ function getOnlineUsers()
 	// view count
 	$.get(boardroot+"ajaxcallbacks.php", "a=vc", function(data)
 	{
-	    var viewCount = $("#viewCount");
-	    var oldCount = viewCount[0].innerHTML;
-	    if(oldCount != data)
-	    {
+		var viewCount = $("#viewCount");
+		var oldCount = viewCount[0].innerHTML;
+		if(oldCount != data)
+		{
 			viewCount.html(data);
 		}
 	});
@@ -268,10 +269,10 @@ function getOnlineUsers()
 	// online users
 	$.get(boardroot+"ajaxcallbacks.php", "a=ou&f=" + onlineFID, function(data)
 	{
-	    var onlineUsers = $("#onlineUsers");
-	    var oldOnline = onlineUsers[0].innerHTML;
-	    if(oldOnline != data)
-	    {
+		var onlineUsers = $("#onlineUsers");
+		var oldOnline = onlineUsers[0].innerHTML;
+		if(oldOnline != data)
+		{
 			onlineUsers.html(data);
 		}
 	});
@@ -279,7 +280,7 @@ function getOnlineUsers()
 	// notifications
 	$.getJSON(boardroot+"ajaxcallbacks.php", "a=no", function(data)
 	{
-	    var notiflist = '';
+		var notiflist = '';
 		for (var i=0; i < data.length; i++)
 			notiflist += '<li>' + data[i].text + '<br><small>' + data[i].formattedDate + '</small>';
 		
@@ -453,21 +454,21 @@ function ChangeTheme(newtheme)
 //Search page pager
 function ChangePage(newpage)
 {
-        var pagenums = document.getElementsByClassName('pagenum');
-        for (i = 0; i < pagenums.length; i++)
-                pagenums[i].href = '#';
+		var pagenums = document.getElementsByClassName('pagenum');
+		for (i = 0; i < pagenums.length; i++)
+				pagenums[i].href = '#';
 
-        pagenums = document.getElementsByClassName('pagenum'+newpage);
-        for (i = 0; i < pagenums.length; i++)
-                pagenums[i].removeAttribute('href');
+		pagenums = document.getElementsByClassName('pagenum'+newpage);
+		for (i = 0; i < pagenums.length; i++)
+				pagenums[i].removeAttribute('href');
 
-        var pages = document.getElementsByClassName('respage');
-        for (i = 0; i < pages.length; i++)
-                pages[i].style.display = 'none';
+		var pages = document.getElementsByClassName('respage');
+		for (i = 0; i < pages.length; i++)
+				pages[i].style.display = 'none';
 
-        pages = document.getElementsByClassName('respage'+newpage);
-        for (i = 0; i < pages.length; i++)
-                pages[i].style.display = '';
+		pages = document.getElementsByClassName('respage'+newpage);
+		for (i = 0; i < pages.length; i++)
+				pages[i].style.display = '';
 }
 
 

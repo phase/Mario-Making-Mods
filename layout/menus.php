@@ -4,7 +4,7 @@ if (!defined('BLARG')) die();
 $headerlinks = array
 (
 	actionLink('wiki') => 'Wiki',
-	actionLink('irc') => 'IRC',
+	actionLink('downloads') => 'Downloads',
 );
 
 $sidelinks = array

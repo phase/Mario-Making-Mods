@@ -1,6 +1,9 @@
 <?php
 //  AcmlmBoard XD - User account registration page
 //  Access: any, but meant for guests.
+
+include(BOARD_ROOT."toast.php");
+
 if (!defined('BLARG')) die();
 
 require_once('lib/recaptchalib.php');
@@ -37,8 +40,8 @@ if($_POST['register']) {
 		
 		$err = __('Registrations from proxies are not allowed. Turn off your proxy and try again.'.$halp);
 	} else {
-		$name = $_POST['name'];
-		$cname = trim(str_replace(" ","", strtolower($name)));
+		$name = trim($_POST['name']);
+		$cname = str_replace(" ","", strtolower($name));
 
 		$rUsers = Query("select name, displayname from {users}");
 		while($user = Fetch($rUsers)) {
@@ -60,8 +63,8 @@ if($_POST['register']) {
 			$err = __("This user name is already taken. Please choose another.");
 		elseif($ipKnown >= 3)
 			$err = __("Another user is already using this IP address.");
-		else if ($response == null)
-            $err = __('You forgot to do the Captcha.');
+		/*else if ($response == null)
+            $err = __('You forgot to do the Captcha.');*/
 		else if(!$_POST['readFaq'])
 			$err = format(__("You really should {0}read the FAQ{1}&hellip;"), "<a href=\"".actionLink("faq")."\">", "</a>");
 		else if ($_POST['likesCake'])
@@ -83,20 +86,17 @@ if($_POST['register']) {
 		$rUsers = Query("insert into {users} (id, name, password, pss, primarygroup, regdate, lastactivity, lastip, email, sex, theme) values ({0}, {1}, {2}, {3}, {4}, {5}, {5}, {6}, {7}, {8}, {9})", 
 			$uid, $_POST['name'], $sha, $newsalt, Settings::get('defaultGroup'), time(), $_SERVER['REMOTE_ADDR'], $_POST['email'], (int)$_POST['sex'], Settings::get("defaultTheme"));
 
+		//if($uid == 1)
+		//	Query("update {users} set primarygroup = {0} where id = 1", Settings::get('rootGroup'));
+
 		Report("New user: [b]".$_POST['name']."[/] (#".$uid.") -> [g]#HERE#?uid=".$uid);
 
 		$user = Fetch(Query("select * from {users} where id={0}", $uid));
 		$user['rawpass'] = $_POST['pass'];
 
-		if ($email != '') {
-			$gravatar = SqlEscape('https://www.gravatar.com/avatar/' . md5(strtolower(trim($_POST['email']))) . '?s=128');
-
-			// Save the gravatar to DB
-			Query("UPDATE {users} SET `picture`={0} WHERE `id`={1}", $gravatar, $uid);
-		}
-
 		$bucket = "newuser"; include(BOARD_ROOT."lib/pluginloader.php");
-
+		
+		
 		$rLogUser = Query("select id, pss, password from {users} where 1");
 		$matches = array();
 
@@ -117,15 +117,19 @@ if($_POST['register']) {
 		Query("INSERT INTO {threadsread} (id,thread,date) SELECT {0}, id, {1} FROM {threads} WHERE lastpostdate<={2} ON DUPLICATE KEY UPDATE date={1}", $uid, time(), time()-900);
 
 
-		if($_POST['autologin']) {
+		if($_POST['autologin'])
+		{
 			$sessionID = Shake();
 			setcookie("logsession", $sessionID, 0, URL_ROOT, "", false, true);
 			Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], 0);
 			die(header("Location: ".actionLink('profile', $user['id'], '', $user['name'])));
-		} else
+		}
+		else
 			die(header("Location: ".actionLink("login")));
 	}
-} else {
+}
+else
+{
 	$_POST['name'] = '';
 	$_POST['email'] = '';
 	$_POST['sex'] = 2;
@@ -164,17 +168,16 @@ function MakeOptions($fieldName, $checkedIndex, $choicesList)
 }
 
 function IsProxy() {
-	if ($_SERVER['HTTP_X_FORWARDED_FOR'] && $_SERVER['HTTP_X_FORWARDED_FOR'] != $_SERVER['REMOTE_ADDR'])
-		return true;
+    if ($_SERVER['HTTP_X_FORWARDED_FOR'] && $_SERVER['HTTP_X_FORWARDED_FOR'] != $_SERVER['REMOTE_ADDR'])
+        return true;
 
-	$result = QueryURL('http://www.stopforumspam.com/api?ip='.urlencode($_SERVER['REMOTE_ADDR']));
-	if (!$result)
-		return false;
+    $page = file_get_contents('http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.$_POST['email'].'&json&notorexit');
+    $a = json_decode($page);
 
-	if (stripos($result, '<appears>yes</appears>') !== FALSE)
-		return true;
+    if($a->ip->torexit == 1)
+        return true;
 
-	return false;
+    return false;
 }
 
 ?>

@@ -2,8 +2,7 @@
 
 define('BLARG', 1);
 
-function fixyoutube($m)
-{
+function fixyoutube($m) {
 	$url = $m[1];
 	if (substr($url,0,4) != 'http')
 		$url = 'http://www.youtube.com/watch?v='.$url;
@@ -56,23 +55,22 @@ print '<?xml version="1.0" encoding="UTF-8"?>';
 						WHERE t.forum={0} AND p.deleted=0
 						ORDER BY p.date DESC LIMIT 5", $fid);
 	
-	while($entry = Fetch($entries))
-	{
+	while($entry = Fetch($entries)) {
 		$tags = ParseThreadTags($entry['title']);
-		
+
 		$title = htmlspecialchars($entry['title']);
 		$username = $entry['udname'] ? $entry['udname'] : $entry['uname'];
 		$rfcdate = htmlspecialchars(gmdate(DATE_RFC1123, $entry['date']));
 		$entryurl = htmlspecialchars($url.actionLink('thread', $entry['id'], '', $tags[0]));
-		
+
 		$text = $entry['text'];
 		$text = preg_replace_callback('@\[youtube\](.*?)\[/youtube\]@si', 'fixyoutube', $text);
 		$text = preg_replace('@\[spoiler.*?\].*?\[/spoiler\]@si', '(spoiler)', $text);
 		$text = CleanUpPost($text, $username, true);
-		
+
 		$text = preg_replace('@<img[^>]+?src\s*=\s*(["\'])(.*?)\\1[^>]*?>@si', '<a href="$2">(image)</a>', $text);
 		$text = preg_replace('@<img[^>]+?src\s*=\s*([^\s>]+?)(\s+[^>]*?)?>@si', '<a href="$1">(image)</a>', $text);
-		
+
 		$text = preg_replace('@([="\'])\?page=@si', '$1'.$fullurl.'/?page=', $text);
 		
 		$text = str_replace(']]>', ']]&gt;', $text);

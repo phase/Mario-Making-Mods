@@ -1,33 +1,18 @@
 {foreach $categories as $cat}
-<table class="outline margin forumlist">
+<table class="outline margin forumlist center">
 	<tr class="header1">
-		<th>&nbsp;</th>
 		<th>{$cat.name}</th>
-		<th style="width: 75px;">Threads</th>
-		<th style="width: 50px;">Posts</th>
-		<th style="min-width:150px; width:15%;">Last post</th>
 	</tr>
 	{foreach $cat.forums as $forum}
 	<tr class="cell1">
-		<td class="cell2 newMarker">{$forum.new}</td>
-		<td>
-			<h4{if $forum.ignored} class="ignored"{/if}>{$forum.link}</h4>
-			<span class="smallFonts{if $forum.ignored} ignored{/if}">
+		<td {if $forum.ignored} class="ignored"{/if}>
+			{$forum.new}<h4>{$forum.link}</h4>
+			<span class="smallFonts">
 				{$forum.description}
-				{if $forum.localmods}<br>Moderated by: {$forum.localmods}{/if}
-				<!-- {if $forum.subforums}<br>Subforums: {$forum.subforums}{/if} -->
-			</span>
-		</td>
-		<td class="center cell2"><span{if $forum.ignored} class="ignored"{/if}>{$forum.threads}</span></td>
-		<td class="center cell2"><span{if $forum.ignored} class="ignored"{/if}>{$forum.posts}</span></td>
-		<td class="center smallFonts">
-			<span{if $forum.ignored} class="ignored"{/if}>
-			{if $forum.lastpostdate}
-				{$forum.lastpostdate}<br>
-				by {$forum.lastpostuser} <a href="{$forum.lastpostlink}">&raquo;</a>
-			{else}
-				&mdash;
-			{/if}
+				{if $forum.localmods}<br>Moderated by: {$forum.localmods}{/if}<br><br>
+				{if $forum.lastpostdate}{$forum.threads} {if $forum.threads == 1}thread{else}threads{/if}, {$forum.posts} {if $forum.posts == 1}post{else}posts{/if}<br><br>
+
+				Last post: {$forum.lastpostdate}, by {$forum.lastpostuser} <a href="{$forum.lastpostlink}">&raquo;</a>{else}No posts have been made in this forum yet.{/if}
 			</span>
 		</td>
 		{if $forum.subforums} {makeSubForumListing($forum.id)} {/if}

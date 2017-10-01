@@ -69,8 +69,8 @@ elseif($_GET['action']=="open" && $canClose)
 
 	die(header("Location: ".$ref));
 }
-elseif($_GET['action']=="stick" && $canStick)
-{
+
+if($_GET['action']=="stick" && $canStick) {
 	$rThread = Query("update {threads} set sticky=1 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] stickied thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
@@ -145,7 +145,7 @@ elseif($_POST['actionedit'])
 				SET {forums}.lastpostdate=IFNULL({threads}.lastpostdate,0), {forums}.lastpostuser=IFNULL({threads}.lastposter,0), {forums}.lastpostid=IFNULL({threads}.lastpostid,0)
 				WHERE {forums}.id={0} OR {forums}.id={1}", $thread['forum'], $moveto);
 
-		Report("[b]".$loguser['name']."[/] moved thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
+		Report("[b]".$loguser['name']."[/] moved thread [b]".$thread['title']."[/] to Forum ID #".$_POST['moveTo']." -> [g]#HERE#?tid=".$tid, $isHidden);
 	}
 
 	$isClosed = $canClose ? (isset($_POST['isClosed']) ? 1 : 0) : $thread['closed'];

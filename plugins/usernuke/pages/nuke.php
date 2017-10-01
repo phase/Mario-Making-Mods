@@ -11,8 +11,8 @@ $user = fetch(query("select * from {users} where id={0}", $uid));
 if(!$user)
 	Kill(__("You cannot delete a user that doesn't exist."));
 
-if(!$loguserid == 1)
-	kill("Only founder can nuke");
+if($loguser['id'] !== 1)
+	Kill(__("Fuck off."));
 
 $passwordFailed = false;
 
