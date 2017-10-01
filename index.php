@@ -156,11 +156,8 @@ $layout_title = htmlspecialchars(Settings::get('boardname'));
 if($title != '')
 	$layout_title .= ' &raquo; '.$title;
 
-if($loguserid && $loguser['primarygroup'] >= 0)
-	$chat = '					<span class="navButton"><a href="/irc/">IRC</a></span>
+$chat = '
 					<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>';
-else
-	$chat = '';
 
 
 //=======================
