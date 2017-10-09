@@ -98,6 +98,7 @@ include(__DIR__."/bbcode_callbacks.php");
 include(__DIR__."/bbcode_main.php");
 include(__DIR__."/post.php");
 include(__DIR__."/onlineusers.php");
+include(__DIR__."/cache.php");
 
 $theme = $loguser['theme'];
 include(__DIR__."/layout.php");

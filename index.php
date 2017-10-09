@@ -1,29 +1,7 @@
 <?php
 
-// error_reporting(E_ALL);
-// ini_set("display_errors", "on");
-// ini_set("display_startup_errors", "on");
-
-// if ($_SERVER["HTTP_USER_AGENT"] == "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 OPR/45.0.2552.898" || $_SERVER["HTTP_USER_AGENT"] == "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) CriOS/59.0.3071.102 Mobile/14F89 Safari/602.1" || $_SERVER["REMOTE_ADDR"] == "109.152.71.106")
-//	die(file_get_contents("youareanidiot.html"));
-
-if (isset($_COOKIE["ninjabanned"]))
-	die(file_get_contents("youareanidiot.html"));
-
-//include(__DIR__."/toast.php");
-
 $starttime = microtime(true);
 define('BLARG', 1);
-
-/*if($_SERVER["REMOTE_ADDR"] != "127.0.0.1" || $_SERVER["REMOTE_ADDR"] != "::1") {
-	try { // Let's attempt to take CF-CONNECTING-IP header as the IP, because Cloudflare.
-		$_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-	}
-	catch(Exception $e) {
-		// We really don't do nothing here. Just let's go ahead.
-	}
-}*/
-
 
 // change this to change your board's default page
 define('MAIN_PAGE', 'home');
@@ -156,8 +134,7 @@ $layout_title = htmlspecialchars(Settings::get('boardname'));
 if($title != '')
 	$layout_title .= ' &raquo; '.$title;
 
-$chat = '
-					<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>';
+$chat = '<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span><span class="navButton"><a href="https://www.patreon.com/mariomods/">Patreon</a></span>';
 
 
 //=======================
@@ -176,16 +153,14 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 
 $layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard 1.2 &middot; by StapleButter
-Site ran by [user=1], [user=2] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].<br>';
+'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
+Site ran by [user=1], [user=20] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 
 //=======================
 // Print everything!
-
-$perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' seconds (with '.$queries.' SQL queries and '.sprintf('%.03f',memory_get_usage() / 1024).'K of RAM)';
 
 ?>
 <!doctype html>
@@ -198,7 +173,7 @@ $perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' se
 	<meta name="description" content="<?php print $metaStuff['description']; ?>">
 	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
 	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
@@ -272,8 +247,7 @@ $perfdata = 'Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' se
 		'layout_birthdays' => $layout_birthdays,
 		'layout_credits' => parseBBCode($layout_credits),
 		'mobileswitch' => $mobileswitch,
-		'chat' => $chat,
-		'perfdata' => $perfdata)); 
+		'chat' => $chat)); 
 ?>
 </body>
 </html>

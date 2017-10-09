@@ -17,7 +17,7 @@ if($_REQUEST['action'] == "enable")
 	require(BOARD_ROOT.'db/functions.php');
 	Upgrade();
 
-	die(header("location: ".oldactionLink("pluginmanager")));
+	die(header("location: ".actionLink("pluginmanager")));
 }
 if($_REQUEST['action'] == "disable")
 {
@@ -25,7 +25,7 @@ if($_REQUEST['action'] == "disable")
 		Kill("No.");
 
 	Query("delete from {enabledplugins} where plugin={0}", $_REQUEST['id']);
-	die(header("location: ".oldactionLink("pluginmanager")));
+	die(header("location: ".actionLink("pluginmanager")));
 }
 
 
@@ -98,12 +98,12 @@ function listPlugin($plugin, $plugindata)
 		$text = __("Disable");
 		$act = "disable";
 	}
-	$pdata['actions'] = '<ul class="pipemenu">'.oldactionLinkTagItem($text, "pluginmanager", $plugin, "action=".$act."&key=".$loguser['token']);
+	$pdata['actions'] = '<ul class="pipemenu">'.actionLinkTagItem($text, "pluginmanager", $plugin, "action=".$act."&key=".$loguser['token']);
 
 	if(in_array("settingsfile", $plugindata['buckets']))
 	{
 		if(isset($plugins[$plugin]))
-			$pdata['actions'] .= oldactionLinkTagItem(__("Settings&hellip;"), "editsettings", $plugin);
+			$pdata['actions'] .= actionLinkTagItem(__("Settings&hellip;"), "editsettings", $plugin);
 	}
 	$pdata['actions'] .= '</ul>';
 	

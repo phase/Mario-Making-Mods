@@ -462,42 +462,46 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 }
 
 function makeAnncBar() {
-	global $loguserid;
+    global $loguserid;
 
-	$anncforum = Settings::get('anncForum');
-	if ($anncforum > 0) {
-		$annc = Query("	SELECT 
-							t.id, t.title, t.icon, t.poll, t.forum,
-							t.date anncdate,
-							".($loguserid ? "tr.date readdate," : '')."
-							u.(_userfields)
-						FROM 
-							{threads} t 
-							".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
-							LEFT JOIN {users} u ON u.id=t.user
-						WHERE forum={0}
-						ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
+    $anncforum = Settings::get('anncForum');
 
-		if ($annc && NumRows($annc)) {
-			$annc = Fetch($annc);
-			$adata = array();
+    if ($anncforum > 0)    {
+        if (($adata = cacheGet('anncBar', 3600)) === null) {
+            $annc = Query("    SELECT
+                                t.id, t.title, t.icon, t.poll, t.forum,
+                                t.date anncdate,
+                                ".($loguserid ? "tr.date readdate," : '')."
+                                u.(_userfields)
+                            FROM
+                                {threads} t
+                                ".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
+                                LEFT JOIN {users} u ON u.id=t.user
+                            WHERE forum={0}
+                            ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
 
-			$adata['new'] = '';
-			if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
-				($loguserid && $annc['anncdate'] > $annc['readdate']))
-				$adata['new'] = "<div class=\"statusIcon new\"></div>";
+            if ($annc && NumRows($annc)) {
+                $annc = Fetch($annc);
+                $adata = [];
 
-			$adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
-			$adata['link'] = MakeThreadLink($annc);
-			$adata['name'] = "Announcements";
+                $adata['new'] = '';
+                if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
+                    ($loguserid && $annc['anncdate'] > $annc['readdate']))
+                    $adata['new'] = "<div class=\"statusIcon new\"></div>";
 
-			$user = getDataPrefix($annc, 'u_');
-			$adata['user'] = UserLink($user);
-			$adata['date'] = formatdate($annc['anncdate']);
+                $adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
+                $adata['link'] = MakeThreadLink($annc);
+				$adata['name'] = "Announcements";
 
-			RenderTemplate('anncbar', array('annc' => $adata));
-		}
-	}
+                $user = getDataPrefix($annc, 'u_');
+                $adata['user'] = UserLink($user);
+                $adata['date'] = formatdate($annc['anncdate']);
+
+                cachePut('anncBar', $adata, 3600);
+            }
+        }
+        RenderTemplate('anncbar', ['annc' => $adata]);
+    }
 }
 
 function makeStaffAnncBar() {
