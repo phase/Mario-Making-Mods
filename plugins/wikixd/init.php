@@ -1,5 +1,4 @@
 <?php
-
 define('WIKIXD', 1);
 
 define('WIKI_PFLAG_DELETED', 1);
