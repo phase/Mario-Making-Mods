@@ -13,7 +13,7 @@ require 'lib/diff/Diff/Renderer/inline.php';
 <?php
 
 $rev = (int)$_GET['rev'];
-$page = getWikiPage($_GET['id'], $rev);
+$page = getWikiPage($pageParams['page'], $rev);
 $rev = min($page['revision'], $rev);
 
 $urltitle = $page['id'];//urlencode($page['id']);

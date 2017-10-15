@@ -2,20 +2,18 @@
 //  AcmlmBoard XD - User account registration page
 //  Access: any, but meant for guests.
 
-include(BOARD_ROOT."toast.php");
-
 if (!defined('BLARG')) die();
 
-require_once('lib/recaptchalib.php');
+//require_once('lib/recaptchalib.php');
 
 //Recaptcha secret key
-$secret = "{nope}";
+//$secret = "6LcBPSMUAAAAACx4ecmU9u8Eru_O60lInlqkPaQp";
 
 //Empty response
-$response = null;
+//$response = null;
 
 //Check the secret key
-$reCaptcha = new ReCaptcha($secret);
+//$reCaptcha = new ReCaptcha($secret);
 
 $title = __("Register");
 MakeCrumbs(array(actionLink("register") => __("Register")));
@@ -23,12 +21,12 @@ MakeCrumbs(array(actionLink("register") => __("Register")));
 print "<script src='https://www.google.com/recaptcha/api.js'></script>";
 
 //If submitted check the reponse
-if($_POST['g-recaptcha-response']) {
-    $response = $reCaptcha->verifyResponse(
-        $_SERVER['REMOTE_ADDR'],
-        $_POST['g-recaptcha-response']
-    );
-}
+//if($_POST['g-recaptcha-response']) {
+//    $response = $reCaptcha->verifyResponse(
+//        $_SERVER['REMOTE_ADDR'],
+//        $_POST['g-recaptcha-response']
+//    );
+//}
 
 $sexes = array(__("Male"), __("Female"), __("N/A"));
 
@@ -63,8 +61,8 @@ if($_POST['register']) {
 			$err = __("This user name is already taken. Please choose another.");
 		elseif($ipKnown >= 3)
 			$err = __("Another user is already using this IP address.");
-		/*else if ($response == null)
-            $err = __('You forgot to do the Captcha.');*/
+		//else if ($response == null)
+        //    $err = __('You forgot to do the Captcha.');
 		else if(!$_POST['readFaq'])
 			$err = format(__("You really should {0}read the FAQ{1}&hellip;"), "<a href=\"".actionLink("faq")."\">", "</a>");
 		else if ($_POST['likesCake'])
@@ -77,7 +75,7 @@ if($_POST['register']) {
 
 	if($err) {
 		Alert($err, __('Error'));
-	} elseif ($response->success) {
+	} else {
 		$newsalt = Shake();
 		$sha = doHash($_POST['pass'].SALT.$newsalt);
 		$uid = FetchResult("SELECT id+1 FROM {users} WHERE (SELECT COUNT(*) FROM {users} u2 WHERE u2.id={users}.id+1)=0 ORDER BY id ASC LIMIT 1");
@@ -117,19 +115,15 @@ if($_POST['register']) {
 		Query("INSERT INTO {threadsread} (id,thread,date) SELECT {0}, id, {1} FROM {threads} WHERE lastpostdate<={2} ON DUPLICATE KEY UPDATE date={1}", $uid, time(), time()-900);
 
 
-		if($_POST['autologin'])
-		{
+		if($_POST['autologin']) {
 			$sessionID = Shake();
 			setcookie("logsession", $sessionID, 0, URL_ROOT, "", false, true);
 			Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], 0);
 			die(header("Location: ".actionLink('profile', $user['id'], '', $user['name'])));
-		}
-		else
+		} else
 			die(header("Location: ".actionLink("login")));
 	}
-}
-else
-{
+} else {
 	$_POST['name'] = '';
 	$_POST['email'] = '';
 	$_POST['sex'] = 2;

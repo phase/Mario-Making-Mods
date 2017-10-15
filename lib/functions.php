@@ -180,7 +180,7 @@ function cdate($format, $date = 0)
 function Report($stuff, $hidden = 0, $severity = 0)
 {
 	$full = GetFullURL();
-	$here = substr($full, 0, strrpos($full, "/"))."/";
+	$here = substr($full, 0, strrpos($full, "/"));
 
 	$req = 'NULL';
 
@@ -452,13 +452,4 @@ function utfmb4_fix($string) {
 
 function utfmb4String($string) {
 	return utfmb4_fix(preg_replace_callback('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'entity_fix__callback', $string));
-}
-
-function SendWebhookReport($message) {
-    $data = array("content" => $message, "username" => "change this to something original");
-    $curl = curl_init("WEBHOOK_URL_GOES_HERE");
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    return curl_exec($curl);
 }

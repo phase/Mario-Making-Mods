@@ -18,7 +18,7 @@ if(isset($_GET['gfx']))
 	{
 		$names[] = $forum['title'];
 		$posts[] = FetchResult("select count(*) from {posts} left join {threads} on {posts}.thread = {threads}.id where {posts}.user = {0} and {threads}.forum = {1}", $id, $forum['id']);
-		//echo $forum['title']." &rarr; ".$posts."<br/>";
+		//print $forum['title']." &rarr; ".$posts."<br/>";
 	}
 
 

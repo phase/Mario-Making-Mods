@@ -2,7 +2,7 @@
 if (!defined('BLARG')) die();
 
 $rev = isset($_GET['rev']) ? (int)$_GET['rev'] : 0;
-$page = getWikiPage($_GET['id'], $rev);
+$page = getWikiPage($pageParams['page'], $rev);
 $rev = min($rev, $page['revision']);
 
 $urltitle = $page['id'];

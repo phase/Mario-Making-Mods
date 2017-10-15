@@ -20,7 +20,7 @@ function reportFix($what, $aff = -1)
 	
 	if($aff = -1)
 		$aff = affectedRows();
-	echo $what, " ", format(__("{0} rows affected."), $aff), " time: ", sechof('%1.3f', usectime()-$fixtime), "<br />";
+	echo $what, " ", format(__("{0} rows affected."), $aff), " time: ", sprintf('%1.3f', usectime()-$fixtime), "<br />";
 }
 
 $debugMode = false;
@@ -105,5 +105,5 @@ while($forum = Fetch($rForum))
 reportFix(__("Updating threads last posts&hellip;"));
 
 $bucket = "recalc"; include(BOARD_ROOT."lib/pluginloader.php");
-echo "<br />All done!<br />";
+print "<br />All done!<br />";
 

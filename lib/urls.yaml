@@ -1,0 +1,10 @@
+##########################################################################################
+##                           MarioMods URL Configuration File                           ##
+##                         Syntax is NAME: [METHOD, SLUG, FILE]                         ##
+##########################################################################################
+
+# Basic pages
+home: ['GET', '/', 'home']
+
+# Catch-all rule
+catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

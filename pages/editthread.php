@@ -53,7 +53,7 @@ $tags = ParseThreadTags($thread['title']);
 $urlname = $isHidden?'':$tags[0];
 MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $urlname) => $tags[0], '' => __("Edit thread")));
 
-$ref = $_SERVER['HTTP_REFERER'] ?: actionLink('thread', $tid, '', $urlname);
+$ref = $_SERVER['HTTP_REFERER'] ?: '/'.actionLink('thread', $tid, '', $urlname);
 
 if($_GET['action']=="close" && $canClose)
 {
@@ -69,8 +69,8 @@ elseif($_GET['action']=="open" && $canClose)
 
 	die(header("Location: ".$ref));
 }
-
-if($_GET['action']=="stick" && $canStick) {
+elseif($_GET['action']=="stick" && $canStick)
+{
 	$rThread = Query("update {threads} set sticky=1 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] stickied thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
@@ -117,7 +117,7 @@ elseif(($_GET['action'] == "trash" && HasPermission('mod.trashthreads', $thread[
 		if (HasPermission('forum.viewforum', $thread['forum'], true))
 			$forumname = FetchResult("SELECT title FROM {forums} WHERE id={0}", $thread['forum']);
 			
-		die(header("Location: ".actionLink("forum", $thread['forum'], '', $forumname)));
+		die(header("Location: /".actionLink("forum", $thread['forum'], '', $forumname)));
 	}
 	else
 		Kill(__("No trash forum set. Check board settings."));
@@ -145,7 +145,7 @@ elseif($_POST['actionedit'])
 				SET {forums}.lastpostdate=IFNULL({threads}.lastpostdate,0), {forums}.lastpostuser=IFNULL({threads}.lastposter,0), {forums}.lastpostid=IFNULL({threads}.lastpostid,0)
 				WHERE {forums}.id={0} OR {forums}.id={1}", $thread['forum'], $moveto);
 
-		Report("[b]".$loguser['name']."[/] moved thread [b]".$thread['title']."[/] to Forum ID #".$_POST['moveTo']." -> [g]#HERE#?tid=".$tid, $isHidden);
+		Report("[b]".$loguser['name']."[/] moved thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 	}
 
 	$isClosed = $canClose ? (isset($_POST['isClosed']) ? 1 : 0) : $thread['closed'];
@@ -177,7 +177,7 @@ elseif($_POST['actionedit'])
 		
 		$tags = ParseThreadTags($thread['title']);
 		$urlname = $isHidden?'':$tags[0];
-		$ref = $_POST['ref'] ?: actionLink('thread', $tid, '', $urlname);
+		$ref = $_POST['ref'] ?: '/'.actionLink('thread', $tid, '', $urlname);
 
 		die(header("Location: ".$ref));
 	}

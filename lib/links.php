@@ -16,6 +16,22 @@ function urlNamify($urlname)
 }
 
 function actionLink($action, $id="", $args="", $urlname="") {
+	// rewritten links
+	if ($action == MAIN_PAGE) $action = '';
+	else if ($id) $action .= '/';
+	else $action .= '';
+
+	if ($id)
+	{
+		if ($urlname) $id .= '-'.urlNamify($urlname);
+		$id .= '';
+	}
+	else $id = '';
+
+	return $boardroot.$action.$id.($args ? '?'.$args : '');
+}
+
+function old2actionLink($action, $id="", $args="", $urlname="") {
 	$boardroot = URL_ROOT;
 	if($boardroot == "")
 		$boardroot = "./";
@@ -66,7 +82,26 @@ function oldactionLink($action, $id="", $args="", $urlname="")
 }
 
 
+function pageLink($page, $params=[], $extra='') {
+	global $router;
+	return $router->generate($page, $params) . ($extra != '' ? '?' . $extra : '');
+}
 
+// Page generators
+function pageLinkTag($text, $page, $params=[], $extra='', $title='') {
+	return '<a href="'.pageLink($page, $params, $extra).'" title="'. $title . '">'.htmlentities($text).'</a>';
+}
+function pageLinkTagItem($text, $page, $params=[], $extra='', $title='') {
+	return '<li><a href="'.pageLink($page, $params, $extra).'" title="'. $title . '">'.htmlentities($text).'</a></li>';
+}
+function pageLinkTagConfirm($text, $prompt, $page, $params=[], $extra='') {
+	return '<a onclick="return confirm(\''.htmlentities($prompt).'\'); " href="'.pageLink($page, $params, $extra).'">'.htmlentities($text).'</a>';
+}
+function pageLinkTagItemConfirm($text, $prompt, $page, $params=[], $extra='') {
+	return '<li><a onclick="return confirm(\''.htmlentities($prompt).'\'); " href="'.pageLink($page, $params, $extra).'">'.htmlentities($text).'</a></li>';
+}
+
+// Action generators
 function actionLinkTag($text, $action, $id='', $args="", $urlname="")
 {
 	return '<a href="'.htmlentities(actionLink($action, $id, $args, $urlname)).'">'.$text.'</a>';
@@ -415,5 +450,9 @@ function smarty_function_resourceLink($params, $template)
 {
 	return htmlspecialchars(resourceLink($params['url']));
 }
-
+function smarty_function_pageLink($params, $template)
+{
+	$passParams = isset($params['params']) ? $params['params'] : [];
+	return pageLink($params['name'], $passParams);
+}
 ?>

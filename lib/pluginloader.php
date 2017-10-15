@@ -9,9 +9,12 @@ if(!isset($self))
 	$self = NULL;
 $oldself = $self;
 
-if (isset($pluginbuckets[$bucket])) {
-	foreach ($pluginbuckets[$bucket] as $plugin) {
-		if (isset($plugins[$plugin])) {
+if (isset($pluginbuckets[$bucket]))
+{
+	foreach ($pluginbuckets[$bucket] as $plugin)
+	{
+		if (isset($plugins[$plugin]))
+		{
 			$self = $plugins[$plugin];
 			include(__DIR__.'/../plugins/'.$self['dir'].'/'.$bucket.'.php');
 			unset($self);

@@ -29,11 +29,6 @@ else
 
 $tpp = 3;
 
-if (HasPermission('forum.postthreads', $forum['id']))
-	$links[] = actionLinkTag(__('Post new'), 'newthread', $forum['id']);
-
-MakeCrumbs(array(), $links);
-
 $rThreads = Query("	SELECT 
 						t.id, t.title, t.closed, t.replies, t.lastpostid,
 						p.id pid, p.date,

@@ -76,7 +76,7 @@ if((int)$_GET['delete'] == 1)
 	}
 	$rPosts = Query("update {posts} set deleted=1,deletedby={0},reason={1} where id={2} limit 1", $loguserid, $_GET['reason'], $pid);
 
-	die(header("Location: ".actionLink("post", $pid)));
+	die(header("Location: /".actionLink("post", $pid)));
 }
 else if((int)$_GET['delete'] == 2)
 {
@@ -86,7 +86,7 @@ else if((int)$_GET['delete'] == 2)
 		Kill(__("You're not allowed to undelete posts."));
 	$rPosts = Query("update {posts} set deleted=0 where id={0} limit 1", $pid);
 
-	die(header("Location: ".actionLink("post", $pid)));
+	die(header("Location: /".actionLink("post", $pid)));
 }
 
 if ($post['deleted'])
@@ -185,7 +185,7 @@ else if(isset($_POST['actionpost']))
 		Report("Post edited by [b]".$loguser['name']."[/] in [b]".$thread['title']."[/] (".$forum['title'].") -> [g]#HERE#?pid=".$pid, $isHidden);
 		$bucket = 'editpost'; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: ".actionLink("post", $pid)));
+		die(header("Location: /".actionLink("post", $pid)));
 	}
 	else
 		$attachs = HandlePostAttachments(0, false);

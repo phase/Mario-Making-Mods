@@ -90,7 +90,7 @@ echo "
 		<input type=\"hidden\" name=\"key\" value=\"{$loguser['token']}\">";
 
 $settingfields = array();
-$settingfields[''] = ''; // ensures the uncategorized entries come first
+$settingfields[] = ''; // ensures the uncategorized entries come first
 
 foreach($settings as $name => $data)
 {
@@ -218,7 +218,7 @@ function makeLangList($fieldname, $value)
 	$dir = @opendir("lib/lang");
 	while ($file = readdir($dir))
 	{
-		//echo $file;
+		//print $file;
 		if (endsWith($file, "_lang.php"))
 		{
 			$file = substr($file, 0, strlen($file)-9);

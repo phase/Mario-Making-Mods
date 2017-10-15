@@ -2,7 +2,7 @@
 //  AcmlmBoard XD - Login page
 //  Access: guests
 
-include(BOARD_ROOT."toast.php");
+// include(BOARD_ROOT."toast.php");
 
 if (!defined('BLARG')) die();
 
@@ -42,7 +42,7 @@ elseif(isset($_POST['actionlogin']))
 		Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], $_POST['session']?1:0);
 
 		Report("[b]".$user['name']."[/] logged in.", 1);
-		
+
 		$rLogUser = Query("select id, pss, password from {users} where 1");
 		$matches = array();
 

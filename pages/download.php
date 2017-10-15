@@ -85,7 +85,6 @@ $dlc = '<table class="downloadtable outline margin" id="downloads">
 			<td>Green Hill Zone Port</td>
 			<td class="center"><a href="'.$packroot.'3DS-SMB3-GreenHill.zip">3DS</a> & <a href="'.$packroot.'WiiU-SMB3-GreenHill.zip">WiiU (v1.4)</a></td>
 			<td>~[user=38]: Creating the Tileset
-			~[user=4]: Import WiiU
 			~[user=1]: Import 3DS</td>
 		</tr>
 		<tr class="cell1">
@@ -107,7 +106,7 @@ $dlc = '<table class="downloadtable outline margin" id="downloads">
 			<td><a href="https://www.youtube.com/watch?v=GBAasXelQhI">Minecraft Theme</a></td>
 			<td class="center"><a href="'.$packroot.'WiiU-SMW-Minecraft.zip">WiiU</a> & <a href="'.$packroot.'3DS-SMW-Minecraft.zip">3DS</a></td>
 			<td>~[user=9]: Creating the tileset
-			~[user=5]:Import WiiU
+			~[user=4]:Import WiiU
 			~[user=1]:Import 3DS</td>
 		</tr>
 		<tr class="cell2">
@@ -147,7 +146,7 @@ $dlc = '<table class="downloadtable outline margin" id="downloads">
 		</tr>
 		<tr class="cell1">
 			<td class="center">NSMBU</td>
-			<td>[threads=124]</td>
+			<td><a href="https://www.youtube.com/watch?v=UOzPuPJWPpE">Bombard-Cliffs Theme</a></td>
 			<td class="center"><a href="'.$packroot.'WiiU-NSMBU-Bombard-Cliffs.zip">WiiU</a> & <a href="'.$packroot.'3DS-NSMBU-Bombard-Cliffs.zip">3DS</a></td>
 			<td>~[user=2]: Creating the original
 			~[user=4]: WiiU Import
@@ -164,8 +163,7 @@ $dlc = '<table class="downloadtable outline margin" id="downloads">
 			<td class="center">NSMBU</td>
 			<td><a href="https://www.youtube.com/watch?v=nbRisMFkQjY">Desert theme</a></td>
 			<td class="center"><a href="'.$packroot.'WiiU-NSMBU-desert.zip">WiiU</a> & <a href="'.$packroot.'3DS-NSMBU-desert.zip">3DS</a></td>
-			<td>[user=2]: Creating it
-			[user=4]: WiiU import
+			<td>[user=2] & [user=4]: Creating it
 			[user=1]: 3DS Import</td>
 		</tr>
 		<tr class="cell2">

@@ -48,7 +48,7 @@ while($ipban = Fetch($rIPBan))
 	</tr>";
 }
 
-echo "
+print "
 <table class=\"outline margin width50\">
 	<tr class=\"header1\">
 		<th>".__("IP")."</th>

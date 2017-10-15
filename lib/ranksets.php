@@ -4,9 +4,9 @@ if (!defined('BLARG')) die();
 function loadRanksets()
 {
 	global $ranksetData, $ranksetNames;
-
+	
 	if(isset($ranksetNames)) return;
-
+	
 	$ranksetData = array();
 	$ranksetNames = array();
 
@@ -46,7 +46,7 @@ function getRank($rankset, $posts)
 {
 	global $ranksetData;
 	if(!$rankset) return "";
-	if(!isset($ranksetData)) loadRanksets();
+	if(!isset($ranksetData)) loadRanksets(); 
 
 	$thisSet = $ranksetData[$rankset];
 	if(!is_array($thisSet)) return "";
@@ -57,7 +57,7 @@ function getRank($rankset, $posts)
 			break;
 		$ret = $row;
 	}
-
+	
 	if(!$ret) return "";
 	return getRankHtml($rankset, $ret);
 }
@@ -66,7 +66,7 @@ function getToNextRank($rankset, $posts)
 {
 	global $ranksetData;
 	if(!$rankset) return "";
-	if(!isset($ranksetData)) loadRanksets();
+	if(!isset($ranksetData)) loadRanksets(); 
 
 	$thisSet = $ranksetData[$rankset];
 	if(!is_array($thisSet)) return "";

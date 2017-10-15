@@ -13,7 +13,7 @@ $there = "./"; //"/";
 $logR = Query("select * from {reports} order by time desc");
 while($item = Fetch($logR))
 {
-	//echo $item['text'];
+	//print $item['text'];
 	$blar = $item['text'];
 	$blar = htmlspecialchars($blar);
 	$blar = str_replace("[g]", "", $blar);

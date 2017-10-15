@@ -12,9 +12,12 @@ CheckPermission('user.editavatars');
 MakeCrumbs(array(actionLink('profile', $loguserid, '', $loguser['name']) => htmlspecialchars($loguser['displayname']?$loguser['displayname']:$loguser['name']),
 	actionLink("editavatars") => __("Mood avatars")));
 
+$ft = ['','gif','jpg','png'];
+
 if(isset($_POST['actionrename']) || isset($_POST['actiondelete']) || isset($_POST['actionadd']))
 {
 	$mid = (int)$_POST['mid'];
+	$fte = (int)$_POST['ext'];
 	if($_POST['actionrename'])
 	{
 		Query("update {moodavatars} set name={0} where mid={1} and uid={2}", $_POST['name'], $mid, $loguserid);
@@ -25,8 +28,8 @@ if(isset($_POST['actionrename']) || isset($_POST['actiondelete']) || isset($_POS
 	{
 		Query("delete from {moodavatars} where uid={0} and mid={1}", $loguserid, $mid);
 		Query("update {posts} set mood=0 where user={0} and mood={1}", $loguserid, $mid);
-		if(file_exists(DATA_DIR."avatars/".$loguserid."_".$mid))
-			unlink(DATA_DIR."avatars/".$loguserid."_".$mid);
+		if(file_exists(DATA_DIR."avatars/".$loguserid."_".$mid.".".$ft[$fte]))
+			unlink(DATA_DIR."avatars/".$loguserid."_".$mid.".".$ft[$fte]);
 			
 		die(header('Location: '.actionLink('editavatars')));
 	}
@@ -64,14 +67,14 @@ if(isset($_POST['actionrename']) || isset($_POST['actiondelete']) || isset($_POS
 			if(!$error)
 			{
 				$tmpfile = $_FILES['picture']['tmp_name'];
-				$file = DATA_DIR."avatars/".$loguserid."_".$mid;
+				list($width, $height, $type) = getimagesize($tmpfile);
+
+				$file = DATA_DIR."avatars/".$loguserid."_".$mid.'.'.$ft[$type];
 
 				if($_POST['name'] == "")
 					$_POST['name'] = "#".$mid;
 
-				Query("insert into {moodavatars} (uid, mid, name) values ({0}, {1}, {2})", $loguserid, $mid, $_POST['name']);
-
-				list($width, $height, $type) = getimagesize($tmpfile);
+				Query("insert into {moodavatars} (uid, mid, name, ext) values ({0}, {1}, {2}, {3})", $loguserid, $mid, $_POST['name'], $type);
 
 				if($type == 1) $img1 = imagecreatefromgif ($tmpfile);
 				if($type == 2) $img1 = imagecreatefromjpeg($tmpfile);
@@ -105,16 +108,17 @@ if(isset($_POST['actionrename']) || isset($_POST['actiondelete']) || isset($_POS
 }
 
 $moodRows = array();
-$rMoods = Query("select mid, name from {moodavatars} where uid={0} order by mid asc", $loguserid);
+$rMoods = Query("select mid, name, ext from {moodavatars} where uid={0} order by mid asc", $loguserid);
 while($mood = Fetch($rMoods))
 {
 	$row = array();
 	
-	$row['avatar'] = "<img src=\"".DATA_URL."avatars/{$loguserid}_{$mood['mid']}\" alt=\"\">";
+	$row['avatar'] = "<img src=\"".DATA_URL."avatars/{$loguserid}_{$mood['mid']}.{$ft[$mood['ext']]}\" alt=\"\">";
 	
 	$row['field'] = "
 				<form method=\"post\" action=\"".htmlentities(actionLink("editavatars"))."\">
 					<input type=\"hidden\" name=\"mid\" value=\"{$mood['mid']}\">
+					<input type=\"hidden\" name=\"ext\" value=\"{$mood['ext']}\">
 					<input type=\"text\" id=\"name{$mood['mid']}\" name=\"name\" size=80 maxlength=60 value=\"".htmlspecialchars($mood['name'])."\"><br>
 					<input type=\"submit\" name=\"actionrename\" value=\"".__("Rename")."\">
 					<input type=\"submit\" name=\"actiondelete\" value=\"".__("Delete")."\" 

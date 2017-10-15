@@ -12,14 +12,19 @@ include_once(__DIR__."/lang/".$language.".php");
 if($language != "en_US")
 	include_once(__DIR__."/lang/".$language."_lang.php");
 
-function __($english, $flags = 0) {
+function __($english, $flags = 0)
+{
 	global $languagePack, $language;
-	if($language != "en_US") {
-		if(!isset($languagePack)) {
-			if(is_file(__DIR__."/lang/".$language.".txt")) {
+	if($language != "en_US")
+	{
+		if(!isset($languagePack))
+		{
+			if(is_file(__DIR__."/lang/".$language.".txt"))
+			{
 				importLanguagePack(__DIR__."/lang/".$language.".txt");
 				importPluginLanguagePacks($language.".txt");
-			} else
+			}
+			else
 				$final = $english;
 		}
 		if(!isset($languagePack))
@@ -30,8 +35,9 @@ function __($english, $flags = 0) {
 		elseif(array_key_exists($english, $languagePack))
 			$final = $languagePack[$english];
 		if($final == "")
-			$final = $english;
-	} else
+			$final = $english; //$final = "[".$english."]";
+	}
+	else
 		$final = $english;
 
 	if($flags & 1)
@@ -41,7 +47,8 @@ function __($english, $flags = 0) {
 	return $final	;
 }
 
-function importLanguagePack($file) {
+function importLanguagePack($file)
+{
 	global $languagePack;
 	$f = file_get_contents($file);
 	$f = explode("\n", $f);

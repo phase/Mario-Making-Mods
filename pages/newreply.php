@@ -179,7 +179,7 @@ else if(isset($_POST['actionpost']))
 
 		$bucket = "newreply"; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: ".actionLink("post", $pid)));
+		die(header("Location: /".actionLink("post", $pid)));
 	}
 	else
 		$attachs = HandlePostAttachments(0, false);

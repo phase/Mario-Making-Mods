@@ -226,7 +226,7 @@ if($_POST['actionsave'])
 			Query("UPDATE {users} SET primarygroup={0}, title={1} WHERE id={2}",
 				Settings::get('bannedGroup'), 'Spamvertising', $loguserid);
 			
-			die(header('Location: '.actionLink('index')));
+			die(header('Location: /'));
 		}
 	}
 	
@@ -408,7 +408,7 @@ if($_POST['actionsave'])
 			$his = HisHer($user['sex']);
 		Report("[b]".$loguser['name']."[/] edited ".$his." profile. -> https://mariomods.net/?page=profile&id=".$userid, 1);
 
-		die(header("Location: ".actionLink("profile", $userid, '', $_POST['name']?:$user['name'])));
+		die(header("Location: /".actionLink("profile", $userid, '', $_POST['name']?:$user['name'])));
 	}
 }
 

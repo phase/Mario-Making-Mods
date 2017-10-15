@@ -15,7 +15,7 @@ if (isset($_GET['createnew']))
 }
 else
 {
-	$page = getWikiPage($_GET['id']);
+	$page = getWikiPage($pageParams['page']);
 	$ptitle = $page['id'];
 }
 
@@ -63,7 +63,7 @@ if (isset($_POST['saveaction']))
 		
 	$bucket = 'wikixd_pageedit'; include("lib/pluginloader.php");
 		
-	die(header('Location: '.actionLink('wiki', $page['id'])));
+	die(header('Location: /'.actionLink('wiki', $page['id'])));
 }
 
 if ($page['new'] == 2)

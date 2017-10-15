@@ -37,6 +37,6 @@ $url = actionLink("thread", $thread['id'], $from?"from=$from":"", HasPermission(
 
 header("HTTP/1.1 301 Moved Permanently");
 header("Status: 301 Moved Permanently");
-header("Location: ".$url);
+header("Location: /".$url);
 die;
 

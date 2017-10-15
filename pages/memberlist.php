@@ -150,7 +150,7 @@ while($user = Fetch($rUsers))
 	$udata = array();
 	
 	$daysKnown = (time()-$user['regdate'])/86400;
-	$udata['average'] = sechof("%1.02f", $user['posts'] / $daysKnown);
+	$udata['average'] = sprintf("%1.02f", $user['posts'] / $daysKnown);
 
 	if($user['picture'])
 	{

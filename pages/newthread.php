@@ -93,7 +93,7 @@ else if(isset($_POST['actionpreview']))
 			if($totalVotes > 0)
 			{
 				$width = (100 * $odata['votes']) / $totalVotes;
-				$odata['percent'] = sechof('%.4g', $width);
+				$odata['percent'] = sprintf('%.4g', $width);
 			}
 			else
 				$odata['percent'] = 0;
@@ -256,7 +256,7 @@ else if(isset($_POST['actionpost']))
 		$thread['id'] = $tid;
 		$bucket = "newthread"; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: ".actionLink("thread", $tid)));
+		die(header("Location: /".actionLink("thread", $tid)));
 	}
 	else
 		$attachs = HandlePostAttachments(0, false);
