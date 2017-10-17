@@ -21,7 +21,7 @@
 								<li><a href="{$url|escape}">{$text}</a></li>
 							{/foreach}
 							{if HasPermission('admin.viewadminpanel')}
-								<li><a href="/?page=board&id=staff">Staff Forums</a></li>
+								<li><a href="/board/staff">Staff Forums</a></li>
 							{/if}
 							<li><a href="#" onclick="$('#logout').submit(); return false;">Log out</a></li>
 						</ul>
