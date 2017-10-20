@@ -16,7 +16,10 @@ limit 6", $user["id"]);
 $plusoners = array();
 
 while($row = fetch($res))
-	$plusoners[] = userLink(getDataPrefix($row, "u_"))." (".$row["ct"].")";
+	if(count($plusoners) == 5)
+		$plusoners[] = "more...";
+	else
+		$plusoners[] = userLink(getDataPrefix($row, "u_"))." (".$row["ct"].")";
 
 if(count($plusoners))
 	$received .= "<br/>".__("From:")." ".implode(", ", $plusoners);

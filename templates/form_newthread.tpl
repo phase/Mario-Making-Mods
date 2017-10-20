@@ -12,6 +12,14 @@
 		</tr>
 		<tr class="cell1">
 			<td class="cell2 center">
+				Thread description
+			</td>
+			<td id="threadTitleContainer">
+				{$fields.description}
+			</td>
+		</tr>
+		<tr class="cell0">
+			<td class="cell2 center">
 				Icon
 			</td>
 			<td class="threadIcons">
