@@ -35,12 +35,7 @@ $metaStuff = array(
 //=======================
 // Do the page
 
-if (isset($_GET['page']))
-	$page = $_GET['page'];
-else
-	$page = MAIN_PAGE;
-if(!ctype_alnum($page))
-	$page = MAIN_PAGE;
+$match = $router->match();
 
 define('CURRENT_PAGE', $page);
 
@@ -59,34 +54,43 @@ if ($loguser['flags'] & 0x2)
 
 if (!$fakeerror) {
 	try {
-		try {
-			if(array_key_exists($page, $pluginpages)) {
-				$plugin = $pluginpages[$page];
+		// Throw the 404 page if we don't have a match already.
+		if ($match === false)
+			throw new Exception(404);
+		else {
+			// Set up the stuff for our page loader.
+			$pageName = $match['target'];
+			$pageParams = $match['params'];
+
+			// MabiPro: Set this to Smarty for template purposes
+			$tpl->assign('currentPage', $pageName);
+
+			// Check first for plugin pages.
+			if(array_key_exists($pageName, $pluginpages)) {
+				// TODO: Make this cleaner than a hack.
+				$plugin = $pluginpages[$pageName];
 				$self = $plugins[$plugin];
-				
-				$page = __DIR__.'/plugins/'.$self['dir']."/pages/".$page.".php";
-				if(!file_exists($page))
+
+				$page = __DIR__ . '/plugins/' . $self['dir'] . '/pages/' . $pageName . '.php';
+				if (file_exists($page))
+					require_once($page);
+				else
 					throw new Exception(404);
-				include($page);
-				unset($self);
 			} else {
-				$page = __DIR__.'/pages/'.$page.'.php';
-				if(!file_exists($page))
+				// Check now for core pages.
+				$page = __DIR__ . '/pages/' . $pageName . '.php';
+
+				if (file_exists($page))
+					require_once($page);
+				else
 					throw new Exception(404);
-				include($page);
 			}
-		}
-		catch(Exception $e)
-		{
-			if ($e->getMessage() != 404) {
-				throw $e;
-			}
-			require(__DIR__.'/pages/404.php');
 		}
 	}
-	catch(KillException $e)
-	{
-		// Nothing. Just ignore this exception.
+	catch(Exception $e) {
+		// is this uded at all?
+		if ($e->getMessage() != 404) throw $e;
+		require_once(__DIR__.'/pages/404.php');
 	}
 }
 
@@ -174,6 +178,7 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<base href="<?php echo getServerURLNoSlash($ishttps)?>" /><!--[if IE]></base><![endif]-->
 
 	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
 	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
