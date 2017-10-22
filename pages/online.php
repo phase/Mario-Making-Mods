@@ -15,7 +15,7 @@ $rUsers = Query("select * from {users} where lastactivity > {0} order by lastact
 $rGuests = Query("select * from {guests} where date > {0} and bot = 0 order by date desc", (time()-$time));
 $rBots = Query("select * from {guests} where date > {0} and bot = 1 order by date desc", (time()-$time));
 
-$spans = array(60, 300, 900, 3600, 86400);
+$spans = array(60, 300, 900, 3600, 86400, 259200, 604800);
 $spanList = array();
 foreach($spans as $span)
 {

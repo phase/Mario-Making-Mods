@@ -15,7 +15,7 @@ if(NumRows($rFora))
 		return;
 } else
 	return;
-		
+	
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
 $fid = $forum['id'];
@@ -62,8 +62,9 @@ while($thread = Fetch($rThreads))
 	$last = getDataPrefix($thread, 'lu_');
 
 	$tags = ParseThreadTags($thread['title']);
+	
+	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
 
-	$pdata['title'] = $tags[0];
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);
 	$pdata['text'] = CleanUpPost($thread['text'],$starter['name'], false, false);

@@ -20,9 +20,6 @@
 							{foreach $layout_userpanel as $url=>$text}
 								<li><a href="{$url|escape}">{$text}</a></li>
 							{/foreach}
-							{if HasPermission('admin.viewadminpanel')}
-								<li><a href="/board/staff">Staff Forums</a></li>
-							{/if}
 							<li><a href="#" onclick="$('#logout').submit(); return false;">Log out</a></li>
 						</ul>
 					</div>
@@ -42,12 +39,16 @@
 						</ul>
 					</div>
 					{else}
-					<span class="navButton">
-						<a href="{actionLink page='register'}">Register</a>
-					</span>
-					<span class="navButton">
-						<a href="{actionLink page='login'}">Log in</a>
-					</span>
+					<div id="userMenuContainer" class="dropdownContainer">
+						<div id="userMenuButton" class="navButton">
+							Guest
+							<i class="icon-caret-down"></i>
+						</div>
+						<ul class="dropdownMenu">
+							<li><a href="{actionLink page='register'}">Register</a></li>
+							<li><a href="{actionLink page='login'}">Log in</a></li>
+						</ul>
+					</div>
 					{/if}
 				</div>
 				<div id="navMenuContainer">
@@ -71,15 +72,6 @@
 						<span class="navButton"><a href="{$url|escape}">{$text}</a></span>
 					{/foreach}
 					{$chat}
-					<!--				<div id="userMenuContainer" class="dropdownContainer">
-						<div id="userMenuButton" class="navButton">
-							<a href="/?page=wiki&id=Partnered_Forums">Affiliates</a>
-							<i class="icon-caret-down"></i>
-						</div>
-						<ul class="dropdownMenu">
-							<li><a href="http://rosey.cucco.de/">Vanilla's Hangout</a></li>
-						</ul>
-					</div> -->
 				</div>
 			</th>
 		</tr>
