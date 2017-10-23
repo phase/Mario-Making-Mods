@@ -229,7 +229,7 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	} ?>
 </head>
 <body style="width:100%; font-size: <?php echo $loguser['fontsize']; ?>%;">
-<form action="<?php echo htmlentities(actionLink('login')); ?>" method="post" id="logout" style="display:none;"><input type="hidden" name="action" value="logout"></form>
+<form action="<?php echo htmlentities(pageLink('login')); ?>" method="post" id="logout" style="display:none;"><input type="hidden" name="action" value="logout"></form>
 <?php 
 	if (Settings::get('maintenance'))
 		echo '<div style="font-size:30px; font-weight:bold; color:red; background:black; padding:5px; border:2px solid red; position:absolute; top:30px; left:30px;">MAINTENANCE MODE</div>';

@@ -1,27 +1,18 @@
 <?php
-//  AcmlmBoard XD - Login page
-//  Access: guests
-
-// include(BOARD_ROOT."toast.php");
-
 if (!defined('BLARG')) die();
 
-if($_POST['action'] == "logout")
-{
+if($http->post('action') === "logout") {
 	setcookie("logsession", "", 2147483647, URL_ROOT, "", false, true);
 	Query("UPDATE {users} SET loggedin = 0 WHERE id={0}", $loguserid);
 	Query("DELETE FROM {sessions} WHERE id={0}", doHash($_COOKIE['logsession'].SALT));
 
 	die(header("Location: ".URL_ROOT));
-}
-elseif(isset($_POST['actionlogin']))
-{
+} elseif($http->post('action') === "login") {
 	$okay = false;
-	$pass = $_POST['pass'];
+	$pass = $http->post('pass');
 
-	$user = Fetch(Query("select * from {users} where name={0}", $_POST['name']));
-	if($user)
-	{
+	$user = Fetch(Query("select * from {users} where name={0}", $http->post('name')));
+	if($user) {
 		$sha = doHash($pass.SALT.$user['pss']);
 		if($user['password'] === $sha)
 			$okay = true;
@@ -30,28 +21,25 @@ elseif(isset($_POST['actionlogin']))
 	// auth plugins
 	if (!$okay) {
 		$bucket = 'login'; include(BOARD_ROOT.'lib/pluginloader.php');
-		Report("A visitor from [b]".$_SERVER['REMOTE_ADDR']."[/] tried to log in as [b]".$_POST['name']."[/].", 1);
+		Report("A visitor from [b]".$_SERVER['REMOTE_ADDR']."[/] tried to log in as [b]".$http->post('name')."[/].", 1);
 		Alert(__("Invalid user name or password."));
-	}
-	else
-	{
+	} else {
 		//TODO: Tie sessions to IPs if user has enabled it (or probably not)
 
 		$sessionID = Shake();
 		setcookie("logsession", $sessionID, 2147483647, URL_ROOT, "", false, true);
-		Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], $_POST['session']?1:0);
+		Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], $http->post('session')?1:0);
 
 		Report("[b]".$user['name']."[/] logged in.", 1);
 
 		$rLogUser = Query("select id, pss, password from {users} where 1");
 		$matches = array();
 
-		while($testuser = Fetch($rLogUser))
-		{
+		while($testuser = Fetch($rLogUser)) {
 			if($testuser['id'] == $user['id'])
 				continue;
 
-			$sha = doHash($_POST['pass'].SALT.$testuser['pss']);
+			$sha = doHash($http->post('pass').SALT.$testuser['pss']);
 			if($testuser['password'] === $sha)
 				$matches[] = $testuser['id'];
 		}
@@ -80,7 +68,7 @@ $fields = array(
 	'btnForgotPass' => $forgotPass,
 );
 
-echo "<form name=\"loginform\" action=\"".htmlentities(actionLink("login"))."\" method=\"post\">";
+echo "<form name=\"loginform\" action=\"".htmlentities(pageLink("login"))."\" method=\"post\">";
 
 RenderTemplate('form_login', array('fields' => $fields));
 

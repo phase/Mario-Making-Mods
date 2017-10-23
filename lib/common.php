@@ -57,6 +57,9 @@ include(__DIR__."/../config/salt.php");
 
 include(__DIR__."/settingsfile.php");
 
+require_once(__DIR__."/input.php");
+$http = new Input();
+
 include(__DIR__."/debug.php");
 include(__DIR__."/mysql.php");
 include(__DIR__."/settingssystem.php");
