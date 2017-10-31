@@ -138,7 +138,10 @@ $layout_title = htmlspecialchars(Settings::get('boardname'));
 if($title != '')
 	$layout_title .= ' &raquo; '.$title;
 
+if (!HasPermission('admin.nolink'))
 $chat = '<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span><span class="navButton"><a href="https://www.patreon.com/mariomods/">Patreon</a></span>';
+else
+$chat = '';
 
 
 //=======================

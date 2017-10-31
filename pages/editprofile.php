@@ -395,18 +395,10 @@ if($_POST['actionsave'])
 	if(!$failed) {
 		RawQuery($query);
 
-		if(isset($_POST['removepicture'])) {
-			$email = FetchResult("SELECT `email` FROM {users} WHERE `id`={0}", $userid);
-			$gravatar = SqlEscape('https://www.gravatar.com/avatar/' . md5(strtolower(trim($email))) . '?s=128');
-
-			// Save the gravatar to DB
-			$why = Query("UPDATE {users} SET `picture`={0} WHERE `id`={1}", $gravatar, $userid);
-		}
-
 		$his = "[b]".$user['name']."[/]'s";
 		if($loguserid == $userid)
 			$his = HisHer($user['sex']);
-		Report("[b]".$loguser['name']."[/] edited ".$his." profile. -> https://mariomods.net/?page=profile&id=".$userid, 1);
+		Report("[b]".$loguser['name']."[/] edited ".$his." profile. -> http://mariomods.net/profile/".$userid, 1);
 
 		die(header("Location: /".actionLink("profile", $userid, '', $_POST['name']?:$user['name'])));
 	}

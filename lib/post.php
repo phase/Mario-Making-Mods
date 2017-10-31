@@ -315,10 +315,11 @@ function makePost($post, $type, $params=array())
 
 	if($post['mood'] > 0)
 	{
-		$mExt = FetchResult("select mid, name, ext from {moodavatars} where uid={0} and mid = {1}", $poster['id'], $post['mood']);
+		$mExt = FetchResult("select ext from {moodavatars} where uid={0} and mid = {1}", $poster['id'], $post['mood']);
+		$ft = ['','gif','jpg','png'];
 
-		if(file_exists(DATA_DIR."avatars/".$poster['id']."_".$post['mood'].$mExt))
-			$sidebar['avatar'] = "<img src=\"".DATA_URL."avatars/".$poster['id']."_".$post['mood'].$mExt."\" alt=\"\">";
+		if(file_exists(DATA_DIR."avatars/".$poster['id']."_".$post['mood'].'.'.$ft[$mExt]))
+			$sidebar['avatar'] = "<img src=\"".DATA_URL."avatars/".$poster['id']."_".$post['mood'].'.'.$ft[$mExt]."\" alt=\"\">";
 	}
 	else if ($poster['picture'])
 	{

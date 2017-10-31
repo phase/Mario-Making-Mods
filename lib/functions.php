@@ -45,7 +45,8 @@ function dieAjax($what)
 
 	echo $what;
 	$ajaxPage = true;
-	throw new KillException();
+	exit;
+	//throw new KillException();
 }
 
 // returns FALSE if it fails.

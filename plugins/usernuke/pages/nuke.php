@@ -1,5 +1,9 @@
 <?php
 
+error_reporting(E_ALL);
+
+CheckPermission('admin.usernuke');
+
 $title = __("Delete the user");
 
 makeCrumbs([actionlink('deleteuser') => __("Delete User")]);
@@ -10,9 +14,6 @@ $user = fetch(query("select * from {users} where id={0}", $uid));
 
 if(!$user)
 	Kill(__("You cannot delete a user that doesn't exist."));
-
-if($loguser['id'] !== 1)
-	Kill(__("Fuck off."));
 
 $passwordFailed = false;
 
