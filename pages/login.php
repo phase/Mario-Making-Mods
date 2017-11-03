@@ -52,7 +52,7 @@ if($http->post('action') === "logout") {
 }
 
 $title = __('Log in');
-MakeCrumbs(array('' => __('Log in')));
+MakeCrumbs(array(pageLink("login") => __('Log in')));
 
 $forgotPass = '';
 

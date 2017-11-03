@@ -94,7 +94,7 @@ elseif(($_GET['action'] == "trash" && HasPermission('mod.trashthreads', $thread[
 	else
 	{
 		$trashid = Settings::get('trashForum');
-		$verb = 'thrashed';
+		$verb = 'trashed';
 	}
 	
 	if($trashid > 0)

@@ -211,8 +211,7 @@ else if(isset($_POST['actionpost']))
 		if (HasPermission('mod.stickthreads', $forum['id']))
 			$sticky = ($_POST['stick'] == 'on') ? '1':'0';
 
-		if($_POST['poll'])
-		{
+		if($_POST['poll']) {
 			$doubleVote = ($_POST['multivote']) ? 1 : 0;
 			$rPoll = Query("insert into {poll} (question, doublevote) values ({0}, {1})", $_POST['pollQuestion'], $doubleVote);
 			$pod = InsertId();
@@ -224,8 +223,7 @@ else if(isset($_POST['actionpost']))
 					$rPollOption = Query("insert into {poll_choices} (poll, choice, color) values ({0}, {1}, {2})", $pod, $opt, $pollColor);
 				}
 			}
-		}
-		else
+		} else
 			$pod = 0;
 
 		$rThreads = Query("insert into {threads} (forum, user, title, icon, lastpostdate, lastposter, closed, sticky, poll, description)
@@ -265,6 +263,7 @@ else if(isset($_POST['actionpost']))
 // Let the user try again.
 $prefill = htmlspecialchars($_POST['text']);
 $trefill = htmlspecialchars($_POST['title']);
+$beefill = htmlspecialchars($_POST['description']);
 
 if(!isset($_POST['iconid']))
 	$_POST['iconid'] = 0;
@@ -382,7 +381,7 @@ if (HasPermission('mod.stickthreads', $forum['id']))
 
 
 $fields = array(
-	'title' => "<input type=\"text\" name=\"title\" size=80 maxlength=\"60\" value=\"$trefill\">",
+	'title' => "<input type=\"text\" name=\"title\" size=80 maxlength=\"60\" value=\"$beefill\">",
 	'description' => "<input type=\"text\" name=\"description\" size=80 maxlength=\"50\" value=\"$trefill\">",
 	'icon' => $iconSettings,
 	'pollQuestion' => "<input type=\"text\" name=\"pollQuestion\" value=\"".htmlspecialchars($_POST['pollQuestion'])."\" size=80 maxlength=\"100\">",
