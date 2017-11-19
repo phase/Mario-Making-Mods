@@ -1,6 +1,4 @@
 <script src="<?php print resourceLink("ckeditor/ckeditor.js");?>"></script>
-<link rel="stylesheet" href="/css/spoiler.css">
-<script src="/js/spoiler.js"></script>
 <?php
 //  AcmlmBoard XD - Post editing page
 //  Access: users

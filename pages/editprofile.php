@@ -444,7 +444,8 @@ function dummycallback($field, $item)
 
 function HandlePicture($field, $type, &$usepic) {
 	global $userid;
-	$extensions = array(".png",".jpg",".jpeg",".gif");
+
+	$extensions = [".png",".jpg",".jpeg",".gif"];
 
 	if($type == 0) {
 		$maxDim = 200;
@@ -462,24 +463,16 @@ function HandlePicture($field, $type, &$usepic) {
 	list($width, $height, $fileType) = getimagesize($tempFile);
 
 	if ($type == 0 && ($width > 300 || $height > 300))
-		return __("That avatar is definitely too big. The avatar field is meant for an avatar, not a wallpaper.");
+		return __("The avatar you uploaded is too large. Try something smaller.");
 
 	$extension = strtolower(strrchr($fileName, "."));
-	if($extension == '.blarg') {
-		Query("UPDATE {users} SET primarygroup={0}, title={1} WHERE id={2}",
-		Settings::get('bannedGroup'), 'Nice try hacking the forum, but no. It will not work.', $loguserid);
-		
-		Report("[b]".$loguser['name']."[/] got banned for trying to exploit the forums. -> https://mariomods.net/?page=profile&id=".$userid, 1);
-		die(header('Location: '.actionLink('index')));
-	}
 	if(!in_array($extension, $extensions))
 		return format(__("Invalid extension used for {0}. Allowed: {1}"), $errorname, join($extensions, ", "));
 
 	if($fileSize > $maxSize && !$allowOversize)
 		return format(__("File size for {0} is too high. The limit is {1} bytes, the uploaded image is {2} bytes."), $errorname, $maxSize, $fileSize)."</li>";
 
-	switch($fileType)
-	{
+	switch($fileType) {
 		case 1:
 			$sourceImage = imagecreatefromgif($tempFile);
 			$ext = '.gif';
@@ -493,53 +486,43 @@ function HandlePicture($field, $type, &$usepic) {
 			$ext = '.png';
 			break;
 	}
-	
+
 	$randomcrap = '_'.time();
 	$targetFile = false;
 
 	$oversize = ($width > $maxDim || $height > $maxDim);
-	if ($type == 0)
-	{
+	if ($type == 0) {
 		$targetFile = 'avatars/'.$userid.$randomcrap.$ext;
 
-		if(!$oversize)
-		{
+		if(!$oversize) {
 			//Just copy it over.
 			copy($tempFile, DATA_DIR.$targetFile);
-		}
-		else
-		{
-			//Resample that mother!
+		} else {
+			//Resample it!
 			$ratio = $width / $height;
-			if($ratio > 1)
-			{
+			if($ratio > 1) {
 				$targetImage = imagecreatetruecolor($maxDim, floor($maxDim / $ratio));
 				imagecopyresampled($targetImage, $sourceImage, 0,0,0,0, $maxDim, $maxDim / $ratio, $width, $height);
-			} else
-			{
+			} else {
 				$targetImage = imagecreatetruecolor(floor($maxDim * $ratio), $maxDim);
 				imagecopyresampled($targetImage, $sourceImage, 0,0,0,0, $maxDim * $ratio, $maxDim, $width, $height);
 			}
 			imagepng($targetImage, DATA_DIR.$targetFile);
 			imagedestroy($targetImage);
 		}
-	}
-	elseif ($type == 1)
-	{
+	} elseif ($type == 1) {
 		$targetFile = 'minipics/'.$userid.$randomcrap.$ext;
 
-		if ($oversize)
-		{
+		if ($oversize) {
 			//Don't allow minipics over $maxDim for anypony.
 			return format(__("Dimensions of {0} must be at most {1} by {1} pixels."), $errorname, $maxDim);
-		}
-		else
+		} else
 			copy($tempFile, DATA_DIR.$targetFile);
 	}
-	
+
 	// file created to verify that the avatar was created here
 	file_put_contents(DATA_DIR.$targetFile.'.internal', hash_hmac_file('sha256', DATA_DIR.$targetFile, $userid.SALT));
-	
+
 	$usepic = '$root/'.$targetFile;
 	return true;
 }
