@@ -115,7 +115,7 @@ if($_COOKIE['logsession'] && !$ipban)
 if($loguser)
 {
 	$loguser['token'] = hash('sha1', "{$loguser['id']},{$loguser['pss']},".SALT.",dr567hgdf546guol89ty896rd7y56gvers9t");
-	$loguserid = $loguser["id"];
+	$loguserid = (int)$loguser["id"];
 	
 	$sessid = doHash($_COOKIE['logsession'].SALT);
 	Query("UPDATE {sessions} SET lasttime={0} WHERE id={1}", time(), $sessid);
@@ -140,8 +140,6 @@ if ($mobileLayout)
 {
 	$loguser['blocklayouts'] = 1;
 	$loguser['fontsize'] = 80;
-	//$loguser['dateformat'] = 'm/d/y';
-	//$loguser['timeformat'] = 'H:i';
 }
 
 
