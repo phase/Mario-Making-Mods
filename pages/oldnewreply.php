@@ -271,7 +271,7 @@ $fields = array(
 );
 
 echo "
-	<form name=\"postform\" action=\"".htmlentities(actionLink("newreply", $tid))."\" method=\"post\" enctype=\"multipart/form-data\">
+	<form name=\"postform\" action=\"".htmlentities(actionLink("oldnewreply", $tid))."\" method=\"post\" enctype=\"multipart/form-data\">
 		<input type=\"hidden\" name=\"ninja\" value=\"$ninja\">";
 					
 RenderTemplate('form_newreply', array('fields' => $fields));

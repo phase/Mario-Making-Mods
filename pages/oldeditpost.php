@@ -224,7 +224,7 @@ $fields = array(
 );
 
 echo "
-	<form name=\"postform\" action=\"".htmlentities(actionLink("editpost", $pid))."\" method=\"post\" enctype=\"multipart/form-data\">";
+	<form name=\"postform\" action=\"".htmlentities(actionLink("oldeditpost", $pid))."\" method=\"post\" enctype=\"multipart/form-data\">";
 
 RenderTemplate('form_editpost', array('fields' => $fields));
 

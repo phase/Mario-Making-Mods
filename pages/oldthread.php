@@ -303,7 +303,7 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'] 
 	);
 
 	echo "
-	<form action=\"".htmlentities(actionLink("newreply", $tid))."\" method=\"post\">
+	<form action=\"".htmlentities(actionLink("oldnewreply", $tid))."\" method=\"post\">
 		<input type=\"hidden\" name=\"ninja\" value=\"{$ninja}\">";
 	
 	RenderTemplate('form_quickreply', array('fields' => $fields));
