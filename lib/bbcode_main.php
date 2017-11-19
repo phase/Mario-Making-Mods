@@ -95,8 +95,6 @@ function securityPostFilter($s) {
 		'<iframe width="560" height="315" src="//www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $s);
 
 	$s = preg_replace("'-moz-binding'si"," -mo<em></em>z-binding", $s);
-	//$s = preg_replace("'filter:'si","filter<em></em>:>", $s);
-	//$s = preg_replace("'javascript:'si","javascript<em></em>:>", $s);
 
 	// TODO do it more nicely
 	$s = preg_replace_callback("@(href|src)\s*=\s*\"([^\"]+)\"@si", "FilterJS", $s);

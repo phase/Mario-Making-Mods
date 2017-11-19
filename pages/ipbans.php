@@ -11,14 +11,9 @@ MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("ipbans") => __(
 
 if(isset($_POST['actionadd']))
 {
-	//This doesn't allow you to ban IP ranges...
-	//if(!filter_var($_POST['ip'], FILTER_VALIDATE_IP))
-	//	Alert("Invalid IP");
-	//else
 	if(isIPBanned($_POST['ip']))
 		Alert("Already banned IP!");
-	else
-	{
+	else {
 		$rIPBan = Query("insert into {ipbans} (ip, reason, date) values ({0}, {1}, {2})", $_POST['ip'], $_POST['reason'], ((int)$_POST['days'] > 0 ? time() + ((int)$_POST['days'] * 86400) : 0));
 		Alert(__("Added."), __("Notice"));
 	}
@@ -49,7 +44,7 @@ while($ipban = Fetch($rIPBan))
 }
 
 print "
-<table class=\"outline margin width50\">
+<table class=\"outline margin\">
 	<tr class=\"header1\">
 		<th>".__("IP")."</th>
 		<th>".__("Reason")."</th>
@@ -60,7 +55,7 @@ print "
 </table>
 
 <form action=\"".htmlentities(actionLink("ipbans"))."\" method=\"post\">
-	<table class=\"outline margin width50\">
+	<table class=\"outline margin\">
 		<tr class=\"header1\">
 			<th colspan=\"2\">
 				".__("Add")."

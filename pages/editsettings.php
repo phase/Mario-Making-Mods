@@ -1,3 +1,4 @@
+<style> .width75 { width: 75%; } </style>
 <?php
 //  AcmlmBoard XD - Board Settings editing page
 //  Access: administrators

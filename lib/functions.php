@@ -139,7 +139,7 @@ function OptimizeLayouts($text)
 
 function LoadPostToolbar()
 {
-	echo "<script type=\"text/javascript\">window.addEventListener(\"load\", hookUpControls, false);</script>";
+	echo "";
 }
 
 

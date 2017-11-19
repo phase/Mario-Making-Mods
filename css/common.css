@@ -18,9 +18,6 @@ body
 	font-family: "Verdana", "Lucida Grande", sans-serif;
 	font-size: 1em; /* 10pt; */
 	margin: 0;
-	/*max-width: 1366px;
-	margin-left: auto;
-	margin-right: auto;*/
 	overflow-y: scroll;
 	-ms-overflow-y: scroll;
 }
@@ -104,27 +101,11 @@ table, td, tr, th, div
 	border-color:black;
 }
 /* Default link colors */
-a:link
-{
-	color: #FFC040;
-}
-a:visited
-{
-	color: #FFC040;
-/*	color: #C09030;*/
-}
-a:active
-{
-	color: #FFEA60;
-}
-a:hover
-{
-	color:#FFF;
-}
-a:hover span
-{
-	color: #FFF !important;
-}
+a:link { color: #FFC040; }
+a:visited { color: #FFC040; }
+a:active { color: #FFEA60; }
+a:hover { color:#FFF; }
+a:hover span { color: #FFF !important; }
 
 .pagelink
 {
@@ -133,69 +114,20 @@ a:hover span
 	display:inline-block;
 }
 
-
-/* Widths */
-/* TODO REMOVE ME */
-.width100
-{
-	width: 100%;
-}
-.width75
-{
-	width: 75%;
-}
-.width50
-{
-	width: 50%;
-}
-.width25
-{
-	width: 25%;
-}
-
-.margin, .pages
-{
-	margin-bottom: .75em;
-}
-
-.smallFonts
-{
-	font-size: 0.85em !important;
-}
-
+.margin, .pages { margin-bottom: .75em; }
+.smallFonts { font-size: 0.85em !important; }
 
 /* Positioning */
 
-.left
-{
-	text-align: left;
-}
-.right
-{
-	text-align: right;
-}
-
-table.message
-{
-	text-align: center;
-}
+.left { text-align: left; }
+.right { text-align: right; }
+table.message { text-align: center; }
 
 /* Some styles */
 
-.block
-{
-	display: block;
-}
-
-.center
-{
-	text-align: center;
-}
-
-.underline
-{
-	text-decoration: underline;
-}
+.block { display: block; }
+.center { text-align: center; }
+.underline { text-decoration: underline; }
 
 table
 {
@@ -213,8 +145,7 @@ table
 	height: 4px;
 }
 
-/* Main table style */
-/* The main table is just here to position elements correctly; make sure it takes no space */
+/* Main table style: The main table is just here to position elements correctly; make sure it takes no space */
 
 table.layout-table
 {
@@ -224,24 +155,13 @@ table.layout-table
 	width: 100%;
 }
 
-table.layout-table > tbody > tr > td
-{
-	padding: 0;
-}
-
-
-table.layout-table#main
-{
-	height: 100%;
-}
+table.layout-table > tbody > tr > td { padding: 0; }
+table.layout-table#main { height: 100%; }
 
 /* Sidebar table style */
 /* Same kind of border removal as with #header */
 
-table#sidebar
-{
-	height: 100%;
-}
+table#sidebar { height: 100%; }
 
 table#sidebar > tbody > tr > td
 {
@@ -249,10 +169,7 @@ table#sidebar > tbody > tr > td
 	padding: 4px;
 }
 
-table#sidebar table td a
-{
-	display: block;
-}
+table#sidebar table td a { display: block; }
 
 /* Footer table style */
 
@@ -262,20 +179,9 @@ table#footer > tbody > tr > td
 	text-align: center;
 }
 
-table#page-container
-{
-	height: 100%;
-}
-
-td.crumb-container
-{
-	height: 1px;
-}
-
-td.contents-container
-{
-	vertical-align: top;
-}
+table#page-container { height: 100%; }
+td.crumb-container { height: 1px; }
+td.contents-container { vertical-align: top; }
 
 div#page_contents
 {
@@ -283,10 +189,7 @@ div#page_contents
 	height: 100%;
 }
 
-div#page_contents > .margin:last-child
-{
-	margin-bottom: 0;
-}
+div#page_contents > .margin:last-child { margin-bottom: 0; }
 
 /* Header info table */
 
@@ -413,8 +316,8 @@ ul.dropdownMenu li > a
 	white-space: nowrap;
 }
 
-/* little hack so that the dropdownContainer div comes under the dropdown menu when hovered over */
-/* so we don't get a deactivating gap between the button and the menu */
+/* little hack so that the dropdownContainer div comes under the dropdown menu when hovered over
+ so we don't get a deactivating gap between the button and the menu */
 .dropdownContainer:hover
 {
 	padding-bottom: 4px;
@@ -518,20 +421,20 @@ table.form_quickreply
 /* All cells have border by default */
 table.post>tbody>tr>td, table.outline>tbody>tr>td, table.message>tbody>tr>td
 {
-	font-size: 1em; /* 10pt; */
+	font-size: 1em;
 	padding:2px 4px;
 }
 
 table.post>tbody>tr>th, table.outline>tbody>tr>th, table.message>tbody>tr>th
 {
-	font-size: 1em; /* 12px; */
+	font-size: 1em;
 	text-align: left;
 }
 
 tr.header0>th, tr.header1>th
 {
 	text-align: center!important;
-	font-size: .85em!important; /* 8pt; */
+	font-size: .85em!important;
 }
 
 /* Post tables */
@@ -541,11 +444,6 @@ table.post, table.custompost
 	width: 100%;
 	margin-bottom: 0.75em;
 }
-
-/*table.post *
-{
-	word-break: break-all !important;
-}*/
 
 table.post td.side,
 table.custompost td.side,
@@ -585,14 +483,14 @@ table.post td.post.haslayout
 
 table.post td.meta
 {
-	font-size: .85em; /* 8pt; */
+	font-size: .85em;
 	height: 14px;
 	margin: 0;
 	padding-right: 4px;
 }
 table.post td.links
 {
-	font-size: .85em; /* 8pt; */
+	font-size: .85em;
 	height: 14px;
 	margin: 0;
 }
@@ -615,7 +513,7 @@ table.post td.links
 {
 	text-align: center;
 	width: 100%;
-	font-size: .8em; /* 10pt; */
+	font-size: .8em;
 	clear: both;
 }
 .footer *
@@ -625,7 +523,7 @@ table.post td.links
 
 .links
 {
-	font-size: 1em; /* 10pt; */
+	font-size: 1em;
 	text-align: right;
 }
 
@@ -899,7 +797,6 @@ td.threadIcon
 	background: silver;
 	color: #FFF;
 	text-shadow: 1px 1px 0px #000, 0px 1px 0px #000, -1px 1px 0px #000, -1px 0px 0px #000, -1px -1px 0px #000, 0px -1px 0px #000, 1px -1px 0px #000, 1px 0px 0px #000;
-	/*box-shadow: inset 0px -4px 12px #000;*/
 	border-radius: 8px;
 	white-space: nowrap;
 }
@@ -975,20 +872,6 @@ td.threadIcons label > input:checked ~ *
 	border: 1px solid rgba(255, 255, 255, .5);
 }
 
-div.postToolbar
-{
-	margin-bottom: 1px;
-}
-
-div.postToolbar button
-{
-	vertical-align: bottom;
-	width: 1.85em;
-	height: 1.85em;
-	margin-right: 1px;
-	padding-bottom: 0.1em;
-}
-
 div#rss
 {
 	float: right;
@@ -1008,63 +891,6 @@ input[type="checkbox"]
 label
 {
 	display:inline-block;
-}
-
-div.overlayShade {
-	background: rgba(0, 0, 0, 0.5);
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	left: 0px;
-	top: 0px;
-	-webkit-animation-name: fadeIn;
-	-webkit-animation-duration: 1s;
-
-}
-
-@-webkit-keyframes fadeIn {
-	from {
-		background: rgba(0, 0, 0, 0);
-	}
-	to {
-		background: rgba(0, 0, 0, 0.5);
-	}
-}
-
-div.overlayShade div.message {
-	width: 50%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 4em;
-	-webkit-animation-name: overlayScaleIn;
-	-webkit-animation-duration: 0.25s;
-}
-
-@-webkit-keyframes overlayScaleIn {
-	from {
-		opacity: 0;
-		-webkit-transform: scale(0.75);
-	}
-	to {
-		oacpty: 1;
-		-webkit-transform: scale(1);
-	}
-}
-
-div.overlayShade div.overlayContent {
-	padding: 16px;
-}
-
-div.overlayShade div.buttonContainer {
-	text-align: right;
-}
-
-div.overlayShade div.buttonContainer button {
-	margin: 8px;
-}
-
-.postToolbar {
-	cursor: default;
 }
 
 code, pre, kbd

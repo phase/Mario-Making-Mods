@@ -138,10 +138,8 @@ $layout_title = htmlspecialchars(Settings::get('boardname'));
 if($title != '')
 	$layout_title .= ' &raquo; '.$title;
 
-if (!HasPermission('admin.nolink'))
-$chat = '<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span><span class="navButton"><a href="https://www.patreon.com/mariomods/">Patreon</a></span>';
-else
 $chat = '';
+if (!HasPermission('admin.nolink')) $chat .= '<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span><span class="navButton"><a href="https://www.patreon.com/mariomods/">Patreon</a></span>';
 
 
 //=======================
@@ -161,7 +159,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
-Site ran by [user=1], [user=20] [url=/memberlist/?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].';
+Site ran by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
@@ -171,23 +169,38 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 
 ?>
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 	<title><?php print $layout_title; ?></title>
 	
 	<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=10">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="description" content="<?php print $metaStuff['description']; ?>">
 	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<base href="<?php echo getServerURLNoSlash($ishttps)?>" /><!--[if IE]></base><![endif]-->
+	<base href="<?php echo getServerURLNoSlash($ishttps)?>" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="theme-color" content="#2196F3"/>
+	<!-- Open Graph general (Facebook, Pinterest & Google+) -->
+	<meta name="og:title" content="<?php print $layout_title; ?>">
+	<meta name="og:description" content="<?php print $metaStuff['description']; ?>">
+	<meta name="og:url" content="https://mariomods.net/">
+	<meta name="og:site_name" content="Mario Making Mods">
+	<meta name="og:locale" content="en_US">
+	<meta name="og:type" content="website">
+	<meta property="og:image" content="https://mariomods.net/apple-touch-icon.png" />
+	<!-- Twitter cards -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="<?php print $layout_title; ?>" />
+	<meta property="twitter:image" content="<?php print $layout_logopic; ?>" />
+	<meta name="twitter:description" content="<?php print $metaStuff['description']; ?>">
 
 	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
 	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
 	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php print resourceLink('css/font-awesome.min.css'); ?>">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="manifest" href="/manifest.json">
 
 	<script>
 		(function(document,navigator,standalone) {
@@ -215,13 +228,11 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	<script type="text/javascript" src="<?php print resourceLink("js/jquery.tablednd_0_5.js");?>"></script>
 	<script type="text/javascript" src="<?php print resourceLink("js/jquery.scrollTo-1.4.2-min.js");?>"></script>
 	<script type="text/javascript" src="<?php print resourceLink("js/jscolor/jscolor.js");?>"></script>
-	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript">boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
 
 	<?php $bucket = "pageHeader"; include(__DIR__."/lib/pluginloader.php"); ?>
 	
 	<?php if ($mobileLayout) { ?>
-	<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, width=device-width">
 	<script type="text/javascript" src="<?php echo resourceLink('js/mobile.js'); ?>"></script>
 	<?php if ($oldAndroid) { ?>
 	<style type="text/css"> 

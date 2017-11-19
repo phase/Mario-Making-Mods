@@ -53,7 +53,7 @@ foreach($gcolors as $g)
 ", $cellClass, $items);
 }
 $colortable = format("
-<table class=\"width50 outline\" style=\"margin-left: auto; margin-right: auto;\">
+<table class=\"outline\" style=\"margin-left: auto; margin-right: auto; width: 50%;\">
 	<tr class=\"header1\">
 		{0}
 	</tr>
@@ -68,7 +68,7 @@ foreach ($themefiles as $i=>$t)
 ksort($themelist);
 
 $finaltlist = '
-<table class="width75 outline" style="margin-left: auto; margin-right: auto;">
+<table class="outline" style="margin-left: auto; margin-right: auto; width: 75%;">
 	<tbody>
 		<tr class="header1"><th colspan="6" style="cursor:pointer;" onclick="$(\'#themelist\').toggle();">Themes (click to expand)</th></tr>
 	</tbody>

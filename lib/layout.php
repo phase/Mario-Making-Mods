@@ -14,14 +14,14 @@ function RenderTemplate($template, $options=null) {
 		
 		$tplroot = __DIR__.'/../plugins/'.$self['dir'].'/templates/';
 	} else
-		$tplroot = __DIR__.'/../templates/';
+		$tplroot = __DIR__.'/../layout/';
 
 	if ($mobileLayout) {
 		$tplname = $tplroot.'mobile/'.$template.'.tpl';
 		if (!file_exists($tplname)) 
-			$tplname = $tplroot.$template.'.tpl';
+			$tplname = $tplroot.'bb/'.$template.'.tpl';
 	} else
-		$tplname = $tplroot.$template.'.tpl';
+		$tplname = $tplroot.'bb/'.$template.'.tpl';
 	
 	if ($options)
 		$tpl->assign($options);

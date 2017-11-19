@@ -1,6 +1,3 @@
-<script src="<?php print resourceLink("ckeditor/ckeditor.js");?>"></script>
-<link rel="stylesheet" href="/css/spoiler.css">
-<script src="/js/spoiler.js"></script>
 <?php
 //  AcmlmBoard XD - Reply submission/preview page
 //  Access: users
@@ -262,7 +259,7 @@ if (HasPermission('mod.stickthreads', $fid))
 }
 
 $fields = array(
-	'text' => "<textarea name=\"text\" id=\"text\" rows=\"10\" cols=\"80\">$prefill</textarea> <script>CKEDITOR.replace( 'text' );</script>",
+	'text' => "<textarea name=\"text\" id=\"text\" rows=\"10\" cols=\"80\">$prefill</textarea>",
 	'mood' => "<select size=1 name=\"mood\">".$moodOptions."</select>",
 	'nopl' => "<label><input type=\"checkbox\" ".getCheck('nopl')." name=\"nopl\">&nbsp;".__("Disable post layout", 1)."</label>",
 	'nosm' => "<label><input type=\"checkbox\" ".getCheck('nosm')." name=\"nosm\">&nbsp;".__("Disable smilies", 1)."</label>",

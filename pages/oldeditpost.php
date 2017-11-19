@@ -1,6 +1,3 @@
-<script src="<?php print resourceLink("ckeditor/ckeditor.js");?>"></script>
-<link rel="stylesheet" href="/css/spoiler.css">
-<script src="/js/spoiler.js"></script>
 <?php
 //  AcmlmBoard XD - Post editing page
 //  Access: users
@@ -217,7 +214,7 @@ while($mood = Fetch($rMoods))
 	$moodOptions .= Format("<option {0}value=\"{1}\">{2}</option>\n", $moodSelects[$mood['mid']], $mood['mid'], htmlspecialchars($mood['name']));
 	
 $fields = array(
-	'text' => "<textarea name=\"text\" id=\"text\" rows=\"10\" cols=\"80\">".htmlspecialchars($prefill)."</textarea><script>CKEDITOR.replace( 'text' );</script>",
+	'text' => "<textarea name=\"text\" id=\"text\" rows=\"10\" cols=\"80\">".htmlspecialchars($prefill)."</textarea>",
 	'mood' => "<select size=1 name=\"mood\">".$moodOptions."</select>",
 	'nopl' => "<label><input type=\"checkbox\" $nopl name=\"nopl\">&nbsp;".__("Disable post layout", 1)."</label>",
 	'nosm' => "<label><input type=\"checkbox\" $nosm name=\"nosm\">&nbsp;".__("Disable smilies", 1)."</label>",

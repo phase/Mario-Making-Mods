@@ -82,7 +82,7 @@ if($passwordFailed) {
 
 echo "
 <form name=\"confirmform\" action=\"".actionLink("nuke", $uid)."\" method=\"post\" onsubmit=\"actionlogin.disabled = true; return true;\">
-	<table class=\"outline margin width50\">
+	<table class=\"outline margin\">
 		<tr class=\"header0\">
 			<th colspan=\"2\">
 				".__("Delete the user!!")."

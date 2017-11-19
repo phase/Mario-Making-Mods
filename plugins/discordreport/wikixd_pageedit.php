@@ -8,7 +8,7 @@ if($loguser["displayname"])
 	$thename = $loguser["displayname"];
 $uncolor = ircUserColor($thename, $loguser['sex'], 0);
 
-$link = getServerDomainNoSlash().actionLink("wiki", $page['id'], '', '_');
+$link = getServerDomainNoSlash().'/'.actionLink("wiki", $page['id'], '', '_');
 
 if ($page['new'] == 2)
 	ircReport("New wiki page: ".url2title($page['id'])." created by {$thename} -- {$link}");

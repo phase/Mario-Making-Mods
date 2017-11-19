@@ -5,17 +5,15 @@ if ($isHidden) return;
 $thename = $loguser["name"];
 if($loguser["displayname"])
 	$thename = $loguser["displayname"];
-	
-$fpage = ircForumPrefix($forum);
+
 $link = getServerDomainNoSlash().'/'.actionLink("post", $pid);
 
-ircReport("Post edited by "
-	.ircUserColor($thename, $loguser['sex'], 0)
-	.": "
+if ($tid == 73) { HeyReport("Post edited by "
+	.$thename
+	." in "
 	.$thread["title"]
-	."(".$fpage.$forum["title"].")"
-	." -- "
+	.": "
 	.$link
-	);
+); }
 	
 ?>

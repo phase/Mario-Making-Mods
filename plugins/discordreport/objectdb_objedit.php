@@ -10,7 +10,7 @@ $uncolor = ircUserColor($thename, $loguser['sex'], 0);
 	
 
 if($urlRewriting)
-	$link = getServerURLNoSlash().actionLink("objectdbchanges", $sprite['id'], 'rev='.$rev, '_');
+	$link = getServerURLNoSlash().'/'.actionLink("objectdbchanges", $sprite['id'], 'rev='.$rev, '_');
 else
 	$link = getServerURL()."?page=objectdbchanges&id={$sprite['id']}&rev={$rev}";
 

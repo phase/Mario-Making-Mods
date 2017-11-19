@@ -34,7 +34,7 @@ $avgAge = formatBirthday($avgAge);
 
 write(
 "
-<table class=\"outline margin width75\">
+<table class=\"outline margin\" style=\"width: 75%;\">
 	<tr class=\"header0\">
 		<th colspan=\"2\">
 			".__("Highest Numbers")."
@@ -214,7 +214,7 @@ while ($t = Fetch($threadsperday)) $stats[$t['day']]['t'] = $t['num'];
 while ($p = Fetch($postsperday)) $stats[$p['day']]['p'] = $p['num'];
 
 echo '
-<table class="outline margin width100">
+<table class="outline margin" style="width: 100%;">
 	<tr class="header1">
 		<th colspan="7">'.__('This month\'s daily stats').'</th>
 	</tr>
