@@ -25,14 +25,12 @@ $rOnlineUsers = Query("select id from {users} where lastactivity > {0} or lastpo
 $_qRecords = "";
 $onlineUsers = "";
 $onlineUserCt = 0;
-while($onlineUser = Fetch($rOnlineUsers))
-{
+while($onlineUser = Fetch($rOnlineUsers)) {
 	$onlineUsers .= ":".$onlineUser["id"];
 	$onlineUserCt++;
 }
 
-if($onlineUserCt > $misc['maxusers'])
-{
+if($onlineUserCt > $misc['maxusers']) {
 	$_qRecords = "maxusers = {0}, maxusersdate = {1}, maxuserstext = {2}";
 }
 //Check the amount of posts for the record
@@ -66,12 +64,10 @@ Query("delete from {ipbans} where date != 0 and date < {0}", time());
 //Delete expired sessions
 Query("delete from {sessions} where expiration != 0 and expiration < {0}", time());
 
-function isIPBanned($ip)
-{
+function isIPBanned($ip) {
 	$rIPBan = Query("select * from {ipbans} where instr({0}, ip)=1", $ip);
 	
-	while ($ipban = Fetch($rIPBan))
-	{
+	while ($ipban = Fetch($rIPBan)) {
 		// check if this IP ban is actually good
 		// if the last character is a number, IPs have to match precisely
 		if (ctype_alnum(substr($ipban['ip'],-1)) && ($ip !== $ipban['ip']))
@@ -84,8 +80,7 @@ function isIPBanned($ip)
 
 $ipban = isIPBanned($_SERVER['REMOTE_ADDR']);
 
-if($ipban)
-{
+if($ipban) {
 	$adminemail = Settings::get('ownerEmail');
 	
 	print "You have been IP-banned from this board".($ipban['date'] ? " until ".gmdate("M jS Y, G:i:s",$ipban['date'])." (GMT). That's ".TimeUnits($ipban['date']-time())." left" : "").". Attempting to get around this in any way will result in worse things.";
@@ -101,7 +96,7 @@ function doHash($data)
 
 $loguser = NULL;
 
-if($_COOKIE['logsession'] && !$ipban)
+if(isset($_COOKIE['logsession']) && !$ipban)
 {
 	$session = Fetch(Query("SELECT * FROM {sessions} WHERE id={0}", doHash($_COOKIE['logsession'].SALT)));
 	if($session)
@@ -112,55 +107,46 @@ if($_COOKIE['logsession'] && !$ipban)
 	}
 }
 
-if($loguser)
-{
+if($loguser) {
 	$loguser['token'] = hash('sha1', "{$loguser['id']},{$loguser['pss']},".SALT.",dr567hgdf546guol89ty896rd7y56gvers9t");
 	$loguserid = (int)$loguser["id"];
 	
 	$sessid = doHash($_COOKIE['logsession'].SALT);
 	Query("UPDATE {sessions} SET lasttime={0} WHERE id={1}", time(), $sessid);
 	Query("DELETE FROM {sessions} WHERE user={0} AND lasttime<={1}", $loguserid, time()-2592000);
-}
-else
-{
+} else {
 	$loguser = array("name"=>"", "primarygroup"=>Settings::get('defaultGroup'), "threadsperpage"=>50, "postsperpage"=>20, "theme"=>Settings::get("defaultTheme"),
 		"dateformat"=>"m-d-y", "timeformat"=>"h:i A", "fontsize"=>80, "timezone"=>0, "blocklayouts"=>!Settings::get("guestLayouts"),
 		'token'=>hash('sha1', rand()));
 	$loguserid = 0;
 }
 
-if ($loguser['flags'] & 0x1)
-{
+if ($loguser['flags'] & 0x1) {
 	Query("INSERT INTO {ipbans} (ip,reason,date) VALUES ({0},{1},0)",
 		$_SERVER['REMOTE_ADDR'], '['.htmlspecialchars($loguser['name']).'] Account IP-banned');
 	die(header('Location: '.$_SERVER['REQUEST_URI']));
 }
 
-if ($mobileLayout)
-{
+if ($mobileLayout) {
 	$loguser['blocklayouts'] = 1;
 	$loguser['fontsize'] = 80;
 }
 
 
-function setLastActivity()
-{
+function setLastActivity() {
 	global $loguserid, $isBot, $lastKnownBrowser, $ipban;
 
 	Query("delete from {guests} where ip = {0}", $_SERVER['REMOTE_ADDR']);
 
 	if($ipban) return;
 
-	if($loguserid == 0)
-	{
+	if($loguserid == 0) {
 		$ua = "";
 		if(isset($_SERVER['HTTP_USER_AGENT']))
 			$ua = $_SERVER['HTTP_USER_AGENT'];
 		Query("insert into {guests} (date, ip, lasturl, useragent, bot) values ({0}, {1}, {2}, {3}, {4})",
 			time(), $_SERVER['REMOTE_ADDR'], getRequestedURL(), $ua, $isBot);
-	}
-	else
-	{
+	} else {
 		Query("update {users} set lastactivity={0}, lastip={1}, lasturl={2}, lastknownbrowser={3}, loggedin=1 where id={4}",
 			time(), $_SERVER['REMOTE_ADDR'], getRequestedURL(), $lastKnownBrowser, $loguserid);
 	}

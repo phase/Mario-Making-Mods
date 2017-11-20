@@ -152,10 +152,8 @@ elseif($_POST['actionedit'])
 	$isSticky = $canStick ? (isset($_POST['isSticky']) ? 1 : 0) : $thread['sticky'];
 
 	$trimmedTitle = $canRename ? trim(str_replace('&nbsp;', ' ', $_POST['title'])) : 'lolnotempty';
-	if($trimmedTitle != "")
-	{
-		if ($canRename)
-		{
+	if($trimmedTitle != "") {
+		if ($canRename) {
 			$thread['title'] = $_POST['title'];
 			$thread['description'] = $_POST['description'];
 			
@@ -171,8 +169,10 @@ elseif($_POST['actionedit'])
 		else
 			$iconurl = $thread['icon'];
 
-		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4} where id={5} limit 1", 
-			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], $tid);
+		$thread['screenshot'] = $_POST['screenshot'];
+
+		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, screenshot={5} where id={6} limit 1", 
+			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], $thread['screenshot'], $tid);
 
 		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 		
@@ -210,10 +210,7 @@ if ($canRename)
 	{
 		$check = "";
 		if($iconid == $i) $check = "checked=\"checked\" ";
-		$icons .= "	<label>
-						<input type=\"radio\" $check name=\"iconid\" value=\"$i\">
-						<img src=\"".resourceLink("img/icons/icon$i.png")."\" alt=\"Icon $i\" onclick=\"javascript:void()\">
-					</label>";
+		$icons .= "";
 		$i++;
 	}
 	$check[0] = "";
@@ -224,21 +221,11 @@ if ($canRename)
 		$check[1] = "checked=\"checked\" ";
 	}
 
-	$iconSettings = "
-					<label>
-						<input type=\"radio\" {$check[0]} name=\"iconid\" value=\"0\">
-						<span>".__("None")."</span>
-					</label>
-					$icons
-					<br/>
-					<label>
-						<input type=\"radio\" {$check[1]} name=\"iconid\" value=\"255\">
-						<span>".__("Custom")."</span>
-					</label>
-					<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
+	$iconSettings = "<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" value=\"".htmlspecialchars($thread['description'])."\">";
+	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"80\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
 	$fields['icon'] = $iconSettings;
 }
 

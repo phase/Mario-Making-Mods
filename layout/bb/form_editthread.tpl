@@ -22,10 +22,18 @@
 		</tr>
 		<tr class="cell{cycle values='0,1'}">
 			<td class="cell2 center">
-				Icon
+				Thread Icon
 			</td>
 			<td class="threadIcons">
 				{$fields.icon}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Depot Screenshot
+			</td>
+			<td>
+				{$fields.screenshot}
 			</td>
 		</tr>
 		{/if}

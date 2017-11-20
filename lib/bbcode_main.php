@@ -36,9 +36,6 @@ function cleanUpPost($postText, $poster = "", $noSmilies = false, $noBr = false)
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*'(.*?)'@si", 'ApplyNetiquetteToLinks', $s);
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*([^\"'][^\s>]*)@si", 'ApplyNetiquetteToLinks', $s);
 
-	$s = str_ireplace('4shared', 'shittyfilehost', $s);
-	//$s = str_ireplace('imageshack', 'imageshit', $s);
-
 	$s = str_ireplace('autoplay', 'auto<i></i>play', $s);
 
 	$s = securityPostFilter($s);

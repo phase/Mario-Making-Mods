@@ -30,7 +30,7 @@ else
 $tpp = 3;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid,
+						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -60,6 +60,11 @@ while($thread = Fetch($rThreads))
 
 	$starter = getDataPrefix($thread, 'su_');
 	$last = getDataPrefix($thread, 'lu_');
+
+	$pdata['screenshots'] = $thread['screenshot'];
+	
+	$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);
 	
