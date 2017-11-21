@@ -6,7 +6,7 @@ $thename = $loguser["name"];
 if($loguser["displayname"])
 	$thename = $loguser["displayname"];
 
-$link = getServerDomainNoSlash().''.actionLink("post", $pid);
+$link = getServerDomainNoSlash().'/'.actionLink("post", $pid);
 
 if ($tid == 73) { HeyReport("New reply by "
 	.$thename

@@ -117,14 +117,13 @@ $mobileswitch = '';
 if ($mobileLayout) $mobileswitch .= 'Mobile view - ';
 if ($_COOKIE['forcelayout']) $mobileswitch .= '<a href="?forcelayout=0" rel="nofollow">Auto view</a>';
 else if ($mobileLayout) $mobileswitch .= '<a href="?forcelayout=-1" rel="nofollow">Force normal view</a>';
-else $mobileswitch .= '<a href="?forcelayout=1" rel="nofollow">Force mobile view [BETA]</a>';
+else $mobileswitch .= '<a href="?forcelayout=1" rel="nofollow">Force mobile view</a><noscript>Javascript required</noscript>';
 
 
 //=======================
 // Notification bars
 
 $notifications = getNotifications();
-
 
 //=======================
 // Misc stuff
@@ -156,17 +155,12 @@ $themefile = "themes/$theme/style.css";
 if(!file_exists(__DIR__.'/'.$themefile))
 	$themefile = "themes/$theme/style.php";
 
-
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
 Site ran by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].';
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
-
-//=======================
-// Print everything!
-
 ?>
 <!doctype html>
 <html lang="en">
