@@ -224,11 +224,31 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 			}
 		})(document,window.navigator,'standalone');
 	</script>
-	<script type="text/javascript" src="<?php print resourceLink("js/jquery.js");?>"></script>
-	<script type="text/javascript" src="<?php print resourceLink("js/tricks.js");?>"></script>
-	<script type="text/javascript" src="<?php print resourceLink("js/jscolor.js");?>"></script>
-	<script type="text/javascript">boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
-	<script src="https://use.fontawesome.com/8963bac2cd.js"></script>
+	<script type="text/javascript">
+(function(){
+var foxscript = document.createElement('script');
+foxscript.src = '//js.foxpush.com/mariomodsnet.js?v='+Math.random();
+foxscript.type = 'text/javascript';
+foxscript.async = 'true';
+var fox_s = document.getElementsByTagName('script')[0];
+fox_s.parentNode.insertBefore(foxscript, fox_s);})();
+</script>
+	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
+	<script src="<?php print resourceLink("js/tricks.js");?>"></script>
+	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
+	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
+	<script src="https://use.fontawesome.com/8963bac2cd.js" async></script>
+	<script>
+  if ('serviceWorker' in navigator) {
+    console.log("Will the service worker register?");
+    navigator.serviceWorker.register('service-worker.js')
+      .then(function(reg){
+        console.log("Yes, it did.");
+      }).catch(function(err) {
+        console.log("No it didn't. This happened: ", err)
+      });
+  }
+</script>
 
 	<?php $bucket = "pageHeader"; include(__DIR__."/lib/pluginloader.php"); ?>
 	
