@@ -178,65 +178,39 @@ function ConstructToolbar() {
 	toolbar.className = "postToolbar";
 
 	var buttons = [
-		{ icon: "bold", title: "Bold", insert: "b" },
-		{ icon: "italic", title: "Italic", insert: "i" },
-		{ icon: "underline", title: "Underlined", insert: "u" },
-		{ icon: "strikethrough", title: "Strikethrough", insert: "s" },
-		{ separator: true },
-		{ icon: "superscript", title: "Superscript", insert: "sup", html: true },
-		{ icon: "subscript", title: "Subscript", insert: "sub", html: true },
- 		{ separator: true },
- 		{ icon: "user", title: "User", insert: "user=", close: true },
- 		{ icon: "comment", title: "Thread", insert: "thread=", close: true },
- 		{ icon: "list", title: "Forum", insert: "forum=", close: true },
-		{ separator: true },
- 		{ icon: "link", title: "Link", insert: "url" },
- 		{ icon: "picture-o", title: "Resized image", insert: "imgs" },
-		{ icon: "youtube-play", title: "Youtube video", insert: "youtube" },
-		{ separator: true },
- 		{ icon: "quote-left", title: "Quote", insert: "quote" },
- 		{ icon: "caret-square-o-down", title: "Spoiler", insert: "spoiler" },
-		{ icon: "code", title: "Code", insert: "code" },
+		{ label: "bold", title: "Bold", style: "font-weight: bold", insert: "b" },
+		{ label: "italic", title: "Italic", style: "font-style: italic", insert: "i" },
+		{ label: "underline", title: "Underlined", style: "text-decoration: underline", insert: "u" },
+		{ label: "strikethrough", title: "Strikethrough", style: "text-decoration: line-through", insert: "s" },
+		{ label: "-" },
+		{ label: "superscript", title: "Superscript", insert: "sup", html: true },
+		{ label: "subscript", title: "Subscript", insert: "sub", html: true },
+		{ label: "-" },
+		{ label: "link", title: "Link", style: "color: #66f; text-decoration: underline", insert: "url" },
+		{ label: "picture-o", title: "Image", insert: "img" },
+		{ label: "youtube-play", title: "Youtube video", insert: "youtube" },
+		{ label: "-" },
+		{ label: "quote-left", title: "Quote", insert: "quote" },
+		{ label: "caret-square-o-down", title: "Spoiler", insert: "spoiler" },
+		{ label: "code", title: "Code", insert: "code" },
 
 	];
 
-	for(var i = 0; i < buttons.length; i++) {
+	for(var i = 0; i < buttons.length; i++)
+	{
 		var button = buttons[i];
-		if(button.label == "-") {
+		if(button.label == "-")
+		{
 			toolbar.innerHTML += " ";
 			continue;
 		}
-
-		if (button.separator !== undefined && button.separator == true) {
-			toolbar.appendChild(document.createTextNode(" "));
-			continue;
-		}
-
-		var newButton = document.createElement("button");
-		newButton.type = "button";
-
-		if (button.title != undefined) {
-			newButton.title = button.title;
-		}
-
-		if (button.callback !== undefined) {
-			newButton.addEventListener("click", button.callback, false);
-		} else {
-			//Kind of a hack… -Nina
-			newButton.insert = button.insert;
-			newButton.insertHtml = button.html;
-			newButton.addEventListener('click', function(e) {
-				e.preventDefault();
-				insert(this.insert, this.insertHtml);
-			}, false);
-		}
-
-		var icon = document.createElement("i");
-		icon.className = "fa fa-" + button.icon;
-
-		newButton.appendChild(icon);
-
-		toolbar.appendChild(newButton);
+		var newButton = "<button ";
+		if (button.title != undefined)
+			newButton += "title=\"" + button.title + "\" ";
+		newButton += "onclick=\"Insert('" + button.insert + "', " + button.html + ", " + button.closing + "); return false;\">";
+		newButton += '<i class="fa fa-' + button.label + ' fa-fw"></i>';
+		newButton += "</button>";
+		toolbar.innerHTML += newButton;
 	}
 
 	textEditor.parentNode.insertBefore(toolbar, textEditor);
@@ -256,20 +230,24 @@ function HandleKey()
 		}
 	}
 }
-function Insert(stuff, html)
+function Insert(stuff, html, closing)
 {
 	var oldSelS = textEditor.selectionStart;
 	var oldSelE = textEditor.selectionEnd;
 	var scroll = textEditor.scrollTop;
 	var selectedText = textEditor.value.substr(oldSelS, oldSelE - oldSelS);
-
-	if(html)
-		textEditor.value = textEditor.value.substr(0, oldSelS) + "<" + stuff + ">" + selectedText + "</" + stuff + ">" + textEditor.value.substr(oldSelE);
-	else
-		textEditor.value = textEditor.value.substr(0, oldSelS) + "[" + stuff + "]" + selectedText + "[/" + stuff + "]" + textEditor.value.substr(oldSelE);
-
+	
+	if (html) {
+		if (closing) textEditor.value = textEditor.value.substr(0, oldSelS) + "<" + stuff + ">" + textEditor.value.substr(oldSelE);
+		else textEditor.value = textEditor.value.substr(0, oldSelS) + "<" + stuff + ">" + selectedText + "</" + stuff + ">" + textEditor.value.substr(oldSelE);
+	}
+	else {
+		if (closing) textEditor.value = textEditor.value.substr(0, oldSelS) + "[" + stuff + "]" + textEditor.value.substr(oldSelE);
+		else textEditor.value = textEditor.value.substr(0, oldSelS) + "[" + stuff + "]" + selectedText + "[/" + stuff + "]" + textEditor.value.substr(oldSelE);
+	}
+	
 	textEditor.selectionStart = oldSelS + stuff.length + 2;
-	textEditor.selectionEnd = oldSelS + stuff.length + 2 + selectedText.length;
+	textEditor.selectionEnd = oldSelS + stuff.length + (closing ? 1 : 2) + selectedText.length;
 	textEditor.scrollTop = scroll;
 	textEditor.focus();
 }
@@ -316,19 +294,19 @@ function ChangeTheme(newtheme) {
 function ChangePage(newpage) {
         var pagenums = document.getElementsByClassName('pagenum');
         for (i = 0; i < pagenums.length; i++)
-                pagenums[i].href = '#';
+				pagenums[i].href = '#';
 
         pagenums = document.getElementsByClassName('pagenum'+newpage);
         for (i = 0; i < pagenums.length; i++)
-                pagenums[i].removeAttribute('href');
+				pagenums[i].removeAttribute('href');
 
         var pages = document.getElementsByClassName('respage');
         for (i = 0; i < pages.length; i++)
-                pages[i].style.display = 'none';
+				pages[i].style.display = 'none';
 
         pages = document.getElementsByClassName('respage'+newpage);
         for (i = 0; i < pages.length; i++)
-                pages[i].style.display = '';
+				pages[i].style.display = '';
 }
 
 function expandTable(tableName, button) {

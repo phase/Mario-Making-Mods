@@ -1,11 +1,6 @@
 <?php
 
-echo getForm('leveldepo');
-
 RenderTemplate('form_welcome', array('fields' => $fields));
-
-echo '
-	</form>';
 
 $rFora = Query("select * from {forums} where id = {0}", Settings::pluginget('depoForum'));
 if(NumRows($rFora))
@@ -27,7 +22,7 @@ if(isset($_GET['from']))
 else
 	$from = 0;
 
-$tpp = 3;
+$tpp = 6;
 
 $rThreads = Query("	SELECT 
 						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description,

@@ -60,8 +60,7 @@ $isLastPost = ($thread['lastpostid'] == $post['id']);
 if($thread['closed'] && !HasPermission('mod.closethreads', $fid))
 	Kill(__("This thread is closed."));
 
-if((int)$_GET['delete'] == 1)
-{
+if((int)$_GET['delete'] == 1) {
 	if ($_GET['key'] != $loguser['token']) Kill(__("No."));
 	
 	if ($isFirstPost)
@@ -77,9 +76,7 @@ if((int)$_GET['delete'] == 1)
 	$rPosts = Query("update {posts} set deleted=1,deletedby={0},reason={1} where id={2} limit 1", $loguserid, $_GET['reason'], $pid);
 
 	die(header("Location: /".actionLink("post", $pid)));
-}
-else if((int)$_GET['delete'] == 2)
-{
+} else if((int)$_GET['delete'] == 2) {
 	if ($_GET['key'] != $loguser['token']) Kill(__("No."));
 	
 	if(!HasPermission('mod.deleteposts', $fid))
@@ -87,6 +84,15 @@ else if((int)$_GET['delete'] == 2)
 	$rPosts = Query("update {posts} set deleted=0 where id={0} limit 1", $pid);
 
 	die(header("Location: /".actionLink("post", $pid)));
+} else if((int)$_GET['delete'] == 3) {
+	if ($_GET['key'] != $loguser['token'])
+		Kill(__("No."));
+
+	if(!HasPermission('mod.deleteposts', $fid)) {
+		if ($post['user'] != $loguserid || !HasPermission('user.deleteownposts'))
+			Kill(__("You are not allowed to delete this post."));
+	}
+	$rPosts = Query("DELETE FROM {posts} where id={2} limit 1", $pid);
 }
 
 if ($post['deleted'])
@@ -101,8 +107,7 @@ MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $isHidden?
 LoadPostToolbar();
 
 $attachs = array();
-if ($post['has_attachments'])
-{
+if ($post['has_attachments']) {
 	$res = Query("SELECT id,filename 
 		FROM {uploadedfiles}
 		WHERE parenttype={0} AND parentid={1} AND deldate=0
@@ -112,12 +117,9 @@ if ($post['has_attachments'])
 		$attachs[$a['id']] = $a['filename'];
 }
 
-if (isset($_POST['saveuploads']))
-{
+if (isset($_POST['saveuploads'])) {
 	$attachs = HandlePostAttachments(0, false);
-}
-else if(isset($_POST['actionpreview']))
-{
+} else if(isset($_POST['actionpreview'])) {
 	$attachs = HandlePostAttachments(0, false);
 	
 	$previewPost['text'] = $_POST['text'];
@@ -174,8 +176,7 @@ else if(isset($_POST['actionpost']))
 				Query("UPDATE {threads} SET lastpostdate={0} WHERE id={1}", $now, $thread['id']);
 				Query("UPDATE {forums} SET lastpostdate={0} WHERE id={1}", $now, $fid);
 			}
-		}
-		else
+		} else
 			Query("update {posts} set options={0}, mood={1} where id={2} limit 1",
 							$options, (int)$_POST['mood'], $pid);
 							
@@ -186,8 +187,7 @@ else if(isset($_POST['actionpost']))
 		$bucket = 'editpost'; include(BOARD_ROOT."lib/pluginloader.php");
 
 		die(header("Location: /".actionLink("post", $pid)));
-	}
-	else
+	} else
 		$attachs = HandlePostAttachments(0, false);
 }
 

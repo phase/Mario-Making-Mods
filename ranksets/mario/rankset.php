@@ -93,5 +93,6 @@ $ranksetData["mario"] = array(
 	array("num" => 4700, "image" => 'capeluigi.png', "text" => 'Cape Luigi'),
 	array("num" => 4800, "image" => 'capemario.png', "text" => 'Cape Mario'),
 	array("num" => 4900, "image" => 'starluigi.png', "text" => 'Star Luigi'),
-	array("num" => 5000, "image" => 'starmario.png', "text" => 'Star Mario')
+	array("num" => 5000, "image" => 'starmario.png', "text" => 'Star Mario'),
+	array("num" => 10000, "image" => '', "text" => 'Climbing the ranks again!')
 );

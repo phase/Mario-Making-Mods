@@ -193,12 +193,10 @@ if($lastPost)
 	}
 	$temp[__("Last post")] = format("{0} ({1} ago)", formatdate($lastPost['date']), TimeUnits(time() - $lastPost['date'])) .
 								"<br>".__("in")." ".$place;
-}
-else
+} else
 	$temp[__("Last post")] = __("Never");
 
 $temp[__("Last view")] = format("{0} ({1} ago)", formatdate($user['lastactivity']), TimeUnits(time() - $user['lastactivity']));
-//$temp[__("Score")] = $score;
 
 if(HasPermission('admin.viewips'))
 {
@@ -332,9 +330,9 @@ RenderTemplate('profile', array(
 
 	
 
-if (!$mobileLayout)
-{
-	$previewPost['text'] = Settings::get("profilePreviewText");
+if (!$mobileLayout) {
+	
+		$previewPost['text'] = Settings::get("profilePreviewText");
 
 	$previewPost['num'] = 0;
 	$previewPost['id'] = 0;

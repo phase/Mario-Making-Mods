@@ -36,6 +36,13 @@ function cleanUpPost($postText, $poster = "", $noSmilies = false, $noBr = false)
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*'(.*?)'@si", 'ApplyNetiquetteToLinks', $s);
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*([^\"'][^\s>]*)@si", 'ApplyNetiquetteToLinks', $s);
 
+	$s = str_ireplace('3dsiso.com', 'that ISO site', $s);
+	$s = str_ireplace('chaosgamez.com', 'that chaos site', $s);
+	$s = str_ireplace('wiiu.titlekeys.gq', 'that wiiu titlekey site', $s);
+	$s = str_ireplace('3ds.titlekeys.gq', 'that 3DS titlekey site', $s);
+	$s = str_ireplace('mariomakingmods.net', 'mariomods.net', $s);
+	
+
 	$s = str_ireplace('autoplay', 'auto<i></i>play', $s);
 
 	$s = securityPostFilter($s);

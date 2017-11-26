@@ -225,7 +225,7 @@ if ($canRename)
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" value=\"".htmlspecialchars($thread['description'])."\">";
-	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"80\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
+	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
 	$fields['icon'] = $iconSettings;
 }
 

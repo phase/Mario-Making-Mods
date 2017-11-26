@@ -1,8 +1,8 @@
 <?php
 
-$ranksetNames["Mario_power_ups"] = "Power-Ups";
+$ranksetNames["power-ups"] = "Power-Ups";
 
-$ranksetData["Mario_power_ups"] = array(
+$ranksetData["power-ups"] = array(
 	array("num" => 0, "image" => '', "text" => 'Non-poster'),
 	array("num" => 1, "image" => '', "text" => 'Newcomer'),
 	array("num" => 10, "image" => 'Coin.png', "text" => 'Coin'),

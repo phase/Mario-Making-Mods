@@ -1,8 +1,8 @@
 <?php
 
-$ranksetNames["BK_redone"] = "B-K v2";
+$ranksetNames["BanjoKazooie"] = "Banjo Kazooie";
 
-$ranksetData["BK_redone"] = array(
+$ranksetData["BanjoKazooie"] = array(
 	array("num" => 0, "image" => '', "text" => 'Non-poster'),
 	array("num" => 1, "image" => '', "text" => 'Newcomer'),
 	array("num" => 10, "image" => 'Egg.png', "text" => 'Egg'),
