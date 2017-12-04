@@ -196,7 +196,9 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	<link rel="manifest" href="/manifest.json">
-	<noscript><link rel="stylesheet" href="https://use.fontawesome.com/a78963eb3c.css"></noscript>
+	<noscript>
+	<link rel="stylesheet" href="https://use.fontawesome.com/a78963eb3c.css">
+	</noscript>
 
 	<script>
 		(function(document,navigator,standalone) {
@@ -219,16 +221,8 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 			}
 		})(document,window.navigator,'standalone');
 	</script>
-	<script type="text/javascript">
-(function(){
-var foxscript = document.createElement('script');
-foxscript.src = '//js.foxpush.com/mariomodsnet.js?v='+Math.random();
-foxscript.type = 'text/javascript';
-foxscript.async = 'true';
-var fox_s = document.getElementsByTagName('script')[0];
-fox_s.parentNode.insertBefore(foxscript, fox_s);})();
-</script>
 	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
+	<script src="<?php print resourceLink("js/jquery-ui.js");?>"></script>
 	<script src="<?php print resourceLink("js/tricks.js");?>"></script>
 	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
 	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>

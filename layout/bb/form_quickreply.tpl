@@ -16,6 +16,7 @@
 				{$fields.nosm}
 				{$fields.lock}
 				{$fields.stick}
+				{$fields.question}
 			</td>
 		</tr>
 	</table>

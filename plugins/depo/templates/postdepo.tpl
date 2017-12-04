@@ -1,4 +1,4 @@
-	<table class="outline margin newspost" style="width:400px; padding:5px 5px 5px 5px; flex: 1; flex-grow: 1;">
+	<table class="outline margin newspost" style="width:400px;">
 		<tr class="header1 center">
 			<th>
 				<span style='font-size:125%;'>

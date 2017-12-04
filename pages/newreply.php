@@ -129,6 +129,9 @@ else if(isset($_POST['actionpost']))
 			Alert(__("You got ninja'd. You might want to review the post made while you were typing before you submit yours."));
 			$rejected = true;
 		}
+		
+		if(isset($_POST['question']))
+			$question = true;
 
 		$bucket = "checkPost"; include(BOARD_ROOT."lib/pluginloader.php");
 
@@ -240,6 +243,10 @@ while($mood = Fetch($rMoods))
 
 $ninja = FetchResult("select id from {posts} where thread={0} order by date desc limit 0, 1", $tid);
 
+$questionfield = '';
+if($tid == 73)
+	$questionfield = "<label><input type=\"checkbox\" ".getCheck('question')." name=\"question\">&nbsp;".__("Question", 1)."</label>";
+
 $mod_lock = '';
 if (HasPermission('mod.closethreads', $fid))
 {
@@ -265,6 +272,7 @@ $fields = array(
 	'nosm' => "<label><input type=\"checkbox\" ".getCheck('nosm')." name=\"nosm\">&nbsp;".__("Disable smilies", 1)."</label>",
 	'lock' => $mod_lock,
 	'stick' => $mod_stick,
+	'question' => $questionfield,
 	
 	'btnPost' => "<input type=\"submit\" name=\"actionpost\" value=\"".__("Post")."\">",
 	'btnPreview' => "<input type=\"submit\" name=\"actionpreview\" value=\"".__("Preview")."\">",

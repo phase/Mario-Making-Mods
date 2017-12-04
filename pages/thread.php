@@ -283,6 +283,10 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'] 
 			$mod_stick = "<label><input type=\"checkbox\" name=\"unstick\">&nbsp;".__("Unstick", 1)."</label>\n";
 	}
 	
+	$questionfield = '';
+	if($tid == 73)
+		$questionfield = "<label><input type=\"checkbox\" name=\"question\">&nbsp;".__("Question", 1)."</label>\n";
+	
 	$moodOptions = "<option selected=\"selected\" value=\"0\">".__("[Default avatar]")."</option>\n";
 	$rMoods = Query("select mid, name from {moodavatars} where uid={0} order by mid asc", $loguserid);
 	while($mood = Fetch($rMoods))
@@ -298,6 +302,7 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'] 
 		'nosm' => "<label><input type=\"checkbox\" name=\"nosm\">&nbsp;".__("Disable smilies", 1)."</label>",
 		'lock' => $mod_lock,
 		'stick' => $mod_stick,
+		'question' => $questionfield,
 		
 		'btnPost' => "<input type=\"submit\" name=\"actionpost\" value=\"".__("Post")."\">",
 		'btnPreview' => "<input type=\"submit\" name=\"actionpreview\" value=\"".__("Preview")."\">",

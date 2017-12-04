@@ -1,0 +1,4 @@
+depot: ['GET|POST', '/depot', 'depot']
+leveldepot: ['GET|POST', '/depot/level', 'level']
+haxdepot: ['GET|POST', '/depot/hax', 'hax']
+remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']

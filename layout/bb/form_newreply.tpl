@@ -2,6 +2,7 @@
 		<tr class="header1">
 			<th>New reply</th>
 		</tr>
+		<tr class="cell0">
 			<td>
 				{$fields.text}
 			</td>
@@ -15,6 +16,7 @@
 				{$fields.nosm}
 				{$fields.lock}
 				{$fields.stick}
+				{$fields.question}
 			</td>
 		</tr>
 	</table>

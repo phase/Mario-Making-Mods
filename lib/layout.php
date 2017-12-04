@@ -381,8 +381,7 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 				$tdata['gotonew'] = actionLinkTag('<img src="'.resourceLink('img/gotounread.png').'" alt="[go to first unread post]">',
 					'post', '', 'tid='.$thread['id'].'&time='.(int)$thread['readdate']);
 			}
-		} else if(!$thread['closed'] && !$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")))
-			$NewIcon = 'old';
+		}
 
 		if($NewIcon)
 			$tdata['new'] = '<div class="statusIcon '.$NewIcon.'"></div>';

@@ -8,7 +8,7 @@ if($loguser["displayname"])
 
 $link = getServerDomainNoSlash().'/'.actionLink("post", $pid);
 
-if ($tid == 73) { HeyReport("New reply by "
+if ($question == true) { HeyReport("New question by "
 	.$thename
 	." in "
 	.$thread["title"]

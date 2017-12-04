@@ -119,7 +119,7 @@ if ($post['has_attachments']) {
 
 if (isset($_POST['saveuploads'])) {
 	$attachs = HandlePostAttachments(0, false);
-} else if(isset($_POST['actionpreview'])) {
+} else if(isset($_POST['actionpreview']) && trim($_POST['text'])) {
 	$attachs = HandlePostAttachments(0, false);
 	
 	$previewPost['text'] = $_POST['text'];
