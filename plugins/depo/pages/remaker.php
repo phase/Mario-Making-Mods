@@ -25,7 +25,7 @@ else
 $tpp = 6;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description,
+						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -41,7 +41,7 @@ $rThreads = Query("	SELECT
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(actionLink('depot', '', 'from='), $tpp, $from, $total);
+$pagelinks = PageLinks(pageLink('remakerdepot', [], 'from='), $tpp, $from, $total);
 
 echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
 
@@ -58,10 +58,25 @@ while($thread = Fetch($rThreads))
 
 	$pdata['screenshots'] = $thread['screenshot'];
 	
-	$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+	if (strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false)
+		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
+	else
+		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
 	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);
+	
+	$pdata['download'] = '';
+	if(empty($thread['downloadlevelpc']) == FALSE)
+		$pdata['download'] .= '<a href="'.$thread['downloadlevel3ds'].'">Download Level</a>';
+	if(empty($thread['downloadlevelpc']) == FALSE && empty($thread['downloadthemepc']) == FALSE)
+		$pdata['download'] .= ' | ';
+	if(empty($thread['downloadthemepc']) == FALSE)
+		$pdata['download'] .= '<a href="'.$thread['downloadthemepc'].'">Download Theme</a>';
+	if((empty($thread['downloadcostumepc']) == FALSE && empty($thread['downloadthemepc']) == FALSE) || (empty($thread['downloadlevelpc']) == FALSE && empty($thread['downloadcostumepc']) == FALSE))
+		$pdata['download'] .= ' | ';
+	if(empty($thread['downloadcostumepc']) == FALSE)
+		$pdata['download'] .= '<a href="'.$thread['downloadcostumepc'].'">Download Costume</a>';
 	
 	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
 

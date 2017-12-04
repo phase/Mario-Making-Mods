@@ -25,7 +25,7 @@ else
 $tpp = 6;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description,
+						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelwiiu, t.downloadlevel3ds,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -41,7 +41,7 @@ $rThreads = Query("	SELECT
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(actionLink('depot', '', 'from='), $tpp, $from, $total);
+$pagelinks = PageLinks(pageLink('leveldepot', [], 'from='), $tpp, $from, $total);
 
 echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
 
@@ -58,11 +58,26 @@ while($thread = Fetch($rThreads))
 
 	$pdata['screenshots'] = $thread['screenshot'];
 	
-	$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+	if (strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false)
+		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
+	else
+		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
 	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);
 	
+	$pdata['download'] = '';
+	if(empty($thread['downloadlevel3ds']) == FALSE)
+		$pdata['download'] .= '<a href="'.$thread['downloadlevel3ds'].'">Download 3DS Level</a>';
+	if(empty($thread['downloadlevel3ds']) == FALSE && empty($thread['downloadlevelwiiu']) == FALSE)
+		$pdata['download'] .= ' | ';
+	if(empty($thread['downloadlevelwiiu']) == FALSE) {
+		if (strpos($thread['downloadlevelwiiu'], '://') !== false)
+			$pdata['download'] .= '<a href="'.$thread['downloadlevelwiiu'].'">Download WiiU Level</a>';
+		else
+			$pdata['download'] .= '<a href="https://supermariomakerbookmark.nintendo.net/courses/'.$thread['downloadlevelwiiu'].'">Super Mario Maker Bookmark URL</a>';
+	}
+
 	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
 
 	$pdata['formattedDate'] = formatdate($thread['date']);

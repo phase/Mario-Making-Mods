@@ -16,6 +16,7 @@
 		<tr class="cell0 center">
 			<td style="padding:10px; max-height:200px !important;">
 				{if $post.screenshots}{$post.screenshot}<br><br>{/if}
+				{if $post.download}{$post.download}<br><br>{/if}
 				<span style="font-weight:normal;font-size:97%;">
 					Posted on {$post.formattedDate} by {$post.userlink}
 				</span>

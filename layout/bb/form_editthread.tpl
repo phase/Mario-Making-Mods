@@ -36,6 +36,70 @@
 				{$fields.screenshot}
 			</td>
 		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				3DS Theme Download
+			</td>
+			<td>
+				{$fields.downloadtheme3ds}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				3DS Level Download
+			</td>
+			<td>
+				{$fields.downloadlevel3ds}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Wii U Theme Download
+			</td>
+			<td>
+				{$fields.downloadthemewiiu}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Wii U Level Download
+			</td>
+			<td>
+				{$fields.downloadlevelwiiu}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Wii U Costume Download
+			</td>
+			<td>
+				{$fields.downloadcostumewiiu}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Remaker Theme Download
+			</td>
+			<td>
+				{$fields.downloadthemepc}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Remaker Level Download
+			</td>
+			<td>
+				{$fields.downloadlevelpc}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Remaker Costume Download
+			</td>
+			<td>
+				{$fields.downloadcostumepc}
+			</td>
+		</tr>
 		{/if}
 		
 		{if $canClose}

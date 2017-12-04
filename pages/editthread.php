@@ -170,9 +170,17 @@ elseif($_POST['actionedit'])
 			$iconurl = $thread['icon'];
 
 		$thread['screenshot'] = $_POST['screenshot'];
+		$thread['downloadtheme3ds'] = $_POST['downloadtheme3ds'];
+		$thread['downloadthemewiiu'] = $_POST['downloadthemewiiu'];
+		$thread['downloadthemepc'] = $_POST['downloadthemepc'];
+		$thread['downloadlevel3ds'] = $_POST['downloadlevel3ds'];
+		$thread['downloadlevelwiiu'] = $_POST['downloadlevelwiiu'];
+		$thread['downloadlevelpc'] = $_POST['downloadlevelpc'];
+		$thread['downloadcostumepc'] = $_POST['downloadcostumepc'];
+		$thread['downloadcostumewiiu'] = $_POST['downloadcostumewiiu'];
 
-		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, screenshot={5} where id={6} limit 1", 
-			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], $thread['screenshot'], $tid);
+		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7}, downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10}, downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13} where id={14} limit 1", 
+			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], $thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'], $thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'], $thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $tid);
 
 		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 		
@@ -226,6 +234,14 @@ if ($canRename)
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" value=\"".htmlspecialchars($thread['description'])."\">";
 	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
+	$fields['downloadtheme3ds'] = "<input type=\"text\" id=\"downloadtheme3ds\" name=\"downloadtheme3ds\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadtheme3ds'])."\">";
+	$fields['downloadthemewiiu'] = "<input type=\"text\" id=\"downloadthemewiiu\" name=\"downloadthemewiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemewiiu'])."\">";
+	$fields['downloadthemepc'] = "<input type=\"text\" id=\"downloadthemepc\" name=\"downloadthemepc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemepc'])."\">";
+	$fields['downloadlevel3ds'] = "<input type=\"text\" id=\"downloadlevel3ds\" name=\"downloadlevel3ds\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevel3ds'])."\">";
+	$fields['downloadlevelwiiu'] = "<input type=\"text\" id=\"downloadlevelwiiu\" name=\"downloadlevelwiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelwiiu'])."\">";
+	$fields['downloadlevelpc'] = "<input type=\"text\" id=\"downloadlevelpc\" name=\"downloadlevelpc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelpc'])."\">";
+	$fields['downloadcostumewiiu'] = "<input type=\"text\" id=\"downloadcostumewiiu\" name=\"downloadcostumewiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumewiiu'])."\">";
+	$fields['downloadcostumepc'] = "<input type=\"text\" id=\"downloadcostumepc\" name=\"downloadcostumepc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumepc'])."\">";
 	$fields['icon'] = $iconSettings;
 }
 

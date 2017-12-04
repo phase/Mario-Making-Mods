@@ -25,7 +25,7 @@ else
 $tpp = 6;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description,
+						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -41,7 +41,7 @@ $rThreads = Query("	SELECT
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(actionLink('depot', '', 'from='), $tpp, $from, $total);
+$pagelinks = PageLinks(pageLink('haxdepot', [], 'from='), $tpp, $from, $total);
 
 echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
 
@@ -57,11 +57,24 @@ while($thread = Fetch($rThreads))
 	$last = getDataPrefix($thread, 'lu_');
 
 	$pdata['screenshots'] = $thread['screenshot'];
-	
-	$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+
+	if (strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false)
+		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
+	else
+		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
 	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);
+	
+	$pdata['download'] = '';
+	if($thread['downloadtheme3ds'] !== '')
+		$pdata['download'] .= '<a href="'.$thread['downloadtheme3ds'].'">Download 3DS Theme</a>';
+	if(($thread['downloadtheme3ds'] !== '') && ($thread['downloadthemewiiu'] !== ''))
+		$pdata['download'] .= ' | ';
+	if($thread['downloadthemewiiu'] !== '')
+		$pdata['download'] .= '<a href="'.$thread['downloadthemewiiu'].'">Download WiiU Theme</a>';
+	if($thread['downloadcostumewiiu'] !== '')
+		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 	
 	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
 

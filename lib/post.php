@@ -237,12 +237,8 @@ function makePost($post, $type, $params=array())
 					if ($loguserid && HasPermission('forum.postreplies', $forum) && !$params['noreplylinks'])
 						$links['quote'] = actionLinkTag(__("Quote"), "newreply", $thread, "quote=".$post['id']);
 
-					$editrights = 0;
 					if (($poster['id'] == $loguserid && HasPermission('user.editownposts')) || HasPermission('mod.editposts', $forum))
-					{
 						$links['edit'] = actionLinkTag(__("Edit"), "editpost", $post['id']);
-						$editrights++;
-					}
 					
 					if (($poster['id'] == $loguserid && HasPermission('user.deleteownposts')) || HasPermission('mod.deleteposts', $forum))
 					{
@@ -253,10 +249,9 @@ function makePost($post, $type, $params=array())
 								" onclick=\"deletePost(this);return false;\"" : ' onclick="if(!confirm(\'Really delete this post?\'))return false;"';
 							$links['delete'] = "<a href=\"{$link}\"{$onclick}>".__('Delete')."</a>";
 						}
-						$editrights++;
 					}
 					
-					if ($editrights < 2 && HasPermission('user.reportposts'))
+					if (HasPermission('user.reportposts'))
 						$links['report'] = actionLinkTag(__('Report'), 'reportpost', $post['id']);
 				}
 				
@@ -276,13 +271,11 @@ function makePost($post, $type, $params=array())
 			$thread['forum'] = $post['fid'];
 
 			$post['threadlink'] = makeThreadLink($thread);
-		}
-		else
+		} else
 			$post['threadlink'] = '';
 
 		//Revisions
-		if($post['revision'])
-		{
+		if($post['revision']) {
 			$ru_link = UserLink(getDataPrefix($post, "ru_"));
 			$revdetail = ' '.format(__('by {0} on {1}'), $ru_link, formatdate($post['revdate']));
 
