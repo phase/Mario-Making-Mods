@@ -72,6 +72,7 @@ $TagList = array
 	'<audio'	=>	TAG_GOOD,
 	'<video'	=>  TAG_GOOD,
 	'<source'	=>  TAG_GOOD | TAG_SELFCLOSING,
+	'<label'	=>	TAG_GOOD,
 	
 	// BBCode
 	

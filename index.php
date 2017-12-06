@@ -196,9 +196,7 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	<link rel="manifest" href="/manifest.json">
-	<noscript>
-	<link rel="stylesheet" href="https://use.fontawesome.com/a78963eb3c.css">
-	</noscript>
+	<noscript><link rel="stylesheet" href="https://use.fontawesome.com/a78963eb3c.css"></noscript>
 
 	<script>
 		(function(document,navigator,standalone) {

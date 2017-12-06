@@ -1,6 +1,6 @@
 ##########################################################################################
-##				           MarioMods URL Configuration File				           ##
-##				         Syntax is NAME: [METHOD, SLUG, FILE]				         ##
+##                           MarioMods URL Configuration File                           ##
+##                         Syntax is NAME: [METHOD, SLUG, FILE]                         ##
 ##########################################################################################
 
 # Basic pages
@@ -9,6 +9,9 @@ home: ['GET', '/', 'home']
 # Accounts related
 login: ['GET|POST', '/accounts/login', 'login']
 logout: ['POST', '/accounts/logout', 'login']
+
+# Site Settings
+forumfaq: ['GET', '/faq/forum', 'forumfaq']
 
 # Catch-all rule
 catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

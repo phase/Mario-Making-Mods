@@ -58,10 +58,15 @@ while($thread = Fetch($rThreads))
 
 	$pdata['screenshots'] = $thread['screenshot'];
 	
-	if (strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false)
+	if ((strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false) || (strpos($pdata['screenshots'], 'https://youtu.be/') !== false))
 		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
-	else
+	elseif(!empty($pdata['screenshots']))
 		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+	elseif(preg_match('(\[youtube\](.*?)\[\/youtube\])', $pdata['text']) === 1){
+		$pdata['screenshots'] = '2';
+		preg_match('(\[youtube\](.*?)\[\/youtube\])', $pdata['text'], $match);
+		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
+	}
 	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);

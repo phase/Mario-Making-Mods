@@ -6,6 +6,7 @@ $NotifFormat = array
 (
 	'pm' => 'FormatNotif_PM',
 	'profilecomment' => 'FormatNotif_ProfileComment',
+	'report' => 'FormatNotif_Report',
 );
 
 // plugins should use an init hook to extend $NotifFormat
@@ -35,6 +36,30 @@ function FormatNotif_PM($id, $args)
 		actionLinkTag(htmlspecialchars($pm['pmtitle']), 'showprivate', $pm['id']);
 }
 
+function FormatNotif_Report($id, $args)
+{
+	global $loguserid;
+	
+	$staffpm = '';
+	if (HasPermission('admin.viewstaffpms')) $staffpm = ' OR p.userto=-1';
+	
+	$pm = Fetch(Query("	SELECT 
+							p.id,
+							pt.title pmtitle, 
+							u.(_userfields) 
+						FROM 
+							{pmsgs} p 
+							LEFT JOIN {pmsgs_text} pt ON pt.pid=p.id 
+							LEFT JOIN {users} u ON u.id=p.userfrom 
+						WHERE 
+							p.id={0} AND (p.userto={1}{$staffpm})", 
+					$id, $loguserid));
+	$userdata = getDataPrefix($pm, 'u_');
+						
+	return __('New post report from ').UserLink($userdata)."\n".
+		actionLinkTag(htmlspecialchars($pm['pmtitle']), 'showprivate', $pm['id']);
+}
+
 function FormatNotif_ProfileComment($id, $args)
 {
 	global $loguserid, $loguser;
@@ -52,9 +77,9 @@ function GetNotifications()
 {
 	global $loguserid, $NotifFormat;
 	$notifs = array();
-	
+
 	if (!$loguserid) return $notifs;
-	
+
 	// TODO do it better!
 	$staffnotif = '';
 	if (HasPermission('admin.viewstaffpms')) $staffnotif = ' OR user=-1';
@@ -78,7 +103,7 @@ function GetNotifications()
 			'text' => $ndesc
 		);
 	}
-	
+
 	return $notifs;
 }
 

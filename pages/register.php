@@ -4,29 +4,8 @@
 
 if (!defined('BLARG')) die();
 
-//require_once('lib/recaptchalib.php');
-
-//Recaptcha secret key
-//$secret = "6LcBPSMUAAAAACx4ecmU9u8Eru_O60lInlqkPaQp";
-
-//Empty response
-//$response = null;
-
-//Check the secret key
-//$reCaptcha = new ReCaptcha($secret);
-
 $title = __("Register");
 MakeCrumbs(array(actionLink("register") => __("Register")));
-
-print "<script src='https://www.google.com/recaptcha/api.js'></script>";
-
-//If submitted check the reponse
-//if($_POST['g-recaptcha-response']) {
-//    $response = $reCaptcha->verifyResponse(
-//        $_SERVER['REMOTE_ADDR'],
-//        $_POST['g-recaptcha-response']
-//    );
-//}
 
 $sexes = array(__("Male"), __("Female"), __("N/A"));
 
@@ -61,8 +40,6 @@ if($_POST['register']) {
 			$err = __("This user name is already taken. Please choose another.");
 		elseif($ipKnown >= 3)
 			$err = __("Another user is already using this IP address.");
-		//else if ($response == null)
-        //    $err = __('You forgot to do the Captcha.');
 		else if(!$_POST['readFaq'])
 			$err = format(__("You really should {0}read the FAQ{1}&hellip;"), "<a href=\"".actionLink("faq")."\">", "</a>");
 		else if ($_POST['likesCake'])
@@ -83,9 +60,6 @@ if($_POST['register']) {
 
 		$rUsers = Query("insert into {users} (id, name, password, pss, primarygroup, regdate, lastactivity, lastip, email, sex, theme) values ({0}, {1}, {2}, {3}, {4}, {5}, {5}, {6}, {7}, {8}, {9})", 
 			$uid, $_POST['name'], $sha, $newsalt, Settings::get('defaultGroup'), time(), $_SERVER['REMOTE_ADDR'], $_POST['email'], (int)$_POST['sex'], Settings::get("defaultTheme"));
-
-		//if($uid == 1)
-		//	Query("update {users} set primarygroup = {0} where id = 1", Settings::get('rootGroup'));
 
 		Report("New user: [b]".$_POST['name']."[/] (#".$uid.") -> [g]#HERE#?uid=".$uid);
 
@@ -121,7 +95,7 @@ if($_POST['register']) {
 			Query("INSERT INTO {sessions} (id, user, autoexpire) VALUES ({0}, {1}, {2})", doHash($sessionID.SALT), $user['id'], 0);
 			die(header("Location: ".actionLink('profile', $user['id'], '', $user['name'])));
 		} else
-			die(header("Location: ".actionLink("login")));
+			die(header("Location: ".pageLink("login")));
 	}
 } else {
 	$_POST['name'] = '';
@@ -136,7 +110,7 @@ $fields = array(
 	'password2' => "<input type=\"password\" name=\"pass2\" size=24 class=\"required\">",
 	'email' => "<input type=\"email\" name=\"email\" value=\"".htmlspecialchars($_POST['email'])."\" maxlength=\"60\" size=24>",
 	'sex' => MakeOptions("sex",$_POST['sex'],$sexes),
-	'readfaq' => "<label><input type=\"checkbox\" name=\"readFaq\">".format(__("I have read the {0}FAQ{1}"), "<a href=\"".actionLink("faq")."\">", "</a>")."</label>",
+	'readfaq' => "<label><input type=\"checkbox\" name=\"readFaq\">".format(__("I have read the {0}FAQ{1}"), "<a href=\"".pageLink("forumfaq")."\">", "</a>")."</label>",
 	'autologin' => "<label><input type=\"checkbox\" checked=\"checked\" name=\"autologin\"".($_POST['autologin']?' checked="checked"':'').">".__("Log in afterwards")."</label>",
 	
 	'btnRegister' => "<input type=\"submit\" name=\"register\" value=\"".__("Register")."\">",

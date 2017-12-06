@@ -10,8 +10,12 @@ $pid = (int)$_GET['id'];
 $post = Fetch(Query("SELECT p.*, pt.text FROM {posts} p LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision WHERE p.id={0}", $pid));
 if (!$post) Kill(__('Invalid post ID.'));
 
-if ($post['user'] == $loguserid) Kill(__('You may not report your own posts.'));
 if ($post['deleted']) Kill(__('This post is deleted.'));
+
+if ($post['user'] == $loguserid && HasPermission('user.deleteownposts'))
+	Alert(__('You are reporting your own posts. If you want your post deleted, you can do it yourself. You should do this only if you want to make sure the information is correct/allowed.'));
+else if($post['user'] == $loguserid && !HasPermission('user.deleteownposts'))
+	Alert(__('You are reporting your own posts. You should do this only if you want to make sure the information is correct/allowed or if you want the staff to delete your post for you.'));
 
 $thread = Fetch(Query("SELECT * FROM {threads} WHERE id={0}", $post['thread']));
 if (!$thread) Kill(__('Unknown thread.'));
@@ -19,6 +23,9 @@ $fid = $thread['forum'];
 
 if (!HasPermission('forum.viewforum', $fid))
 	Kill(__('You may not access this forum.'));
+
+if (HasPermission('mod.deleteposts', $forum) && $post['user'] !== $loguserid)
+	Alert(__('If you want the post deleted, you can do it yourself. You should do this only if you want to make sure the information is correct/allowed With your other staff members.'));
 
 $tags = ParseThreadTags($thread['title']);
 $isHidden = !HasPermission('forum.viewforum', $fid, true);
@@ -43,7 +50,7 @@ if ($_POST['report'])
 		
 	Query("UPDATE {pmsgs_text} SET text={0} WHERE pid={1}", $report, $pmid);
 	
-	SendNotification('pm', $pmid, -1);
+	SendNotification('report', $pmid, -1);
 	
 	die(header('Location: '.actionLink('post', $pid)));
 }

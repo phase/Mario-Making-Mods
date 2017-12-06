@@ -56,22 +56,37 @@ while($thread = Fetch($rThreads))
 	$starter = getDataPrefix($thread, 'su_');
 	$last = getDataPrefix($thread, 'lu_');
 
+	$pdata['text'] = $thread['text'];
+
 	$pdata['screenshots'] = $thread['screenshot'];
 	
-	if (strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false)
+	if ((strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false) || (strpos($pdata['screenshots'], 'https://youtu.be/') !== false))
 		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
-	else
+	elseif(!empty($pdata['screenshots']))
 		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
+	elseif((preg_match('(\[img\](.*?)\[\/img\])', $pdata['text']) === 1) || (preg_match('(\[imgs\](.*?)\[\/imgs\])', $pdata['text']) === 1) || (preg_match('(\[youtube\](.*?)\[\/youtube\])', $pdata['text']) === 1)){
+		$pdata['screenshots'] = '2';
+		if(preg_match('(\[youtube\](.*?)\[\/youtube\])', $pdata['text']) === 1) {
+			preg_match('(\[youtube\](.*?)\[\/youtube\])', $pdata['text'], $match);
+			$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
+		} elseif (preg_match('(\[img\](.*?)\[\/img\])', $pdata['text']) === 1) {
+			preg_match('(\[img\](.*?)\[\/img\])', $pdata['text'], $match);
+			$pdata['screenshot'] = parseBBCode('[imgs]'.$match[1].'[/imgs]');
+		} elseif (preg_match('(\[imgs\](.*?)\[\/imgs\])', $pdata['text']) === 1){
+			preg_match('(\[imgs\](.*?)\[\/imgs\])', $pdata['text'], $match);
+			$pdata['screenshot'] = parseBBCode('[imgs]'.$match[1].'[/imgs]');
+		}
+	}
 	$pdata['description'] = $thread['description'];
 
 	$tags = ParseThreadTags($thread['title']);
 	
 	$pdata['download'] = '';
-	if(empty($thread['downloadlevel3ds']) == FALSE)
+	if(!empty($thread['downloadlevel3ds']))
 		$pdata['download'] .= '<a href="'.$thread['downloadlevel3ds'].'">Download 3DS Level</a>';
-	if(empty($thread['downloadlevel3ds']) == FALSE && empty($thread['downloadlevelwiiu']) == FALSE)
+	if(!empty($thread['downloadlevel3ds']) && !empty($thread['downloadlevelwiiu']))
 		$pdata['download'] .= ' | ';
-	if(empty($thread['downloadlevelwiiu']) == FALSE) {
+	if(!empty($thread['downloadlevelwiiu'])) {
 		if (strpos($thread['downloadlevelwiiu'], '://') !== false)
 			$pdata['download'] .= '<a href="'.$thread['downloadlevelwiiu'].'">Download WiiU Level</a>';
 		else
@@ -82,7 +97,6 @@ while($thread = Fetch($rThreads))
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);
-	$pdata['text'] = CleanUpPost($thread['text'],$starter['name'], false, false);
 
 	if (!$thread['replies'])
 		$comments = 'No comments yet';

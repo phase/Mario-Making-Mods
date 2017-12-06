@@ -40,14 +40,6 @@
 				{$fields.readfaq}
 			</td>
 		</tr>
-		<tr>
-			<td class="cell2 center">
-				Captcha
-			</td>
-			<td class="cell1">
-				<div class="g-recaptcha" data-sitekey="6LcBPSMUAAAAADRpq2a1sNe5dAfyvZRrXEKsVBHi"></div>
-			</td>
-        </tr>
 		<tr class="cell2">
 			<td></td>
 			<td>

@@ -239,7 +239,7 @@ function makePost($post, $type, $params=array())
 
 					if (($poster['id'] == $loguserid && HasPermission('user.editownposts')) || HasPermission('mod.editposts', $forum))
 						$links['edit'] = actionLinkTag(__("Edit"), "editpost", $post['id']);
-					
+
 					if (($poster['id'] == $loguserid && HasPermission('user.deleteownposts')) || HasPermission('mod.deleteposts', $forum))
 					{
 						if ($post['id'] != $post['firstpostid'])
@@ -249,8 +249,14 @@ function makePost($post, $type, $params=array())
 								" onclick=\"deletePost(this);return false;\"" : ' onclick="if(!confirm(\'Really delete this post?\'))return false;"';
 							$links['delete'] = "<a href=\"{$link}\"{$onclick}>".__('Delete')."</a>";
 						}
+						
+						if($loguserid == 1) {
+							$link = htmlspecialchars(actionLink('editpost', $post['id'], 'delete=3&key='.$loguser['token']));
+							$onclick = ' onclick="if(!confirm(\'Really delete this post?\'))return false;"';
+							$links['wipe'] = "<a href=\"{$link}\"{$onclick}>".__('Wipe')."</a>";
+						}
 					}
-					
+
 					if (HasPermission('user.reportposts'))
 						$links['report'] = actionLinkTag(__('Report'), 'reportpost', $post['id']);
 				}
@@ -271,11 +277,13 @@ function makePost($post, $type, $params=array())
 			$thread['forum'] = $post['fid'];
 
 			$post['threadlink'] = makeThreadLink($thread);
-		} else
+		}
+		else
 			$post['threadlink'] = '';
 
 		//Revisions
-		if($post['revision']) {
+		if($post['revision'])
+		{
 			$ru_link = UserLink(getDataPrefix($post, "ru_"));
 			$revdetail = ' '.format(__('by {0} on {1}'), $ru_link, formatdate($post['revdate']));
 
@@ -293,9 +301,6 @@ function makePost($post, $type, $params=array())
 	// POST SIDEBAR
 	
 	$sidebar = array();
-	
-	// quit abusing custom syndromes you unoriginal fuckers
-	$poster['title'] = preg_replace('@Affected by \'?.*?Syndrome\'?@si', '', $poster['title']);
 
 	$sidebar['rank'] = GetRank($poster['rankset'], $poster['posts']);
 
@@ -332,6 +337,7 @@ function makePost($post, $type, $params=array())
 
 	$sidebar['lastpost'] = $lastpost;
 	$sidebar['lastview'] = $lastview;
+	$sidebar['posterID'] = $poster['id'];
 
 	if($poster['lastactivity'] > time() - 300)
 		$sidebar['isonline'] = __("User is <strong>online</strong>");

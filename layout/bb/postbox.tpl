@@ -22,6 +22,7 @@
 					{if $post.links.quote}<li>{$post.links.quote}{/if}
 					{if $post.links.edit}<li>{$post.links.edit}{/if}
 					{if $post.links.delete}<li>{$post.links.delete}{/if}
+					{if $post.links.wipe}<li>{$post.links.wipe}{/if}
 					{if $post.links.report}<li>{$post.links.report}{/if}
 					{foreach $post.links.extra as $link}
 						<li>{$link}
