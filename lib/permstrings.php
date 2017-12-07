@@ -36,6 +36,8 @@ $permDescs = array
 		'forum.viewforum' => __('View forum'),
 		'forum.postthreads' => __('Post threads'),
 		'forum.postreplies' => __('Reply to threads'),
+		'forum.doublepsot' => __('Double Post'),
+		'forum.deleteownposts' => __('Delete own posts'),
 	),
 	'mod' => array
 	(

@@ -1,4 +1,3 @@
-<script src="<?php print resourceLink("ckeditor/ckeditor.js");?>"></script>
 <?php
 //  AcmlmBoard XD - Thread display page
 //  Access: all
@@ -93,8 +92,6 @@ if ($firstpost && $firstpost != -1)
 $metaStuff['tags'] = getKeywords(strip_tags($thread['title']));
 
 Query("update {threads} set views=views+1 where id={0} limit 1", $tid);
-
-$isold = (!$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")));
 
 $links = array();
 if ($loguserid)
@@ -261,7 +258,7 @@ if(NumRows($rPosts))
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
 
-if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'] && !$isold)
+if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'])
 {
 	$ninja = FetchResult("select id from {posts} where thread={0} order by date desc limit 0, 1", $tid);
 

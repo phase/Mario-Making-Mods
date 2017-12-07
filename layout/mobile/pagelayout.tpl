@@ -1,5 +1,5 @@
 {$numnotifs=count($notifications)}
-<div id="realbody">
+<div id="realbody page-container">
 	
 	<div id="mobile-sidebar-container" style="display:none;">
 	<div id="mobile-sidebar-deactivate"></div>

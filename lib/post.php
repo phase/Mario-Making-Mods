@@ -240,7 +240,7 @@ function makePost($post, $type, $params=array())
 					if (($poster['id'] == $loguserid && HasPermission('user.editownposts')) || HasPermission('mod.editposts', $forum))
 						$links['edit'] = actionLinkTag(__("Edit"), "editpost", $post['id']);
 
-					if (($poster['id'] == $loguserid && HasPermission('user.deleteownposts')) || HasPermission('mod.deleteposts', $forum))
+					if (($poster['id'] == $loguserid && HasPermission('user.deleteownposts') && HasPermission('forum.deleteownposts', $forum)) || HasPermission('mod.deleteposts', $forum))
 					{
 						if ($post['id'] != $post['firstpostid'])
 						{

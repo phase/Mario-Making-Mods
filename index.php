@@ -167,6 +167,11 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 <html lang="en">
 <head>
 	<title><?php print $layout_title; ?></title>
+
+	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
+	<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js'></script>
+	<link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
 	
 	<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -219,7 +224,6 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 			}
 		})(document,window.navigator,'standalone');
 	</script>
-	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
 	<script src="<?php print resourceLink("js/jquery-ui.js");?>"></script>
 	<script src="<?php print resourceLink("js/tricks.js");?>"></script>
 	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
@@ -235,6 +239,12 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
         console.log("No it didn't. This happened: ", err)
       });
   }
+  if (window.webkitNotifications) {
+    console.log('Your web browser does support notifications!');
+	if (window.webkitNotifications.checkPermission() == 0) {} else {window.webkitNotifications.requestPermission(function(){});}
+} else {
+    console.log('Your web browser does not support notifications!');
+}
 </script>
 
 	<?php $bucket = "pageHeader"; include(__DIR__."/lib/pluginloader.php"); ?>
@@ -275,7 +285,14 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 		'mobileswitch' => $mobileswitch,
 		'chat' => $chat)); 
 ?>
-</body>
+</body><script>$(function() {
+    $(document).pjax('a', '#page-container', { 
+        fragment: '#page-container', 
+        timeout: 10 
+    });
+});
+$(document).on('pjax:start', function() {NProgress.start();});
+$(document).on('pjax:end', function() {NProgress.done();});</script>
 </html>
 <?php
 

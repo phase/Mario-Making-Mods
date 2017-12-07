@@ -14,7 +14,7 @@ if ($post['deleted']) Kill(__('This post is deleted.'));
 
 if ($post['user'] == $loguserid && HasPermission('user.deleteownposts'))
 	Alert(__('You are reporting your own posts. If you want your post deleted, you can do it yourself. You should do this only if you want to make sure the information is correct/allowed.'));
-else if($post['user'] == $loguserid && !HasPermission('user.deleteownposts'))
+else if($post['user'] == $loguserid && (!HasPermission('user.deleteownposts') || !HasPermission('forum.deleteownposts', $forum)))
 	Alert(__('You are reporting your own posts. You should do this only if you want to make sure the information is correct/allowed or if you want the staff to delete your post for you.'));
 
 $thread = Fetch(Query("SELECT * FROM {threads} WHERE id={0}", $post['thread']));

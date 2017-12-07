@@ -1,4 +1,3 @@
-<script src="<?php print resourceLink("ckeditor/ckeditor.js");?>"></script>
 <?php
 //  AcmlmBoard XD - Thread submission/preview page
 //  Access: users

@@ -69,7 +69,7 @@ if((int)$_GET['delete'] == 1)
 	
 	if(!HasPermission('mod.deleteposts', $fid))
 	{
-		if ($post['user'] != $loguserid || !HasPermission('user.deleteownposts'))
+		if ($post['user'] != $loguserid || !HasPermission('user.deleteownposts') || !HasPermission('forum.deleteownposts', $forum))
 			Kill(__("You are not allowed to delete this post."));
 		
 		$_GET['reason'] = '';

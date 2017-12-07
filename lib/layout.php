@@ -7,11 +7,11 @@ if (!defined('BLARG')) die();
 
 function RenderTemplate($template, $options=null) {
 	global $tpl, $mobileLayout, $plugintemplates, $plugins;
-
+	
 	if (array_key_exists($template, $plugintemplates)) {
 		$plugin = $plugintemplates[$template];
 		$self = $plugins[$plugin];
-
+		
 		$tplroot = __DIR__.'/../plugins/'.$self['dir'].'/templates/';
 	} else
 		$tplroot = __DIR__.'/../layout/';
@@ -22,17 +22,17 @@ function RenderTemplate($template, $options=null) {
 			$tplname = $tplroot.'bb/'.$template.'.tpl';
 	} else
 		$tplname = $tplroot.'bb/'.$template.'.tpl';
-
+	
 	if ($options)
 		$tpl->assign($options);
-
+	
 	$tpl->display($tplname);
 }
 
 
 function mfl_forumBlock($fora, $catid, $selID, $indent) {
 	$ret = '';
-
+	
 	foreach ($fora[$catid] as $forum) {
 		$ret .=
 '				<option value="'.$forum['id'].'"'.($forum['id'] == $selID ? ' selected="selected"':'').'>'
@@ -42,7 +42,7 @@ function mfl_forumBlock($fora, $catid, $selID, $indent) {
 		if (!empty($fora[-$forum['id']]))
 			$ret .= mfl_forumBlock($fora, -$forum['id'], $selID, $indent+1);
 	}
-
+	
 	return $ret;
 }
 
@@ -112,9 +112,10 @@ function forumCrumbs($forum)
 	return $ret;
 }
 
-function doThreadPreview($tid, $maxdate=0) {
+function doThreadPreview($tid, $maxdate=0)
+{
 	global $loguser;
-
+	
 	$review = array();
 	$ppp = $loguser['postsperpage'] ?: 20;
 	
@@ -128,8 +129,9 @@ function doThreadPreview($tid, $maxdate=0) {
 		left join {users} u on u.id = {posts}.user
 		where thread={0} and deleted=0".($maxdate?' AND {posts}.date<={1}':'')."
 		order by date desc limit 0, {2u}", $tid, $maxdate, $ppp);
-
-	while ($post = Fetch($rPosts)) {
+		
+	while ($post = Fetch($rPosts))
+	{
 		$pdata = array('id' => $post['id']);
 		
 		$poster = getDataPrefix($post, 'u_');
@@ -142,11 +144,12 @@ function doThreadPreview($tid, $maxdate=0) {
 		
 		$review[] = $pdata;
 	}
-
+	
 	RenderTemplate('threadreview', array('review' => $review));
 }
 
-function makeCrumbs($path, $links='') {
+function makeCrumbs($path, $links='')
+{
 	global $layout_crumbs, $layout_actionlinks;
 
 	if(count($path) != 0)
@@ -157,7 +160,7 @@ function makeCrumbs($path, $links='') {
 
 		$path = $pathPrefix + $path;
 	}
-
+	
 	$layout_crumbs = $path;
 	$layout_actionlinks = $links;
 }
@@ -278,9 +281,11 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 						}
 					}
 				}
-			} else
+			}
+			else
 				$fdata['link'] = '<a href="'.htmlspecialchars($redir).'">'.$forum['title'].'</a>';
-		} else
+		}
+		else
 			$fdata['link'] = actionLinkTag($forum['title'], "forum",  $forum['id'], '', 
 				HasPermission('forum.viewforum', $forum['id'], true) ? $forum['title'] : '');
 				
@@ -296,8 +301,10 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 
 		$fdata['description'] = $forum['description'];
 
-		if (isset($mods[$forum['id']])) {
-			foreach($mods[$forum['id']] as $user) {
+		if (isset($mods[$forum['id']]))
+		{
+			foreach($mods[$forum['id']] as $user)
+			{
 				if ($user['groupid'])
 					$localMods .= htmlspecialchars($usergroups[$user['groupid']]['name']).', ';
 				else
@@ -308,7 +315,8 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 		if($localMods)
 			$fdata['localmods'] = substr($localMods,0,-2);
 
-		if (isset($subfora[$forum['id']])) {
+		if (isset($subfora[$forum['id']]))
+		{
 			foreach ($subfora[$forum['id']] as $subforum)
 			{
 				$link = actionLinkTag($subforum['title'], 'forum', $subforum['id'], '', 
@@ -329,7 +337,8 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 		$fdata['threads'] = $forum['numthreads'];
 		$fdata['posts'] = $forum['numposts'];
 
-		if($forum['lastpostdate']) {
+		if($forum['lastpostdate'])
+		{
 			$user = getDataPrefix($forum, "lu_");
 
 			$fdata['lastpostdate'] = formatdate($forum['lastpostdate']);
@@ -337,7 +346,7 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 			$fdata['lastpostlink'] = actionLink('post', $forum['lastpostid']);
 		} else
 			$fdata['lastpostdate'] = 0;
-			
+
 		$categories[$forum['catid']]['forums'][$forum['id']] = $fdata;
 	}
 	
@@ -348,11 +357,13 @@ function makeSubForumListing($parent, $board='') {
 	makeForumListing($parent, $board, "subforumlist");
 }
 
-function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum = false) {
+function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum = false)
+{
 	global $loguserid, $loguser, $misc;
 
 	$threadlist = array();
-	while ($thread = Fetch($threads)) {
+	while ($thread = Fetch($threads))
+	{
 		$tdata = array('id' => $thread['id']);
 		$starter = getDataPrefix($thread, 'su_');
 		$last = getDataPrefix($thread, 'lu_');
@@ -377,7 +388,8 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 			($loguserid && $thread['lastpostdate'] > $thread['readdate']))
 		{
 			$NewIcon .= 'new';
-			if ($loguserid) {
+			if ($loguserid)
+			{
 				$tdata['gotonew'] = actionLinkTag('<img src="'.resourceLink('img/gotounread.png').'" alt="[go to first unread post]">',
 					'post', '', 'tid='.$thread['id'].'&time='.(int)$thread['readdate']);
 			}
@@ -390,12 +402,14 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 			
 		$tdata['sticky'] = $thread['sticky'];
 
-		if($thread['icon']) {
+		if($thread['icon'])
+		{
 			//This is a hack, but given how icons are stored in the DB, I can do nothing about it without breaking DB compatibility.
 			if(startsWith($thread['icon'], "img/"))
 				$thread['icon'] = resourceLink($thread['icon']);
 			$tdata['icon'] = "<img src=\"".htmlspecialchars($thread['icon'])."\" alt=\"\" class=\"smiley\" style=\"max-width:32px; max-height:32px;\">";
-		} else
+		}
+		else
 			$tdata['icon'] = '';
 
 		$tdata['poll'] = ($thread['poll'] ? "<img src=\"".resourceLink("img/poll.png")."\" alt=\"[poll]\">" : "");
@@ -453,35 +467,35 @@ function makeAnncBar() {
     if ($anncforum > 0)    {
         if (($adata = cacheGet('anncBar', 3600)) === null) {
             $annc = Query("    SELECT
-								t.id, t.title, t.icon, t.poll, t.forum,
-								t.date anncdate,
-								".($loguserid ? "tr.date readdate," : '')."
-								u.(_userfields)
-				            FROM
-								{threads} t
-								".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
-								LEFT JOIN {users} u ON u.id=t.user
-				            WHERE forum={0}
-				            ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
+                                t.id, t.title, t.icon, t.poll, t.forum,
+                                t.date anncdate,
+                                ".($loguserid ? "tr.date readdate," : '')."
+                                u.(_userfields)
+                            FROM
+                                {threads} t
+                                ".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
+                                LEFT JOIN {users} u ON u.id=t.user
+                            WHERE forum={0}
+                            ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
 
             if ($annc && NumRows($annc)) {
-				$annc = Fetch($annc);
-				$adata = [];
+                $annc = Fetch($annc);
+                $adata = [];
 
-				$adata['new'] = '';
-				if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
-				    ($loguserid && $annc['anncdate'] > $annc['readdate']))
-				    $adata['new'] = "<div class=\"statusIcon new\"></div>";
+                $adata['new'] = '';
+                if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
+                    ($loguserid && $annc['anncdate'] > $annc['readdate']))
+                    $adata['new'] = "<div class=\"statusIcon new\"></div>";
 
-				$adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
-				$adata['link'] = MakeThreadLink($annc);
+                $adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
+                $adata['link'] = MakeThreadLink($annc);
 				$adata['name'] = "Announcements";
 
-				$user = getDataPrefix($annc, 'u_');
-				$adata['user'] = UserLink($user);
-				$adata['date'] = formatdate($annc['anncdate']);
+                $user = getDataPrefix($annc, 'u_');
+                $adata['user'] = UserLink($user);
+                $adata['date'] = formatdate($annc['anncdate']);
 
-				cachePut('anncBar', $adata, 3600);
+                cachePut('anncBar', $adata, 3600);
             }
         }
         RenderTemplate('anncbar', ['annc' => $adata]);

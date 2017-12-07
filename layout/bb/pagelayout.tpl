@@ -76,7 +76,7 @@
 			</th>
 		</tr>
 		<tr class="cell0">
-			<td class="smallFonts center">
+			<td class="smallFonts center" id="online-users">
 				{$layout_onlineusers}{if $layout_birthdays}<br><br>{$layout_birthdays}{/if}
 			</td>
 		</tr>
