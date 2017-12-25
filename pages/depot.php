@@ -2,7 +2,18 @@
 
 RenderTemplate('form_welcome', array('fields' => $fields));
 
-$rFora = Query("select * from {forums} where id = {0}", 3);
+if (isset($_GET['3ds'])) {
+	$console = '3ds';
+	$command = " AND t.downloadtheme3ds <> '' ";
+} elseif (isset($_GET['wiiu'])){
+	$console = 'wiiu';
+	$command = " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
+} else {
+	$console = '';
+	$command = '';
+}
+
+$rFora = Query("select * from {forums} where id = {0} ", 3);
 if(NumRows($rFora))
 {
 	$forum = Fetch($rFora);
@@ -14,7 +25,9 @@ if(NumRows($rFora))
 	return;
 
 $sidebarshow = true;
-	
+$showconsoles = true;
+$depoturl = 'depot';
+
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
 $fid = $forum['id'];
@@ -27,17 +40,6 @@ else
 	$from = 0;
 
 $tpp = 6;
-
-if (isset($_GET['3ds'])) {
-	$console = '3ds';
-	$command = " AND t.downloadtheme3ds <> '' ";
-} elseif (isset($_GET['wiiu'])){
-	$console = 'wiiu';
-	$command = " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
-} else {
-	$console = '';
-	$command = '';
-}
 
 $rThreads = Query("	SELECT 
 						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
@@ -96,7 +98,7 @@ while($thread = Fetch($rThreads))
 	if($thread['downloadcostumewiiu'] !== '')
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 	
-	$pdata['titles'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
+	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);
 	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
@@ -106,9 +108,9 @@ while($thread = Fetch($rThreads))
 	if (!$thread['replies'])
 		$comments = 'No comments yet';
 	else if ($thread['replies'] < 2)
-		$comments = actionLinkTag('1 comment', 'post', $thread['lastpostid']).' (by '.UserLink($last).')';
+		$comments = actionLinkTag('1 comment', 'depost', $thread['lastpostid']).' (by '.UserLink($last).')';
 	else
-		$comments = actionLinkTag($thread['replies'].' comments', 'post', $thread['lastpostid']).' (last by '.UserLink($last).')';
+		$comments = actionLinkTag($thread['replies'].' comments', 'depost', $thread['lastpostid']).' (last by '.UserLink($last).')';
 	$pdata['comments'] = $comments;
 
 	if ($thread['closed'])
@@ -116,7 +118,7 @@ while($thread = Fetch($rThreads))
 	else if (!$loguserid)
 		$newreply = actionLinkTag(__('Log in'), 'login').__(' to post a comment.');
 	else if (HasPermission('forum.postthreads', $forum['id']))
-		$newreply = actionLinkTag(__("Post a comment"), "newreply", $thread['id']);
+		$newreply = actionLinkTag(__("Post a comment"), "newcomment", $thread['id']);
 	$pdata['replylink'] = $newreply;
 
 	RenderTemplate('postdepo', array('post' => $pdata));

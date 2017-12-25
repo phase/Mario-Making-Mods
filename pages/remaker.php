@@ -10,6 +10,9 @@ if(NumRows($rFora))
 		return;
 } else
 	return;
+
+$sidebarshow = true;
+$showconsoles = false;
 	
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
@@ -25,7 +28,7 @@ else
 $tpp = 6;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,
+						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -83,7 +86,8 @@ while($thread = Fetch($rThreads))
 	if(empty($thread['downloadcostumepc']) == FALSE)
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumepc'].'">Download Costume</a>';
 	
-	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
+	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);
+	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);
@@ -92,9 +96,9 @@ while($thread = Fetch($rThreads))
 	if (!$thread['replies'])
 		$comments = 'No comments yet';
 	else if ($thread['replies'] < 2)
-		$comments = actionLinkTag('1 comment', 'post', $thread['lastpostid']).' (by '.UserLink($last).')';
+		$comments = actionLinkTag('1 comment', 'depost', $thread['lastpostid']).' (by '.UserLink($last).')';
 	else
-		$comments = actionLinkTag($thread['replies'].' comments', 'post', $thread['lastpostid']).' (last by '.UserLink($last).')';
+		$comments = actionLinkTag($thread['replies'].' comments', 'depost', $thread['lastpostid']).' (last by '.UserLink($last).')';
 	$pdata['comments'] = $comments;
 
 	if ($thread['closed'])
@@ -102,7 +106,7 @@ while($thread = Fetch($rThreads))
 	else if (!$loguserid)
 		$newreply = actionLinkTag(__('Log in'), 'login').__(' to post a comment.');
 	else if (HasPermission('forum.postthreads', $forum['id']))
-		$newreply = actionLinkTag(__("Post a comment"), "newreply", $thread['id']);
+		$newreply = actionLinkTag(__("Post a comment"), "newcomment", $thread['id']);
 	$pdata['replylink'] = $newreply;
 
 	RenderTemplate('postdepo', array('post' => $pdata));

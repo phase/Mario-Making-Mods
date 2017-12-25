@@ -163,28 +163,31 @@ $layout_credits =
 Software based off Blargboard by StapleButter.';
 
 $sidebar = '';
-if($sidebarshow == true)
-	$sidebar = '<td id="main-sidebar">
-	<table id="sidebar" class="outline">
-		<tr>
-			<td class="cell1">
-				<table class="outline margin">
-					<tr class="header0"><th>Depot</th></tr>
-							<tr class="cell0"><td><a href="/depot">Super Mario Maker Projects</a></td></tr>
-							<tr class="cell1"><td><a href="/depot/level">Super Mario Maker Levels</a></td></tr>
-							<tr class="cell0"><td><a href="/depot/remaker">Super Mario ReMaker</a></td></tr>
-				</table>
-				<table class="outline margin">
-					<tr class="header0"><th>Console Filter</th></tr>
-							<tr class="cell0"><td><a href="/depot?wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
-							<tr class="cell1"><td><a href="/depot?3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
-							<tr class="cell0"><td><a href="/depot?">Both</a></td></tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-</td>';
-
+if($sidebarshow == true) {
+		$sidebar = '<td id="main-sidebar">
+		<table id="sidebar" class="outline">
+			<tr>
+				<td class="cell1">
+					<table class="outline margin">
+						<tr class="header0"><th>Depot</th></tr>
+								<tr class="cell0"><td><a href="/depot">Super Mario Maker Projects</a></td></tr>
+								<tr class="cell1"><td><a href="/depot/level">Super Mario Maker Levels</a></td></tr>
+								<tr class="cell0"><td><a href="/depot/remaker">Super Mario ReMaker</a></td></tr>
+					</table>';
+					if ($showconsoles == true) {
+					$sidebar .= '<table class="outline margin">
+						<tr class="header0"><th>Console Filter</th></tr>
+								<tr class="cell0"><td><a href="/'.$depoturl.'?wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
+								<tr class="cell1"><td><a href="/'.$depoturl.'?3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
+								<tr class="cell0"><td><a href="/'.$depoturl.'?">Both</a></td></tr>
+					</table>';
+					}
+			$sidebar .= '
+				</td>
+			</tr>
+		</table>
+	</td>';
+}
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";

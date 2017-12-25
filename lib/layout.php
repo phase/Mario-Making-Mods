@@ -105,19 +105,19 @@ function forumCrumbs($forum)
 {
 	global $forumBoards;
 	$ret = array(actionLink('board') => __('Forums'));
-	
+
 	if ($forum['board'] != '')
 		$ret[actionLink('board', $forum['board'])] = $forumBoards[$forum['board']];
-	
+
 	if (!isset($forum['id'])) return $ret;
-	
+
 	$parents = Query("SELECT id,title FROM {forums} WHERE l<{0} AND r>{1} ORDER BY l", $forum['l'], $forum['r']);
 	while ($p = Fetch($parents))
 	{
 		$public = HasPermission('forum.viewforum', $p['id'], true);
 		$ret[actionLink('forum', $p['id'], '', $public?$p['title']:'')] = $p['title'];
 	}
-	
+
 	$public = HasPermission('forum.viewforum', $forum['id'], true);
 	$ret[actionLink('forum', $forum['id'], '', $public?$forum['title']:'')] = $forum['title'];
 	return $ret;
@@ -147,12 +147,12 @@ function doThreadPreview($tid, $maxdate=0)
 		
 		$poster = getDataPrefix($post, 'u_');
 		$pdata['userlink'] = UserLink($poster);
-		
+
 		$pdata['posts'] = $post['num'].'/'.$poster['posts'];
-		
+
 		$nosm = $post['options'] & 2;
 		$pdata['contents'] = CleanUpPost($post['text'], $poster['name'], $nosm);
-		
+
 		$review[] = $pdata;
 	}
 	
@@ -171,7 +171,7 @@ function makeCrumbs($path, $links='')
 
 		$path = $pathPrefix + $path;
 	}
-	
+
 	$layout_crumbs = $path;
 	$layout_actionlinks = $links;
 }

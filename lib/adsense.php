@@ -56,11 +56,12 @@ function makeAdsense() {
 function getAdsenseCode()
 {
 	return '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- MarioMods -->
+<!-- MarioMods-Responsive -->
 <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
+     style="display:block"
      data-ad-client="ca-pub-5872356345317365"
-     data-ad-slot="8662373751"></ins>
+     data-ad-slot="4754868005"
+     data-ad-format="auto"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>';

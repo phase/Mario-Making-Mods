@@ -2,6 +2,17 @@
 
 RenderTemplate('form_welcome', array('fields' => $fields));
 
+if (isset($_GET['3ds'])) {
+	$console = '3ds';
+	$command = " AND t.downloadlevel3ds <> '' ";
+} elseif (isset($_GET['wiiu'])){
+	$console = 'wiiu';
+	$command = " AND t.downloadlevelwiiu <> '' ";
+} else {
+	$console = '';
+	$command = '';
+}
+
 $rFora = Query("select * from {forums} where id = {0}", 7);
 if(NumRows($rFora))
 {
@@ -10,7 +21,11 @@ if(NumRows($rFora))
 		return;
 } else
 	return;
-	
+
+$sidebarshow = true;
+$showconsoles = true;
+$depoturl = 'depot/level';
+
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
 $fid = $forum['id'];
@@ -25,7 +40,7 @@ else
 $tpp = 6;
 
 $rThreads = Query("	SELECT 
-						t.id, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelwiiu, t.downloadlevel3ds,
+						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelwiiu, t.downloadlevel3ds,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -36,12 +51,12 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE t.forum={0} AND p.deleted=0
+					WHERE t.forum={0} AND p.deleted=0 ".$command."
 					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $from, $tpp);
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(pageLink('leveldepot', [], 'from='), $tpp, $from, $total);
+$pagelinks = PageLinks(pageLink('leveldepot', [], $console.'&from='), $tpp, $from, $total);
 
 echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
 
@@ -93,7 +108,8 @@ while($thread = Fetch($rThreads))
 			$pdata['download'] .= '<a href="https://supermariomakerbookmark.nintendo.net/courses/'.$thread['downloadlevelwiiu'].'">Super Mario Maker Bookmark URL</a>';
 	}
 
-	$pdata['title'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
+	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);
+	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);
@@ -101,9 +117,9 @@ while($thread = Fetch($rThreads))
 	if (!$thread['replies'])
 		$comments = 'No comments yet';
 	else if ($thread['replies'] < 2)
-		$comments = actionLinkTag('1 comment', 'post', $thread['lastpostid']).' (by '.UserLink($last).')';
+		$comments = actionLinkTag('1 comment', 'depost', $thread['lastpostid']).' (by '.UserLink($last).')';
 	else
-		$comments = actionLinkTag($thread['replies'].' comments', 'post', $thread['lastpostid']).' (last by '.UserLink($last).')';
+		$comments = actionLinkTag($thread['replies'].' comments', 'depost', $thread['lastpostid']).' (last by '.UserLink($last).')';
 	$pdata['comments'] = $comments;
 
 	if ($thread['closed'])
@@ -111,7 +127,7 @@ while($thread = Fetch($rThreads))
 	else if (!$loguserid)
 		$newreply = actionLinkTag(__('Log in'), 'login').__(' to post a comment.');
 	else if (HasPermission('forum.postthreads', $forum['id']))
-		$newreply = actionLinkTag(__("Post a comment"), "newreply", $thread['id']);
+		$newreply = actionLinkTag(__("Post a comment"), "newcomment", $thread['id']);
 	$pdata['replylink'] = $newreply;
 
 	RenderTemplate('postdepo', array('post' => $pdata));

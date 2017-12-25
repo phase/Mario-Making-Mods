@@ -3,12 +3,14 @@
 //  Access: all
 if (!defined('BLARG')) die();
 
+$sidebarshow = true;
+$showconsoles = false;
 
 if(isset($_GET['pid']))
 {
 	header("HTTP/1.1 301 Moved Permanently");
 	header("Status: 301 Moved Permanently");
-	die(header("Location: ".actionLink("post", $_GET["pid"])));
+	die(header("Location: ".actionLink("depost", $_GET["pid"])));
 }
 
 $tid = (int)$_GET['id'];
@@ -68,7 +70,7 @@ if(isset($_GET['vote']))
 			Query("insert into {pollvotes} (poll, choiceid, user) values ({0}, {1}, {2})", $thread['poll'], $vote, $loguserid);
 	}
 	
-	$ref = $_SERVER['HTTP_REFERER'] ?: actionLink('thread', $tid, '', $urlname);
+	$ref = $_SERVER['HTTP_REFERER'] ?: actionLink('depotentry', $tid, '', $urlname);
 	die(header('Location: '.$ref));
 }
 
@@ -139,10 +141,9 @@ if ($loguserid)
 	}
 }
 
-$OnlineUsersFid = $fid;
 LoadPostToolbar();
 
-MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $urlname) => $threadtags[0]), $links);
+MakeCrumbs(array(pageLink('depot') => 'Depot', actionLink("depotentry", $tid, '', $urlname) => $threadtags[0]), $links);
 
 if($thread['poll'])
 {
@@ -234,7 +235,7 @@ $rPosts = Query("
 			ORDER BY date ASC LIMIT {2u}, {3u}", $loguserid, $tid, $from, $ppp);
 $numonpage = NumRows($rPosts);
 
-$pagelinks = PageLinks(actionLink("thread", $tid, "from=", $urlname), $ppp, $from, $total);
+$pagelinks = PageLinks(actionLink("depotentry", $tid, "from=", $urlname), $ppp, $from, $total);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
@@ -298,7 +299,7 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'])
 	);
 
 	echo "
-	<form action=\"".htmlentities(actionLink("newreply", $tid))."\" method=\"post\">
+	<form action=\"".htmlentities(actionLink("newcomment", $tid))."\" method=\"post\">
 		<input type=\"hidden\" name=\"ninja\" value=\"{$ninja}\">";
 	
 	RenderTemplate('form_quickreply', array('fields' => $fields));
