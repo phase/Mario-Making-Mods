@@ -28,8 +28,16 @@ else
 
 $tpp = 6;
 
-$tds = isset($_GET['3ds']) ? "AND t.downloadtheme3ds <> '' AND t.downloadtheme3ds IS NOT NULL" : '' ;
-$tu = isset($_GET['wiiu']) ? "AND t.downloadthemewiiu <> '' AND t.downloadthemewiiu IS NOT NULL" : '' ;
+if (isset($_GET['3ds'])) {
+	$console = '3ds';
+	$command = " AND t.downloadtheme3ds <> '' ";
+} elseif (isset($_GET['wiiu'])){
+	$console = 'wiiu';
+	$command = " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
+} else {
+	$console = '';
+	$command = '';
+}
 
 $rThreads = Query("	SELECT 
 						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
@@ -43,12 +51,12 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE t.forum={0} AND p.deleted=0".$tds.$tu."
+					WHERE t.forum={0} AND p.deleted=0 ".$command."
 					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $from, $tpp);
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(pageLink('depot', [], 'from='), $tpp, $from, $total);
+$pagelinks = PageLinks(pageLink('depot', [], $console.'&from='), $tpp, $from, $total);
 
 echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
 
@@ -89,7 +97,7 @@ while($thread = Fetch($rThreads))
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 	
 	$pdata['titles'] = actionLinkTag(__($tags[0]), "thread", $thread['id']);
-	$pdata['title'] = $thread['icon'].$pdata['titles'].'<br>'.$tags[1];
+	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);

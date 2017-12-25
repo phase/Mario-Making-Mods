@@ -160,7 +160,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url]
-Software based off of Blargboard by StapleButter.';
+Software based off Blargboard by StapleButter.';
 
 $sidebar = '';
 if($sidebarshow == true)
@@ -175,9 +175,9 @@ if($sidebarshow == true)
 							<tr class="cell0"><td><a href="/depot/remaker">Super Mario ReMaker</a></td></tr>
 				</table>
 				<table class="outline margin">
-					<tr class="header0"><th>Console Filter (currently broken)</th></tr>
-							<tr class="cell0"><td><a href="/depot?id=wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
-							<tr class="cell1"><td><a href="/depot?id=3da">3DS</a></td></tr>
+					<tr class="header0"><th>Console Filter</th></tr>
+							<tr class="cell0"><td><a href="/depot?wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
+							<tr class="cell1"><td><a href="/depot?3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
 							<tr class="cell0"><td><a href="/depot?">Both</a></td></tr>
 				</table>
 			</td>
