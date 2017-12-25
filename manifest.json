@@ -1,6 +1,6 @@
 {
   "short_name": "MMM",
-  "name": "Mario Making Mods",
+  "name": "MarioMods.Net",
   "icons": [
     {
       "src": "apple-touch-icon.png",
@@ -8,8 +8,13 @@
       "sizes": "512x512"
     }
   ],
+  "serviceworker": {
+    "src": "service-worker.js"
+  },
   "start_url": "/mobile",
   "display": "standalone",
   "background_color": "#2196F3",
-  "theme_color": "#2196F3"
+  "dir": "rtl",
+  "theme_color": "#2196F3",
+  "lang": "en-US"
 }

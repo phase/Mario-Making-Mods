@@ -3,8 +3,10 @@
 $starttime = microtime(true);
 define('BLARG', 1);
 
-// change this to change your board's default page
-define('MAIN_PAGE', 'home');
+$sidebarshow = false;
+
+// change this to change your board's default page (in common.php now)
+//define('MAIN_PAGE', 'home');
 
 $ajaxPage = false;
 if(isset($_GET['ajax']))
@@ -71,14 +73,14 @@ if (!$fakeerror) {
 				$plugin = $pluginpages[$pageName];
 				$self = $plugins[$plugin];
 
-				$page = __DIR__ . '/plugins/' . $self['dir'] . '/pages/' . $pageName . '.php';
+				$page = __DIR__.'/plugins/' . $self['dir'] . '/pages/' . $pageName . '.php';
 				if (file_exists($page))
 					require_once($page);
 				else
 					throw new Exception(404);
 			} else {
 				// Check now for core pages.
-				$page = __DIR__ . '/pages/' . $pageName . '.php';
+				$page = __DIR__.'/pages/' . $pageName . '.php';
 
 				if (file_exists($page))
 					require_once($page);
@@ -157,11 +159,43 @@ if(!file_exists(__DIR__.'/'.$themefile))
 	$themefile = "themes/$theme/style.php";
 
 $layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Blargboard &middot; by StapleButter
-Site ran by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url].';
+'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url]
+Software based off of Blargboard by StapleButter.';
+
+$sidebar = '';
+if($sidebarshow == true)
+	$sidebar = '<td id="main-sidebar">
+	<table id="sidebar" class="outline">
+		<tr>
+			<td class="cell1">
+				<table class="outline margin">
+					<tr class="header0"><th>Depot</th></tr>
+							<tr class="cell0"><td><a href="/depot">Super Mario Maker Projects</a></td></tr>
+							<tr class="cell1"><td><a href="/depot/level">Super Mario Maker Levels</a></td></tr>
+							<tr class="cell0"><td><a href="/depot/remaker">Super Mario ReMaker</a></td></tr>
+				</table>
+				<table class="outline margin">
+					<tr class="header0"><th>Console Filter (currently broken)</th></tr>
+							<tr class="cell0"><td><a href="/depot?id=wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
+							<tr class="cell1"><td><a href="/depot?id=3da">3DS</a></td></tr>
+							<tr class="cell0"><td><a href="/depot?">Both</a></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</td>';
+
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
+
+if($_SERVER["HTTP_X_PJAX"]) {
+		RenderTemplate('pjax', array(
+		'layout_contents' => $layout_contents,
+		'layout_crumbs' => $layout_crumbs,
+		'sidebar' => $sidebar,
+		'layout_actionlinks' => $layout_actionlinks));
+} else {
 ?>
 <!doctype html>
 <html lang="en">
@@ -229,6 +263,7 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
 	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
 	<script src="https://use.fontawesome.com/8963bac2cd.js" async></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/galleria.min.js" async></script>
 	<script>
   if ('serviceWorker' in navigator) {
     console.log("Will the service worker register?");
@@ -283,7 +318,8 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 		'layout_birthdays' => $layout_birthdays,
 		'layout_credits' => parseBBCode($layout_credits),
 		'mobileswitch' => $mobileswitch,
-		'chat' => $chat)); 
+		'sidebar' => $sidebar,
+		'chat' => $chat));
 ?>
 </body><script>$(function() {
     $(document).pjax('a', '#page-container', { 
@@ -295,7 +331,7 @@ $(document).on('pjax:start', function() {NProgress.start();});
 $(document).on('pjax:end', function() {NProgress.done();});</script>
 </html>
 <?php
-
+}
 $bucket = "finish"; include(__DIR__.'/lib/pluginloader.php');
 
 ?>

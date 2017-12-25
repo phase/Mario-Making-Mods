@@ -7,25 +7,36 @@ if (!defined('BLARG')) die();
 
 function RenderTemplate($template, $options=null) {
 	global $tpl, $mobileLayout, $plugintemplates, $plugins;
-	
+
 	if (array_key_exists($template, $plugintemplates)) {
 		$plugin = $plugintemplates[$template];
 		$self = $plugins[$plugin];
-		
-		$tplroot = __DIR__.'/../plugins/'.$self['dir'].'/templates/';
+
+		$tplroot = BOARD_ROOT.'/plugins/'.$self['dir'].'/layouts/';
 	} else
-		$tplroot = __DIR__.'/../layout/';
+		$tplroot = BOARD_ROOT.'/layout/';
 
 	if ($mobileLayout) {
 		$tplname = $tplroot.'mobile/'.$template.'.tpl';
-		if (!file_exists($tplname)) 
+		if (!file_exists($tplname)){
+			if (!empty(Settings::get('defaultLayout')))
+				$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
+			else
+				$tplname = $tplroot.'bb/'.$template.'.tpl';
+		}
+	} else {
+		if (!empty(Settings::get('defaultLayout')))
+			$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
+		else
 			$tplname = $tplroot.'bb/'.$template.'.tpl';
-	} else
-		$tplname = $tplroot.'bb/'.$template.'.tpl';
-	
+
+		if (!file_exists($tplname))
+			$tplname = $tplroot.'bb/'.$template.'.tpl';
+	}
+
 	if ($options)
 		$tpl->assign($options);
-	
+
 	$tpl->display($tplname);
 }
 
@@ -98,7 +109,7 @@ function forumCrumbs($forum)
 	if ($forum['board'] != '')
 		$ret[actionLink('board', $forum['board'])] = $forumBoards[$forum['board']];
 	
-	if (!$forum['id']) return $ret;
+	if (!isset($forum['id'])) return $ret;
 	
 	$parents = Query("SELECT id,title FROM {forums} WHERE l<{0} AND r>{1} ORDER BY l", $forum['l'], $forum['r']);
 	while ($p = Fetch($parents))
@@ -227,7 +238,7 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 		if($skipThisOne)
 			continue;
 			
-		if (!$categories[$forum['catid']])
+		if (!isset($categories[$forum['catid']]))
 			$categories[$forum['catid']] = array('id' => $forum['catid'], 'name' => ($parent==0)?$forum['cname']:'Subforums', 'forums' => array());
 
 		$fdata = array('id' => $forum['id']);
@@ -344,9 +355,10 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 			$fdata['lastpostdate'] = formatdate($forum['lastpostdate']);
 			$fdata['lastpostuser'] = UserLink($user);
 			$fdata['lastpostlink'] = actionLink('post', $forum['lastpostid']);
-		} else
+		}
+		else
 			$fdata['lastpostdate'] = 0;
-
+			
 		$categories[$forum['catid']]['forums'][$forum['id']] = $fdata;
 	}
 	
@@ -394,6 +406,8 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 					'post', '', 'tid='.$thread['id'].'&time='.(int)$thread['readdate']);
 			}
 		}
+		else if(!$thread['closed'] && !$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")))
+			$NewIcon = 'old';
 
 		if($NewIcon)
 			$tdata['new'] = '<div class="statusIcon '.$NewIcon.'"></div>';

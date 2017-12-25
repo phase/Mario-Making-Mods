@@ -101,7 +101,7 @@ function doHash($data)
 
 $loguser = NULL;
 
-if($_COOKIE['logsession'] && !$ipban)
+if(isset($_COOKIE['logsession']) && !$ipban)
 {
 	$session = Fetch(Query("SELECT * FROM {sessions} WHERE id={0}", doHash($_COOKIE['logsession'].SALT)));
 	if($session)
@@ -140,8 +140,6 @@ if ($mobileLayout)
 {
 	$loguser['blocklayouts'] = 1;
 	$loguser['fontsize'] = 80;
-	//$loguser['dateformat'] = 'm/d/y';
-	//$loguser['timeformat'] = 'H:i';
 }
 
 

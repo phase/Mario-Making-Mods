@@ -18,6 +18,8 @@ define('DATA_URL', URL_ROOT.'data/');
 
 setlocale(LC_ALL, 'en_US.UTF8');
 
+define('MAIN_PAGE', 'home');
+
 if(!is_file(__DIR__.'/../config/database.php'))
 	die(header('Location: install.php'));
 
@@ -52,7 +54,7 @@ function usectime()
 // add in here to add board sections to your board
 $forumBoards = array('' => 'Main forums', 'staff' => 'Staff-Exlusive Forums');
 
-
+include(__DIR__."/cache.php");
 include(__DIR__."/../config/salt.php");
 
 include(__DIR__."/settingsfile.php");
@@ -69,9 +71,10 @@ Settings::checkPlugin("main");
 include(__DIR__."/functions.php");
 include(__DIR__."/language.php");
 include(__DIR__."/links.php");
-require_once(__DIR__ . '/urlslugs.php');
-require_once(__DIR__ . '/yaml.php');
-require_once(__DIR__ . '/router.php');
+include("adsense.php");
+require_once(__DIR__.'/urlslugs.php');
+require_once(__DIR__.'/yaml.php');
+require_once(__DIR__.'/router.php');
 
 class KillException extends Exception { }
 date_default_timezone_set("GMT");
@@ -119,7 +122,6 @@ include(__DIR__."/bbcode_callbacks.php");
 include(__DIR__."/bbcode_main.php");
 include(__DIR__."/post.php");
 include(__DIR__."/onlineusers.php");
-include(__DIR__."/cache.php");
 
 $theme = $loguser['theme'];
 include(__DIR__."/layout.php");

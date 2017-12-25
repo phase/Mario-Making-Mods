@@ -100,8 +100,6 @@ $posts = FetchResult("select count(*) from {posts} where user={0}", $id);
 $threads = FetchResult("select count(*) from {threads} where user={0}", $id);
 $averagePosts = sprintf("%1.02f", $user['posts'] / $daysKnown);
 $averageThreads = sprintf("%1.02f", $threads / $daysKnown);
-//$deletedposts = FetchResult("SELECT COUNT(*) FROM {posts} p WHERE p.user={0} AND p.deleted!=0 AND p.deletedby!={0}", $id);
-//$score = 1000 + (10 * $user['postplusones']) - (20 * $deletedposts);
 
 $minipic = getMinipicTag($user);
 
@@ -243,16 +241,18 @@ if($user['birthday'])
 if(count($temp))
 	$profileParts[__("Personal information")] = $temp;
 
-if ($user['bio'])
-	$profileParts[__('Bio')] = CleanUpPost($user['bio']);
-
 $badgersR = Query("select * from {badges} where owner={0} order by color", $id);
 if(NumRows($badgersR))
 {
 	$badgers = "";
-	$colors = array("bronze", "silver", "gold", "platinum");
-	while($badger = Fetch($badgersR))
-		$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+	$colors = array("bronze", "silver", "gold", "platinum", "none");
+	if($badger['color'] !== 7) {
+		while($badger = Fetch($badgersR))
+			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+	} else {
+		while($badger = Fetch($badgersR))
+			$badgers .= Format("{0}", $badger['name']);
+	}
 	$profileParts['General information']['Badges'] = $badgers;
 }
 
@@ -331,7 +331,9 @@ RenderTemplate('profile', array(
 	
 
 if (!$mobileLayout) {
-	
+	if ($user['bio'])
+		$previewPost['text'] = $user['bio'];
+	else
 		$previewPost['text'] = Settings::get("profilePreviewText");
 
 	$previewPost['num'] = 0;
@@ -362,7 +364,9 @@ else if(HasPermission('admin.editusers'))
 if(HasPermission('admin.editusers'))
 	$links[] = actionLinkTag(__('Edit permissions'), 'editperms', '', 'uid='.$id);
 
-if(HasPermission('admin.viewpms'))
+if($loguserid == $id)
+	$links[] = actionLinkTag(__("Show my PMs"), "private", "", "user=".$id);
+elseif(HasPermission('admin.viewpms'))
 	$links[] = actionLinkTag(__("Show PMs"), "private", "", "user=".$id);
 
 if(HasPermission('user.sendpms'))

@@ -1,3 +1,7 @@
+<?php
+$title = 'Forum FAQ';
+?>
+
 <table class="outline"><tr class="header1"><th>
     The Mario Making Mods FAQ
 </th></tr>

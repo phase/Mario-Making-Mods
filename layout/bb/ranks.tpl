@@ -16,6 +16,8 @@
 	</table>
 	{/if}
 	
+	{$description}
+
 	<table class="outline margin ranklist">
 		<tr class="header1">
 			<th>Rank</th>

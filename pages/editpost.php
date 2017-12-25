@@ -8,7 +8,7 @@ require(BOARD_ROOT.'lib/upload.php');
 $title = __("Edit post");
 
 if(!$loguserid)
-	Kill(__("You must be logged in to edit your posts."));
+	Kill(__("You must be logged in to edit posts."));
 
 $pid = (int)$_REQUEST['id'];
 
@@ -69,7 +69,7 @@ if((int)$_GET['delete'] == 1)
 	
 	if(!HasPermission('mod.deleteposts', $fid))
 	{
-		if ($post['user'] != $loguserid || !HasPermission('user.deleteownposts') || !HasPermission('forum.deleteownposts', $forum))
+		if ($post['user'] != $loguserid || !HasPermission('forum.deleteownposts', $fid))
 			Kill(__("You are not allowed to delete this post."));
 		
 		$_GET['reason'] = '';

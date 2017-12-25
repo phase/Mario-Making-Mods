@@ -20,15 +20,10 @@ $permDescs = array
 		'user.editbio' => __('Edit bio'),
 		'user.editavatars' => __('Edit avatars'),
 		'user.havetitle' => __('Always have custom title'),
-		'user.editownposts' => __('Edit own posts'),
-		'user.deleteownposts' => __('Delete own posts'),
-		'user.reportposts' => __('Report posts'),
-		'user.renameownthreads' => __('Rename own threads'),
 		'user.sendpms' => __('Send private messages'),
 		'user.postusercomments' => __('Post user comments'),
 		'user.deleteownusercomments' => __('Delete own user comments'),
-		'user.votepolls' => __('Vote to polls'),
-		'user.doublepost' => __('Make consecutive posts'),
+		'user.snow' => __('See the raining Snow'),
 		'user.viewhiddenforums' => __('View hidden forums'),
 	),
 	'forum' => array
@@ -38,6 +33,13 @@ $permDescs = array
 		'forum.postreplies' => __('Reply to threads'),
 		'forum.doublepsot' => __('Double Post'),
 		'forum.deleteownposts' => __('Delete own posts'),
+		'forum.unlistedthreads' => __('View Unlisted Threads'),
+		'forum.hiddenthreads' => __('View Hidden Threads'),
+		'forum.hideads' => __('Hide Advertisements'),
+		'forum.reportposts' => __('Report posts'),
+		'forum.editownposts' => __('Edit own posts'),
+		'forum.renameownthreads' => __('Rename own threads'),
+		'forum.votepolls' => __('Vote to polls'),
 	),
 	'mod' => array
 	(
@@ -68,6 +70,7 @@ $permDescs = array
 		'admin.ipsearch' => __('Use IP search'),
 		'admin.adminusercomments' => __('Administrate user comments'),
 		'admin.viewstaffpms' => __('Receive staff PMs'),
+		'admin.nolink' => __('No links'),
 	),
 );
 

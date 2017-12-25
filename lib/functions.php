@@ -36,7 +36,6 @@ function Kill($s, $t="")
 	if($t=="")
 		$t = __("Error");
 	Alert($s, $t);
-	throw new KillException();
 }
 
 function dieAjax($what)
@@ -46,7 +45,6 @@ function dieAjax($what)
 	echo $what;
 	$ajaxPage = true;
 	exit;
-	//throw new KillException();
 }
 
 // returns FALSE if it fails.
@@ -152,6 +150,34 @@ function TimeUnits($sec)
 	return floor($sec/86400)." day".($sec >= 172800 ? "s" : "");
 }
 
+$WebHookdata = ["content" => str_replace('@', '[at]', $stuff), "username" => Settings::get("WebHookName"), "avatar_url" => Settings::Get("webhookimage")];
+
+function HelpReport($stuff)
+{
+    $curl = curl_init(Settings::get("helpwebhook"));
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($WebHookdata));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $fartz = curl_exec($curl);
+}
+
+function DevReport($stuff)
+{
+    $curl = curl_init(Settings::Get("devwebhook"));
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($Webhookdata));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $fartz = curl_exec($curl);
+}
+
+function PostReport($stuff)
+{
+    $curl = curl_init(Settings::Get("ForumWebhook"));
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($Webhookdata));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $fartz = curl_exec($curl);
+}
 
 // TODO remove
 function RecalculateKarma($uid)
@@ -187,15 +213,14 @@ function Report($stuff, $hidden = 0, $severity = 0)
 
 	$data = array("content" => str_replace("#HERE#", $here, $stuff), "username" => "Forum logs");
 
-    $curl = curl_init("https://discordapp.com/api/webhooks/328657473642823681/F1vunPAc0_aVpUP0UW8OuMiFGVF8m2tzkR1m8vy-GVBSNH9KMP7-kC9Mj3tiyKELh2ee");
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    return curl_exec($curl);
+	$curl = curl_init(Settings::get("logwebhook"));
+	curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	return curl_exec($curl);
 
 	Query("insert into {reports} (ip,user,time,text,hidden,severity,request)
 		values ({0}, {1}, {2}, {3}, {4}, {5}, {6})", $_SERVER['REMOTE_ADDR'], (int)$loguserid, time(), str_replace("#HERE#", $here, $stuff), $hidden, $severity, $req);
-	Query("delete from {reports} where time < {0}", (time() - (60*60*24*30)));
 }
 
 function Shake()

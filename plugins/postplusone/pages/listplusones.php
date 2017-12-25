@@ -23,6 +23,7 @@ if($minpower < 0)
 ini_set("display_errors", "on");
 ini_set("display_startup_errors", "on");*/
 
+
 $total = FetchResult("
 			SELECT
 				count(p.id)

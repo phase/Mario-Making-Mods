@@ -13,5 +13,10 @@ logout: ['POST', '/accounts/logout', 'login']
 # Site Settings
 forumfaq: ['GET', '/faq/forum', 'forumfaq']
 
+depot: ['GET|POST', '/depot', 'depot']
+leveldepot: ['GET|POST', '/depot/level', 'level']
+haxdepot: ['GET|POST', '/depot/hax', 'hax']
+remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']
+
 # Catch-all rule
 catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

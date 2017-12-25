@@ -50,12 +50,16 @@ class Settings
 
 	public static function load()
 	{
-		self::$settingsArray = array();
-		$rSettings = Query("select * from {settings}");
+		self::$settingsArray = [];
+		if (($cSettings = cacheGet('siteSettings', 3600)) === null) {
+			$rSettings = Query("select * from {settings}");
 
-		while($setting = Fetch($rSettings))
-		{
-			self::$settingsArray[$setting['plugin']][$setting['name']] = $setting['value'];
+			while($setting = Fetch($rSettings)) {
+				self::$settingsArray[$setting['plugin']][$setting['name']] = $setting['value'];
+			}
+			cachePut('siteSettings', self::$settingsArray, 3600);
+		} else {
+			self::$settingsArray = $cSettings;
 		}
 	}
 
@@ -63,7 +67,7 @@ class Settings
 	{
 		global $plugins;
 
-		$settings = array();
+		$settings = [];
 
 		//Get the setting list.
 		if($pluginname == "main")
@@ -79,7 +83,7 @@ class Settings
 	public static function checkPlugin($pluginname)
 	{
 		if(!isset(self::$settingsArray[$pluginname]))
-			self::$settingsArray[$pluginname] = array();
+			self::$settingsArray[$pluginname] = [];
 
 		$changed = false;
 
@@ -89,7 +93,7 @@ class Settings
 			$type = $data['type'];
 			$default = $data['default'];
 
-			if(!isset(self::$settingsArray[$pluginname][$name]) || !self::validate(self::$settingsArray[$pluginname][$name], $type, (isset($data["options"]) ? $data["options"] : array())))
+			if(!isset(self::$settingsArray[$pluginname][$name]) || !self::validate(self::$settingsArray[$pluginname][$name], $type, (isset($data["options"]) ? $data["options"] : [])))
 			{
 				if (isset($data['defaultfile']))
 					self::$settingsArray[$pluginname][$name] = file_get_contents($data['defaultfile']);
@@ -117,7 +121,7 @@ class Settings
 	}
 
 
-	public static function validate($value, $type, $options = array())
+	public static function validate($value, $type, $options = [])
 	{
 		if($type == "boolean" || $type == "integer" || $type == "float" || $type == "user" || $type == "forum" || $type == 'group' || $type == "layout" || $type == "theme" || $type == "language")
 			if(trim($value) == "")

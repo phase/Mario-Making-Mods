@@ -3,6 +3,10 @@ if (!defined('BLARG')) die();
 
 $ajaxPage = TRUE;
 
+error_reporting(E_ALL);
+ini_set("display_errors", "on");
+ini_set("display_startup_errors", "on");
+
 if(isset($_GET['gfx']))
 {
 
@@ -18,7 +22,6 @@ if(isset($_GET['gfx']))
 	{
 		$names[] = $forum['title'];
 		$posts[] = FetchResult("select count(*) from {posts} left join {threads} on {posts}.thread = {threads}.id where {posts}.user = {0} and {threads}.forum = {1}", $id, $forum['id']);
-		//print $forum['title']." &rarr; ".$posts."<br/>";
 	}
 
 
@@ -68,6 +71,8 @@ if(isset($_GET['gfx']))
 	header('Content-type: image/png');
 	imagepng($im);
 	imagedestroy($im);
+} else {
+	echo 'Please insert a UID';
 }
 
 

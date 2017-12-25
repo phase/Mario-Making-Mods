@@ -40,14 +40,8 @@ if(isset($_POST['action']))
 				{
 					if ($pm['userto'] == $loguserid) $pm['deleted'] |= 2;
 					if ($pm['userfrom'] == $loguserid) $pm['deleted'] |= 1;
-					
-					/*if($pm['deleted'] == 3)
-					{
-						Query("delete from {pmsgs} where id = {0}", $pid);
-						Query("delete from {pmsgs_text} where pid = {0}", $pid);
-					}
-					else*/
-						Query("update {pmsgs} set deleted = {0} where id = {1} AND userto={2}", $pm['deleted'], $pid, $pm['userto']);
+
+					Query("update {pmsgs} set deleted = {0} where id = {1} AND userto={2}", $pm['deleted'], $pid, $pm['userto']);
 				}
 			}
 		}

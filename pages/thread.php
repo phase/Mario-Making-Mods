@@ -36,7 +36,7 @@ $urlname = HasPermission('forum.viewforum', $fid, true) ? $title : '';
 
 if(isset($_GET['vote']))
 {
-	CheckPermission('user.votepolls');
+	CheckPermission('forum.votepolls', $fid);
 	
 	if(!$loguserid)
 		Kill(__("You can't vote without logging in."));
@@ -113,7 +113,7 @@ if ($loguserid)
 		$links[] = actionLinkTag(__('Add to favorites'), 'favorites', $tid, 'action=add&token='.$loguser['token']);
 
 	// we also check mod.movethreads because moving threads is done on editthread
-	if ((HasPermission('user.renameownthreads') && $thread['user']==$loguserid) || 
+	if ((HasPermission('forum.renameownthreads', $fid) && $thread['user']==$loguserid) || 
 		(HasPermission('mod.renamethreads', $fid) || HasPermission('mod.movethreads', $fid))
 		&& $notclosed)
 		$links[] = actionLinkTag(__("Edit"), "editthread", $tid);
@@ -124,14 +124,6 @@ if ($loguserid)
 			$links[] = actionLinkTag(__("Open"), "editthread", $tid, "action=open&key=".$loguser['token']);
 		else
 			$links[] = actionLinkTag(__("Close"), "editthread", $tid, "action=close&key=".$loguser['token']);
-	}
-		
-	if (HasPermission('mod.stickthreads', $fid))
-	{
-		if($thread['sticky'])
-			$links[] = actionLinkTag(__("Unstick"), "editthread", $tid, "action=unstick&key=".$loguser['token']);
-		else
-			$links[] = actionLinkTag(__("Stick"), "editthread", $tid, "action=stick&key=".$loguser['token']);
 	}
 
 	if (HasPermission('mod.trashthreads', $fid) && Settings::get('trashForum'))
@@ -246,13 +238,14 @@ $pagelinks = PageLinks(actionLink("thread", $tid, "from=", $urlname), $ppp, $fro
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
-if(NumRows($rPosts))
-{
-	while($post = Fetch($rPosts))
-	{
+$ii = 0;
+if(NumRows($rPosts)) {
+	while($post = Fetch($rPosts)) {
 		$post['closed'] = $thread['closed'];
 		$post['firstpostid'] = $thread['firstpostid'];
 		MakePost($post, POST_NORMAL, array('tid'=>$tid, 'fid'=>$fid));
+		$ii++;
+		if ($ii == 1) makeAdsense();
 	}
 }
 
@@ -298,7 +291,6 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'])
 		'nopl' => "<label><input type=\"checkbox\" name=\"nopl\">&nbsp;".__("Disable post layout", 1)."</label>",
 		'nosm' => "<label><input type=\"checkbox\" name=\"nosm\">&nbsp;".__("Disable smilies", 1)."</label>",
 		'lock' => $mod_lock,
-		'stick' => $mod_stick,
 		'question' => $questionfield,
 		
 		'btnPost' => "<input type=\"submit\" name=\"actionpost\" value=\"".__("Post")."\">",

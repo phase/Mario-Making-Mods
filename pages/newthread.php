@@ -275,7 +275,6 @@ function getCheck($name)
 	else return "";
 }
 
-$iconNoneChecked = ($_POST['iconid'] == 0) ? "checked=\"checked\"" : "";
 $iconCustomChecked = ($_POST['iconid'] == 255) ? "checked=\"checked\"" : "";
 
 $i = 1;
@@ -283,20 +282,11 @@ $icons = "";
 while(is_file("img/icons/icon".$i.".png"))
 {
 	$checked = ($_POST['iconid'] == $i) ? "checked=\"checked\" " : "";
-	$icons .= "	<label>
-					<input type=\"radio\" $checked name=\"iconid\" value=\"$i\">
-					<img src=\"".resourceLink("img/icons/icon$i.png")."\" alt=\"Icon $i\" onclick=\"javascript:void()\">
-				</label>";
+	$icons .= "";
 	$i++;
 }
 
 $iconSettings = "
-	<label>
-		<input type=\"radio\" $iconNoneChecked name=\"iconid\" value=\"0\">
-		<span>".__("None")."</span>
-	</label>
-	$icons
-	<br />
 	<label>
 		<input type=\"radio\" $iconCustomChecked name=\"iconid\" value=\"255\">
 		<span>".__("Custom")."</span>

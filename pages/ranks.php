@@ -33,6 +33,19 @@ foreach($ranksetNames as $name => $title)
 		$ranksets[] = actionLinkTag($title, 'ranks', $name);
 }
 
+$description = '';
+if($ranksetDescription[$rankset]) {
+	$description = '<table class="outline margin ranksets">
+		<tr class="header1">
+			<th colspan=2>
+				'.$ranksetNames[$rankset].'
+			</th>
+		</tr>
+		<tr class="cell0">
+			<td>
+				'.$ranksetDescription[$rankset].'
+			</td>
+	</table>';}
 
 $users = array();
 $rUsers = Query("select u.(_userfields), u.(posts,lastposttime) from {users} u order by id asc");
@@ -84,6 +97,6 @@ for($i = 0; $i < count($ranks); $i++)
 	$ranklist[] = $rdata;
 }
 
-RenderTemplate('ranks', array('ranksets' => $ranksets, 'ranks' => $ranklist));
+RenderTemplate('ranks', array('ranksets' => $ranksets, 'ranks' => $ranklist, 'description' => $description));
 
 ?>

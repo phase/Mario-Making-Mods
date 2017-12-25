@@ -1,1 +1,1 @@
-<script type="text/javascript" src="<?php print resourceLink("plugins/snow/script/snowstorm.js");?>"></script>
+<?php if($loguser['snow'] == 1) echo '<script type="text/javascript" src="'.resourceLink("plugins/snow/snowstorm.js").'"></script>';

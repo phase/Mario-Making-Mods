@@ -14,7 +14,7 @@ if ($post['deleted']) Kill(__('This post is deleted.'));
 
 if ($post['user'] == $loguserid && HasPermission('user.deleteownposts'))
 	Alert(__('You are reporting your own posts. If you want your post deleted, you can do it yourself. You should do this only if you want to make sure the information is correct/allowed.'));
-else if($post['user'] == $loguserid && (!HasPermission('user.deleteownposts') || !HasPermission('forum.deleteownposts', $forum)))
+else if($post['user'] == $loguserid && !HasPermission('forum.deleteownposts', $forum))
 	Alert(__('You are reporting your own posts. You should do this only if you want to make sure the information is correct/allowed or if you want the staff to delete your post for you.'));
 
 $thread = Fetch(Query("SELECT * FROM {threads} WHERE id={0}", $post['thread']));
@@ -27,6 +27,11 @@ if (!HasPermission('forum.viewforum', $fid))
 if (HasPermission('mod.deleteposts', $forum) && $post['user'] !== $loguserid)
 	Alert(__('If you want the post deleted, you can do it yourself. You should do this only if you want to make sure the information is correct/allowed With your other staff members.'));
 
+Alert(__('Thank you for reporting illicit posts. 
+However please make sure that you only report posts that are in direct violation of our Forum Rules. 
+Please do not report posts simply because you disagree with them or that you find them offensive. Remember that Mario Making Mods is a place where the exchange of opinions is important to everyone.
+If you are not sure whether a post is breaking the rules, either read the rules again or simply do not report it.'));
+
 $tags = ParseThreadTags($thread['title']);
 $isHidden = !HasPermission('forum.viewforum', $fid, true);
 
@@ -34,9 +39,7 @@ if ($_POST['report'])
 {
 	if ($_POST['key'] !== $loguser['token'])
 		Kill(__('No.'));
-		
-	// TODO make this use actual notifications or anything better
-		
+
 	Query("INSERT INTO {pmsgs_text} (title,text) VALUES ({0},{1})",
 		"Post report (post #{$pid})", '');
 	$pmid = InsertId();

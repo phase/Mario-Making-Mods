@@ -95,7 +95,7 @@ else if(isset($_POST['actionpost']))
 		Alert(__("Enter a message and try again."), __("Your post is empty."));
 		$rejected = true;
 	}
-	else if($thread['lastposter']==$loguserid && $thread['lastpostdate']>=time()-86400 && (!HasPermission('forum.doublepost', $forum) || && !HasPermission('user.doublepost')))
+	else if($thread['lastposter']==$loguserid && $thread['lastpostdate']>=time()-86400 && !HasPermission('forum.doublepost', $forum))
 	{
 		Alert(__("You can't double post until it's been at least one day."), __("Sorry"));
 		$rejected = true;

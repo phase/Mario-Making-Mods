@@ -97,8 +97,8 @@ Well, what more could you [url=http://en.wikipedia.org]want to know[/url]? Perha
 			"name" => "Post preview text",
 			'category' => 'Presentation'
 		),
-		
-		
+
+
 		"postLayoutType" => array (
 			"type" => "options",
 			"options" => array('0' => 'Signature', '1' => 'Post header + signature', '2' => 'Post header + signature + sidebars'),
@@ -163,9 +163,10 @@ Well, what more could you [url=http://en.wikipedia.org]want to know[/url]? Perha
 			'category' => 'Functionality'
 		),
 		"maintenance" => array (
-			"type" => "boolean",
-			"default" => "0",
+			"type" => "text",
+			"default" => "",
 			"name" => "Maintenance mode",
+			"help" => "Leave Text blank for no Maintenance Mode",
 			'category' => 'Functionality',
 			'rootonly' => 1,
 		),
@@ -195,6 +196,14 @@ Well, what more could you [url=http://en.wikipedia.org]want to know[/url]? Perha
 			"name" => "RSS feed description",
 			'category' => 'Information',
 		),
+
+		"DisReg" => [
+			"type" => "boolean",
+			"default" => "0",
+			"name" => "Turn off registration",
+			"help" => "Usefull when your site is hit with a spam attack.",
+			'category' => 'Registration'
+		],
 		
 		
 		'newsForum' => array(
@@ -227,6 +236,44 @@ Well, what more could you [url=http://en.wikipedia.org]want to know[/url]? Perha
 			"name" => "Deleted threads forum",
 			'category' => 'Forum settings',
 		),
+		
+		"WebHookName" => array(
+			"type" => "text",
+			"default" => "BlargReport",
+			"name" => "Webhook username",
+			'category' => 'Discord settings',
+		),
+		"ForumWebhook" => array(
+			"type" => "text",
+			"default" => "",
+			"name" => "Main Post Report webhook link",
+			'category' => 'Discord settings',
+		),
+		"webhookimage" => array(
+			"type" => "text",
+			"default" => "https://maxcdn.icons8.com/Share/icon/Logos//discord_logo1600.png",
+			"name" => "Webhook profile picture",
+			'category' => 'Discord settings',
+		),
+		"helpwebhook" => array(
+			"type" => "text",
+			"default" => "",
+			"name" => "Help bot webhook link",
+			'category' => 'Discord settings',
+		),
+		"devwebhook" => array(
+			"type" => "text",
+			"default" => "",
+			"name" => "DevBot webhook link",
+			'category' => 'Discord settings',
+		),
+		"logwebhook" => array(
+			"type" => "text",
+			"default" => "",
+			"name" => "Log webhook link",
+			'category' => 'Discord settings',
+		),
+		
 		
 		
 		'defaultGroup' => array (

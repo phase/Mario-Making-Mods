@@ -53,11 +53,11 @@ if(!$snoop && $pm['userto'] == $loguserid)
 else if ($_GET['markread'])
 {
 	Query("update {pmsgs} set msgread=1 where id={0}", $pm['id']);
-	DismissNotification('pm', $pm['id'], -1);
-	
+	DismissNotification('report', $pm['id'], -1);
+
 	die(header('Location: '.actionLink('private')));
 }
-	
+
 
 $pmtitle = htmlspecialchars($pm['title']);
 MakeCrumbs(array(actionLink("private") => __("Private messages"), '' => $pmtitle), $links);

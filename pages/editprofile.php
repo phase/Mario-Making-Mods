@@ -88,6 +88,12 @@ if ($editUserMode || HasPermission('user.editavatars'))
 }
 
 
+
+if(HasPermission('forum.hideads')) {
+	AddCategory('general', 'Cosmetics', __('Cosmetics'));
+	AddField('general', 'Cosmetics', 'snow', 'Have Falling Snow', 'checkbox');
+}
+
 AddCategory('general', 'presentation', __('Presentation'));
 
 AddField('general', 'presentation', 'threadsperpage', __('Threads per page'), 'number', array('min'=>1, 'max'=>99));
@@ -271,6 +277,7 @@ if($_POST['actionsave'])
 				case "label":
 					break;
 				case "text":
+				case "email":
 				case "textarea":
 				case 'themeselector':
 					$sets[] = $field." = '".SqlEscape($_POST[$field])."'";
@@ -361,10 +368,6 @@ if($_POST['actionsave'])
 						}
 					}
 					break;
-
-				case "email": 
-					$sets[] = $field." = '".SqlEscape($_POST[$field])."'"; 
-					break; 
 
 				case "bitmask":
 					$val = 0;
@@ -624,11 +627,13 @@ if (is_dir($dir))
 
 		        $themes[$file]['name'] = trim($themeinfo[0]);
 		        $themes[$file]['author'] = trim($themeinfo[1]);
+				$themes[$file]['category'] = trim($themeinfo[2]);
 		    }
 		    else
 		    {
 		        $themes[$file]['name'] = $file;
 		        $themes[$file]['author'] = '';
+				$themes[$file]['category'] = 'Other';
 		    }
 			
 			$themes[$file]['num'] = 0;
@@ -651,6 +656,7 @@ $themeList .= "
 foreach($themes as $themeKey => $themeData) {
 	$themeName = $themeData['name'];
 	$themeAuthor = $themeData['author'];
+	$themeCategory = $themeData['category'];
 	$numUsers = $themeData['num'];
 	$csspreview = false;
 	$preview = "themes/".$themeKey."/preview.png";

@@ -293,6 +293,7 @@ ul.dropdownMenu
 	
 	cursor: default;
 	font-weight: normal;
+	z-index: 322;
 }
 
 ul.dropdownMenu li

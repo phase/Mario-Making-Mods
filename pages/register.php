@@ -38,8 +38,6 @@ if($_POST['register']) {
 			$err = __('Enter a username and try again.');
 		elseif($uname == $cname)
 			$err = __("This user name is already taken. Please choose another.");
-		elseif($ipKnown >= 3)
-			$err = __("Another user is already using this IP address.");
 		else if(!$_POST['readFaq'])
 			$err = format(__("You really should {0}read the FAQ{1}&hellip;"), "<a href=\"".actionLink("faq")."\">", "</a>");
 		else if ($_POST['likesCake'])
@@ -67,8 +65,8 @@ if($_POST['register']) {
 		$user['rawpass'] = $_POST['pass'];
 
 		$bucket = "newuser"; include(BOARD_ROOT."lib/pluginloader.php");
-		
-		
+
+
 		$rLogUser = Query("select id, pss, password from {users} where 1");
 		$matches = array();
 

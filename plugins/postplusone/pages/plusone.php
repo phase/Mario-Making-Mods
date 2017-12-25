@@ -6,7 +6,7 @@ if($_GET["key"] != $loguser["token"])
 
 CheckPermission('user.voteposts');
 
-$pid = (int)$_GET["id"];
+$pid = (int)$pageParams["id"];
 
 $post = Fetch(Query("SELECT * FROM {posts} WHERE id = {0}", $pid));
 if(!$post)

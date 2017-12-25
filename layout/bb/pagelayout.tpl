@@ -87,6 +87,8 @@
 
 <tr>
 
+{$sidebar}
+
 {capture "breadcrumbs"}
 {if $layout_crumbs || $layout_actionlinks}
 		<table class="outline breadcrumbs"><tr class="header1">

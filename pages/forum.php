@@ -84,6 +84,10 @@ else
 
 if(!$tpp) $tpp = 50;
 
+$viewunlisted = HasPermission('forum.unlistedthreads', $forum) && HasPermission('user.viewunlistedthreads');
+$viewhidden = HasPermission('forum.hiddenthreads', $forum) && HasPermission('user.viewhiddenthreads');
+
+if(!$viewunlisted)
 $rThreads = Query("	SELECT
 						t.*,
 						".($loguserid ? "tr.date readdate," : '')."
@@ -94,7 +98,20 @@ $rThreads = Query("	SELECT
 						".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={3}" : '')."
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE forum={0}
+					WHERE forum={0} AND t.unlisted=0 AND t.hidden=0
+					ORDER BY sticky DESC, lastpostdate DESC LIMIT {1u}, {2u}", $fid, $from, $tpp, $loguserid);
+else
+$rThreads = Query("	SELECT
+						t.*,
+						".($loguserid ? "tr.date readdate," : '')."
+						su.(_userfields),
+						lu.(_userfields)
+					FROM
+						{threads} t
+						".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={3}" : '')."
+						LEFT JOIN {users} su ON su.id=t.user
+						LEFT JOIN {users} lu ON lu.id=t.lastposter
+					WHERE forum={0}".(!$viewhidden ? " AND t.hidden=0" : '')."
 					ORDER BY sticky DESC, lastpostdate DESC LIMIT {1u}, {2u}", $fid, $from, $tpp, $loguserid);
 
 $pagelinks = PageLinks(actionLink("forum", $fid, "from=", $urlname), $tpp, $from, $total);
@@ -103,9 +120,7 @@ $ppp = $loguser['postsperpage'];
 if(!$ppp) $ppp = 20;
 
 if(NumRows($rThreads))
-{
 	makeThreadListing($rThreads, $pagelinks);
-} 
 else
 	if(!HasPermission('forum.postthreads', $fid))
 		Alert(__("You cannot start any threads here."), __("Empty forum"));

@@ -149,7 +149,7 @@ elseif($_POST['actionedit'])
 	}
 
 	$isClosed = $canClose ? (isset($_POST['isClosed']) ? 1 : 0) : $thread['closed'];
-	$isSticky = $canStick ? (isset($_POST['isSticky']) ? 1 : 0) : $thread['sticky'];
+	$isSticky = $canStick ? $_POST['isSticky'] : $thread['sticky'];
 
 	$trimmedTitle = $canRename ? trim(str_replace('&nbsp;', ' ', $_POST['title'])) : 'lolnotempty';
 	if($trimmedTitle != "") {
@@ -232,21 +232,21 @@ if ($canRename)
 	$iconSettings = "<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
-	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" value=\"".htmlspecialchars($thread['description'])."\">";
-	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
-	$fields['downloadtheme3ds'] = "<input type=\"text\" id=\"downloadtheme3ds\" name=\"downloadtheme3ds\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadtheme3ds'])."\">";
-	$fields['downloadthemewiiu'] = "<input type=\"text\" id=\"downloadthemewiiu\" name=\"downloadthemewiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemewiiu'])."\">";
-	$fields['downloadthemepc'] = "<input type=\"text\" id=\"downloadthemepc\" name=\"downloadthemepc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemepc'])."\">";
-	$fields['downloadlevel3ds'] = "<input type=\"text\" id=\"downloadlevel3ds\" name=\"downloadlevel3ds\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevel3ds'])."\">";
-	$fields['downloadlevelwiiu'] = "<input type=\"text\" id=\"downloadlevelwiiu\" name=\"downloadlevelwiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelwiiu'])."\">";
-	$fields['downloadlevelpc'] = "<input type=\"text\" id=\"downloadlevelpc\" name=\"downloadlevelpc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelpc'])."\">";
-	$fields['downloadcostumewiiu'] = "<input type=\"text\" id=\"downloadcostumewiiu\" name=\"downloadcostumewiiu\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumewiiu'])."\">";
-	$fields['downloadcostumepc'] = "<input type=\"text\" id=\"downloadcostumepc\" name=\"downloadcostumepc\" size=80 maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumepc'])."\">";
+	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['description'])."\">";
+	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"200\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
+	$fields['downloadtheme3ds'] = "<input type=\"text\" id=\"downloadtheme3ds\" name=\"downloadtheme3ds\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadtheme3ds'])."\">";
+	$fields['downloadthemewiiu'] = "<input type=\"text\" id=\"downloadthemewiiu\" name=\"downloadthemewiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemewiiu'])."\">";
+	$fields['downloadthemepc'] = "<input type=\"text\" id=\"downloadthemepc\" name=\"downloadthemepc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemepc'])."\">";
+	$fields['downloadlevel3ds'] = "<input type=\"text\" id=\"downloadlevel3ds\" name=\"downloadlevel3ds\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevel3ds'])."\">";
+	$fields['downloadlevelwiiu'] = "<input type=\"text\" id=\"downloadlevelwiiu\" name=\"downloadlevelwiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelwiiu'])."\">";
+	$fields['downloadlevelpc'] = "<input type=\"text\" id=\"downloadlevelpc\" name=\"downloadlevelpc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelpc'])."\">";
+	$fields['downloadcostumewiiu'] = "<input type=\"text\" id=\"downloadcostumewiiu\" name=\"downloadcostumewiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumewiiu'])."\">";
+	$fields['downloadcostumepc'] = "<input type=\"text\" id=\"downloadcostumepc\" name=\"downloadcostumepc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumepc'])."\">";
 	$fields['icon'] = $iconSettings;
 }
 
 if ($canClose) $fields['closed'] = "<label><input type=\"checkbox\" name=\"isClosed\" ".($thread['closed'] ? " checked=\"checked\"" : "")."> ".__('Closed')."</label>";
-if ($canStick) $fields['sticky'] = "<label><input type=\"checkbox\" name=\"isSticky\" ".($thread['sticky'] ? " checked=\"checked\"" : "")."> ".__('Sticky')."</label>";
+if ($canStick) $fields['sticky'] = "<label><input type=\"text\" name=\"isSticky\" size=3 value=\"".htmlspecialchars($thread['sticky'])."\"> ".__('Sticky')."</label>";
 if ($canMove) $fields['forum'] = makeForumList('moveTo', $thread['forum']);
 
 $fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\"".__("Edit")."\">";

@@ -24,8 +24,9 @@ if ($board == '') {
 		(SELECT COUNT(*) FROM {users}) AS numUsers,
 		(select count(*) from {posts} where date > {0}) AS newToday,
 		(select count(*) from {posts} where date > {1}) AS newLastHour,
-		(select count(*) from {users} where lastposttime > {2}) AS numActive",
-		 time() - 86400, time() - 3600, time() - 2592000));
+		(select count(*) from {posts} where date > {2}) AS newLastWeek,
+		(select count(*) from {users} where lastposttime > {3}) AS numActive",
+		 time() - 86400, time() - 3600, time() - 604800, time() - 2592000));
 
 	$statData['pctActive'] = $statData['numUsers'] ? ceil((100 / $statData['numUsers']) * $statData['numActive']) : 0;
 	$lastUser = Query("select u.(_userfields) from {users} u order by u.regdate desc limit 1");

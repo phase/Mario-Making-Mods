@@ -28,78 +28,6 @@
 				{$fields.icon}
 			</td>
 		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Depot Screenshot
-			</td>
-			<td>
-				{$fields.screenshot}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				3DS Theme Download
-			</td>
-			<td>
-				{$fields.downloadtheme3ds}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				3DS Level Download
-			</td>
-			<td>
-				{$fields.downloadlevel3ds}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Wii U Theme Download
-			</td>
-			<td>
-				{$fields.downloadthemewiiu}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Wii U Level Download
-			</td>
-			<td>
-				{$fields.downloadlevelwiiu}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Wii U Costume Download
-			</td>
-			<td>
-				{$fields.downloadcostumewiiu}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Remaker Theme Download
-			</td>
-			<td>
-				{$fields.downloadthemepc}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Remaker Level Download
-			</td>
-			<td>
-				{$fields.downloadlevelpc}
-			</td>
-		</tr>
-		<tr class="cell{cycle values='0,1'}">
-			<td class="cell2 center">
-				Remaker Costume Download
-			</td>
-			<td>
-				{$fields.downloadcostumepc}
-			</td>
-		</tr>
 		{/if}
 		
 		{if $canClose}
@@ -131,6 +59,76 @@
 		</tr>
 		{/if}
 		
+		<tr class="cell2">
+			<td></td>
+			<td>
+				{$fields.btnEditThread}
+			</td>
+		</tr>
+		
+	</table>
+
+	<table class="outline margin form form_editthread">
+		<tr class="header1">
+			<th colspan=4>Depot</th>
+		</tr>
+		<tr class="header0">
+			<th style="width: 25%;"></th>
+			<th style="width: 25%;">ReMaker</th>
+			<th style="width: 25%;">WiiU</th>
+			<th style="width: 25%;">3DS</th>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Depot Screenshot
+			</td>
+			<td colspan=3>
+				{$fields.screenshot}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Level Download
+			</td>
+			<td>
+				{$fields.downloadlevelpc}
+			</td>
+			<td>
+				{$fields.downloadlevelwiiu}<br><small>(If the level is hosted on Nintendo's Server, you may input just the Level ID)
+			</td>
+			<td>
+				{$fields.downloadlevel3ds}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Theme Download
+			</td>
+			<td>
+				{$fields.downloadthemepc}
+			</td>
+			<td>
+				{$fields.downloadthemewiiu}
+			</td>
+			<td>
+				{$fields.downloadtheme3ds}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Costume Download
+			</td>
+			<td>
+				{$fields.downloadcostumepc}
+			</td>
+			<td>
+				{$fields.downloadcostumewiiu}
+			</td>
+			<td></td>
+		</tr>
+	</table>
+
+		<table class="outline margin form form_editthread">
 		<tr class="cell2">
 			<td></td>
 			<td>
