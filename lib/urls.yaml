@@ -18,5 +18,7 @@ leveldepot: ['GET|POST', '/depot/level', 'level']
 haxdepot: ['GET|POST', '/depot/hax', 'hax']
 remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']
 
+nuke: ['GET|POST', '/nuke/[i:id]', 'nuke']
+
 # Catch-all rule
 catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

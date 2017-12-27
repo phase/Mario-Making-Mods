@@ -32,7 +32,6 @@ function OnlineUsers($forum = 0, $update = true)
 		$onlineUsers .= ($onlineUserCt ? ", " : "").$userLink;
 		$onlineUserCt++;
 	}
-	//$onlineUsers = $onlineUserCt." "user".(($onlineUserCt > 1 || $onlineUserCt == 0) ? "s" : "")." ".$browseLocation.($onlineUserCt ? ": " : ".").$onlineUsers;
 	$onlineUsers = Plural($onlineUserCt, __("user"))." ".$browseLocation.($onlineUserCt ? ": " : ".").$onlineUsers;
 
 	$data = Fetch(Query("select 
@@ -47,7 +46,6 @@ function OnlineUsers($forum = 0, $update = true)
 	if($bots)
 		$onlineUsers .= " | ".Plural($bots,__("bot"));
 
-//	$onlineUsers = "<div style=\"display: inline-block; height: 16px; overflow: hidden; padding: 0px; line-height: 16px;\">".$onlineUsers."</div>";
 	return $onlineUsers;
 }
 

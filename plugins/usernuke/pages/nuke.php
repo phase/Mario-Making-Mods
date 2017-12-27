@@ -1,19 +1,19 @@
 <?php
 
-error_reporting(E_ALL);
-
 CheckPermission('admin.usernuke');
 
 $title = __("Delete the user");
 
 makeCrumbs([actionlink('deleteuser') => __("Delete User")]);
 
-$uid = (int)$_GET["id"];
+$uid = (int)$pageParams['id'];
 
 $user = fetch(query("select * from {users} where id={0}", $uid));
 
-if(!$user)
+if(!$user) {
 	Kill(__("You cannot delete a user that doesn't exist."));
+	throw new KillException();
+}
 
 $passwordFailed = false;
 
@@ -66,10 +66,11 @@ if(isset($_POST["currpassword"])) {
 
 		//Log that the user is deleted: Just a safety check if an admin wants to know what happend to that user, and not make the user dissapear without a trace. It also now displays his ID (In case the delete function didn't delete something and an account has some problems, you know if its linked or not) and who nuked him.
 		Report("[b]".$loguser['name']."[/] successfully deleted ".$user["name"]." (#".$uid.").");
+		
+		//Insert his ID into the nuked tables
+        Query("insert into {nuked} (id) values ({0})", $uid);
 
-		echo "User deleted!<br/>";
-		echo "You will need to ", actionLinkTag("Recalculate statistics now", "recalc");
-
+		echo "User deleted!<br/> You will need to ".actionLinkTag("Recalculate statistics now", "recalc");
 		throw new KillException();
 	} else
 		$passwordFailed = true;
@@ -81,7 +82,7 @@ if($passwordFailed) {
 }
 
 echo "
-<form name=\"confirmform\" action=\"".actionLink("nuke", $uid)."\" method=\"post\" onsubmit=\"actionlogin.disabled = true; return true;\">
+<form name=\"confirmform\" action=\"".pageLink('nuke', ['id'=>$uid])."\" method=\"post\" onsubmit=\"actionlogin.disabled = true; return true;\">
 	<table class=\"outline margin\">
 		<tr class=\"header0\">
 			<th colspan=\"2\">

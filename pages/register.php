@@ -53,8 +53,19 @@ if($_POST['register']) {
 	} else {
 		$newsalt = Shake();
 		$sha = doHash($_POST['pass'].SALT.$newsalt);
-		$uid = FetchResult("SELECT id+1 FROM {users} WHERE (SELECT COUNT(*) FROM {users} u2 WHERE u2.id={users}.id+1)=0 ORDER BY id ASC LIMIT 1");
-		if($uid < 1) $uid = 1;
+		// New user id generation, based on the 32bit integer limit rng
+        $uid = mt_rand(1, 2147483647);
+        $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+        $checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
+        while ($checkifnuked == $uid or $UIDexistcheck == $uid) {
+            while ($UIDexistcheck == $uid) {
+                $uid = mt_rand(1, 2147483647);
+                $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+            }
+            $uid = mt_rand(1, 2147483647);
+            $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+            $checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
+        }
 
 		$rUsers = Query("insert into {users} (id, name, password, pss, primarygroup, regdate, lastactivity, lastip, email, sex, theme) values ({0}, {1}, {2}, {3}, {4}, {5}, {5}, {6}, {7}, {8}, {9})", 
 			$uid, $_POST['name'], $sha, $newsalt, Settings::get('defaultGroup'), time(), $_SERVER['REMOTE_ADDR'], $_POST['email'], (int)$_POST['sex'], Settings::get("defaultTheme"));
