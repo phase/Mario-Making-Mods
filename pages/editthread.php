@@ -178,9 +178,16 @@ elseif($_POST['actionedit'])
 		$thread['downloadlevelpc'] = $_POST['downloadlevelpc'];
 		$thread['downloadcostumepc'] = $_POST['downloadcostumepc'];
 		$thread['downloadcostumewiiu'] = $_POST['downloadcostumewiiu'];
+		$thread['style'] = $_POST['style'];
+		$thread['theme'] = $_POST['theme'];
 
-		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7}, downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10}, downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13} where id={14} limit 1", 
-			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], $thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'], $thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'], $thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $tid);
+		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, 
+			screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7}, downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10}, downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13}, style={14}, theme={15} 
+			where id={16} limit 1", 
+			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], 
+			$thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'],
+			$thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'],
+			$thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $thread['theme'], $thread['style'], $tid);
 
 		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 		
@@ -200,9 +207,7 @@ $fields = array();
 if ($canRename)
 {
 	$match = array();
-	if (preg_match("@^img/icons/icon(\d+)\..{3,}\$@si", $thread['icon'], $match))
-		$iconid = $match[1];
-	elseif($thread['icon'] == "") //Has no icon
+	if($thread['icon'] == "") //Has no icon
 		$iconid = 0;
 	else //Has custom icon
 	{
@@ -242,6 +247,20 @@ if ($canRename)
 	$fields['downloadlevelpc'] = "<input type=\"text\" id=\"downloadlevelpc\" name=\"downloadlevelpc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelpc'])."\">";
 	$fields['downloadcostumewiiu'] = "<input type=\"text\" id=\"downloadcostumewiiu\" name=\"downloadcostumewiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumewiiu'])."\">";
 	$fields['downloadcostumepc'] = "<input type=\"text\" id=\"downloadcostumepc\" name=\"downloadcostumepc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumepc'])."\">";
+	$fields['style'] = '
+						<input type="radio" name="style" value="smb1"> SMB1<br>
+						<input type="radio" name="style" value="smb3"> SMB3<br>
+						<input type="radio" name="style" value="smw"> SMW<br>
+						<input type="radio" name="style" value="nsmbu"> NSMBU<br>
+						<input type="radio" name="style" value="custom" checked> Custom';
+	$fields['theme'] = '<input type="radio" name="theme" value="" checked> None/Custom<br>
+						<input type="radio" name="theme" value="grass"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396187499724144640/Screenshot_2017-08-06_at_12.56.45_PM.png"> Grassland<br>
+						<input type="radio" name="theme" value="under"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188673634467841/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underground<br>
+						<input type="radio" name="theme" value="water"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188394004283392/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underwater<br>
+						<input type="radio" name="theme" value="castle"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189460754071553/Screenshot_2017-08-06_at_12.56.45_PM.png"> Castle<br>
+						<input type="radio" name="theme" value="ghost"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189134894399508/Screenshot_2017-08-06_at_12.56.45_PM.png"> Ghost House<br>
+						<input type="radio" name="theme" value="airship"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188140353617920/Screenshot_2017-08-06_at_12.56.45_PM.png"> Airship<br>
+';
 	$fields['icon'] = $iconSettings;
 }
 

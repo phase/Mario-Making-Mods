@@ -36,6 +36,7 @@ function Kill($s, $t="")
 	if($t=="")
 		$t = __("Error");
 	Alert($s, $t);
+	throw new KillException();
 }
 
 function dieAjax($what)
@@ -45,6 +46,7 @@ function dieAjax($what)
 	echo $what;
 	$ajaxPage = true;
 	exit;
+	throw new KillException();
 }
 
 // returns FALSE if it fails.

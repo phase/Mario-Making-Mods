@@ -108,7 +108,7 @@ loadFieldLists();
 include(__DIR__."/loguser.php");
 include(__DIR__."/permissions.php");
 
-if (Settings::get('maintenance') && !$loguser['root'] && (!isset($_GET['page']) || $_GET['page'] != 'login'))
+if (!empty(Settings::get('maintenance')) && !$loguser['root'] && (!isset($_GET['page']) || $_GET['page'] != 'login'))
 {
 	die('The board is in maintenance mode, please try again later. Our apologies for the inconvenience.');
 }

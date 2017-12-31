@@ -126,6 +126,22 @@
 			</td>
 			<td></td>
 		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Game Style
+			</td>
+			<td colspan=3>
+				{$fields.style}
+			</td>
+		</tr>
+		<tr class="cell{cycle values='0,1'}">
+			<td class="cell2 center">
+				Game Theme
+			</td>
+			<td colspan=3>
+				{$fields.theme}
+			</td>
+		</tr>
 	</table>
 
 		<table class="outline margin form form_editthread">

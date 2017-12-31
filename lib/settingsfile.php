@@ -164,7 +164,7 @@ Well, what more could you [url=http://en.wikipedia.org]want to know[/url]? Perha
 		),
 		"maintenance" => array (
 			"type" => "text",
-			"default" => "",
+			"default" => "0",
 			"name" => "Maintenance mode",
 			"help" => "Leave Text blank for no Maintenance Mode",
 			'category' => 'Functionality',

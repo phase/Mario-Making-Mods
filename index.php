@@ -94,6 +94,10 @@ if (!$fakeerror) {
 		if ($e->getMessage() != 404) throw $e;
 		require_once(__DIR__.'/pages/404.php');
 	}
+	catch(KillException $e)
+	{
+		// Nothing. Just ignore this exception.
+	}
 }
 
 if($ajaxPage)
