@@ -152,21 +152,19 @@ while($user = Fetch($rUsers))
 	$daysKnown = (time()-$user['regdate'])/86400;
 	$udata['average'] = sprintf("%1.02f", $user['posts'] / $daysKnown);
 
-	if($user['picture'])
-	{
+	if($user['picture']) {
 		$pic = str_replace('$root/', DATA_URL, $user['picture']);
 		$udata['avatar'] = "<img src=\"".htmlspecialchars($pic)."\" alt=\"\" style=\"max-width: 60px;max-height:60px;\">";
-	}
-	else
+	} else
 		$udata['avatar'] = '';
-		
+
 	$udata['num'] = $i;
-	
+
 	$udata['link'] = UserLink($user);
 	$udata['posts'] = $user['posts'];
 	$udata['birthday'] = ($user['birthday'] ? cdate('M jS', $user['birthday']) : '');
 	$udata['regdate'] = cdate('M jS Y', $user['regdate']);
-	
+
 	$users[] = $udata;
 	$i++;
 }

@@ -2,15 +2,94 @@
 
 RenderTemplate('form_welcome', array('fields' => $fields));
 
-if (isset($_GET['3ds'])) {
-	$console = '3ds';
-	$command = " AND t.downloadtheme3ds <> '' ";
-} elseif (isset($_GET['wiiu'])){
-	$console = 'wiiu';
-	$command = " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
+$command = '';
+$countcommand = '';
+if ($http->get('console')) {
+	if ($http->get('console') == '3ds') {
+		$console = '3ds';
+		$command .= " AND t.downloadtheme3ds <> '' ";
+		$countcommand .= " AND downloadtheme3ds <> '' ";
+	} elseif ($http->get('console') == 'wiiu') {
+		$console = 'wiiu';
+		$command .= " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
+		$countcommand .= " AND (downloadthemewiiu <> '' OR downloadcostumewiiu <> '') ";
+	} else {
+		$console = '';
+		$command = '';
+		$countcommand = '';
+	}
 } else {
 	$console = '';
 	$command = '';
+	$countcommand = '';
+}
+
+if ($http->get('style')) {
+	if ($http->get('style') == 'smb1') {
+		$style = 'smb1';
+		$command .= " AND t.style = 'smb1' ";
+		$countcommand .= " AND style = 'smb1' ";
+	} else if ($http->get('style') == 'smb3') {
+		$style = 'smb3';
+		$command .= " AND t.style = 'smb3' ";
+		$countcommand .= " AND style = 'smb3' ";
+	} else if ($http->get('style') == 'smw') {
+		$style = 'smw';
+		$command .= " AND t.style = 'smw' ";
+		$countcommand .= " AND style = 'smw' ";
+	} else if ($http->get('style') == 'nsmbu') {
+		$style = 'nsmbu';
+		$command .= " AND t.style = 'nsmbu' ";
+		$countcommand .= " AND style = 'nsmbu' ";
+	} else if ($http->get('style') == 'custom') {
+		$style = 'custom';
+		$command .= " AND t.style = 'custom' ";
+		$countcommand .= " AND style = 'custom' ";
+	} else {
+		$style = '';
+		$command .= '';
+		$countcommand .= '';
+	}
+} else {
+	$style = '';
+	$command .= '';
+	$countcommand .= '';
+}
+
+if ($http->get('theme')) {
+	if ($http->get('theme') == 'grass') {
+		$smmtheme = 'grass';
+		$command .= " AND t.theme = 'grass' ";
+		$countcommand .= " AND theme = 'grass' ";
+	} else if ($http->get('theme') == 'under') {
+		$smmtheme = 'under';
+		$command .= " AND t.theme = 'under' ";
+		$countcommand .= " AND theme = 'under' ";
+	} else if ($http->get('theme') == 'water') {
+		$smmtheme = 'water';
+		$command .= " AND t.theme = 'water' ";
+		$countcommand .= " AND theme = 'water' ";
+	} else if ($http->get('theme') == 'castle') {
+		$smmtheme = 'castle';
+		$command .= " AND t.theme = 'castle' ";
+		$countcommand .= " AND theme = 'water' ";
+	} else if ($http->get('theme') == 'ghost') {
+		$smmtheme = 'ghost';
+		$command .= " AND t.theme = 'ghost' ";
+		$countcommand .= " AND theme = 'ghost' ";
+	} else if ($http->get('theme') == 'airship') {
+		$smmtheme = 'airship';
+		$command .= " AND t.theme = 'airship' ";
+		$countcommand .= " AND theme = 'ghost' ";
+	} else {
+		$smmtheme = '';
+		$command .= '';
+		$countcommand .= '';
+	}
+} else {
+	$smmtheme = '';
+	$command .= '';
+	$countcommand .= '';
 }
 
 $rFora = Query("select * from {forums} where id = {0} ", 3);
@@ -28,18 +107,20 @@ $sidebarshow = true;
 $showconsoles = true;
 $depoturl = 'depot';
 
+$numThemes = FetchResult("select count(*) from {threads} where id = 3 ".$countcommand);
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
 $fid = $forum['id'];
 
 $total = $forum['numthreads'];
 
-if(isset($_GET['from']))
-	$from = (int)$_GET['from'];
+if(isset($_GET['depotpage']))
+	$depotpage = (int)$_GET['depotpage'];
 else
-	$from = 0;
+	$depotpage = 0;
+$tpp = 12;
 
-$tpp = 6;
+$depotpagelinks = 'console='.$console.'&style='.$style.'&theme='.$smmtheme.'&depotpage=';
 
 $rThreads = Query("	SELECT 
 						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
@@ -54,17 +135,15 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
 					WHERE t.forum={0} AND p.deleted=0 ".$command."
-					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $from, $tpp);
+					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $depotpage, $tpp);
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(pageLink('depot', [], $console.'&from='), $tpp, $from, $total);
-
-echo '<table><tr class="cell1" style="width: 90%; align: center;"><td><h2><center>';
+$pagelinks = PageLinks(pageLink('depot', [], $depotpagelinks), $tpp, $depotpage, $total);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
-echo '</center></h2></td></tr></table> <div style="max-width: 90%; display: flex; flex-flow: row wrap; justify-content: space-around;">';
+echo '<div style="max-width: 90%; display: flex; flex-flow: row wrap; justify-content: space-around;">';
 
 while($thread = Fetch($rThreads))
 {
@@ -97,7 +176,7 @@ while($thread = Fetch($rThreads))
 		$pdata['download'] .= '<a href="'.$thread['downloadthemewiiu'].'">Download WiiU Theme</a>';
 	if($thread['downloadcostumewiiu'] !== '')
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
-	
+
 	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);
 	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
 
@@ -124,9 +203,7 @@ while($thread = Fetch($rThreads))
 	RenderTemplate('postdepo', array('post' => $pdata));
 }
 
-echo '</div> <br> <table><tr class="cell1"><td><h2><center>';
+echo '</div>';
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
-
-echo '</center></h2></td></tr></table>';
 ?>

@@ -3,7 +3,7 @@ if (!defined('BLARG')) die();
 
 CheckPermission('admin.banusers');
 
-$id = (int)$_GET['id'];
+$id = (int)$pageParams['id'];
 $user = Fetch(Query("SELECT u.(_userfields) FROM {users} u WHERE u.id={0}", $id));
 if (!$user)
 	Kill('Invalid user ID.');
@@ -38,10 +38,10 @@ if ($_POST['ban'])
 	Report($loguser['name'].' banned '.$user['u_name'].($expire ? ' for '.TimeUnits($time) : ' permanently').
 		($_POST['reason'] ? ': '.$_POST['reason']:'.'), true);
 
-	die(header('Location: '.actionLink('profile', $id, '', $user['name'])));
-}
-else if ($_POST['unban'])
-{
+	die(header("Location: ".pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])))));
+} else if ($_POST['unban']) {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');
 	if ($user['u_primarygroup'] != Settings::get('bannedGroup')) Kill(__('This user is not banned.'));
 	
@@ -50,7 +50,9 @@ else if ($_POST['unban'])
 	
 	Report($loguser['name'].' unbanned '.$user['u_name'].'.', true);
 
-	die(header('Location: '.actionLink('profile', $id, '', $user['name'])));
+	die(header("Location: ".pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])))));
 }
 
 
@@ -73,7 +75,10 @@ else
 {
 	$title = __('Ban user');
 	
-	MakeCrumbs(array(actionLink("profile", $id, '', $user['u_name']) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
+	MakeCrumbs(array(pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['u_name'])
+			)) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
 		actionLink('banhammer', $id) => __('Ban user')));
 		
 	$duration = '

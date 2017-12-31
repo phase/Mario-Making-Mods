@@ -1,0 +1,29 @@
+/* Cydro preview file */
+
+.pcydro { background: hsl(166, 63%, 12%) url('starsbg.png'); color: #fff; }
+
+.pcydro a:link, .pcydro a:visited { color: #bebafe; }
+.pcydro a:active, .pcydro a:hover { color: #cecafe; }
+
+.pcydro tr.pheader1 th, .pcydro tr.pheader0 th { 
+	background: hsla(152, 68%, 20%, 0.62);
+	border: 1px solid #000;
+	border-bottom-width: 0px;
+	color: #fff;
+	padding: 8px 10px; }
+
+.pcydro tr.pcell0 td, .pcydro tr.pcell1 td {
+	background: hsla(240, 50%, 13%, 0.62);
+	border: 1px solid #000;
+	color: #fff;
+	padding: 4px 4px 4px 4px; }
+	
+.pcydro tr.pcell2 td {
+	background: hsla(240, 50%, 13%, 0.76);
+	border: 1px solid #000;
+	border-top-width: 0px;
+	color: #fff;
+	padding: 4px 8px; }
+
+.pcydro table.outline {
+	border: 1px solid #000; }

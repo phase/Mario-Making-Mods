@@ -103,21 +103,17 @@ function makePostText($post, $poster)
 			$separator = "<br>_________________________<br>";
 		else
 			$separator = "<br>";
-	
+
 	$attachblock = '';
-	if ($post['has_attachments'])
-	{
-		if (isset($post['preview_attachs']))
-		{
+	if ($post['has_attachments']) {
+		if (isset($post['preview_attachs'])) {
 			$ispreview = true;
 			$fileids = array_keys($post['preview_attachs']);
 			$attachs = Query("SELECT id,filename,physicalname,description,downloads 
 				FROM {uploadedfiles}
 				WHERE id IN ({0c})",
 				$fileids);
-		}
-		else
-		{
+		} else {
 			$ispreview = false;
 			$attachs = Query("SELECT id,filename,physicalname,description,downloads 
 				FROM {uploadedfiles}
@@ -126,8 +122,7 @@ function makePostText($post, $poster)
 				'post_attachment', $post['id']);
 		}
 		
-		while ($attach = Fetch($attachs))
-		{
+		while ($attach = Fetch($attachs)) {
 			$url = URL_ROOT.'get.php?id='.htmlspecialchars($attach['id']);
 			$linkurl = $ispreview ? '#' : $url;
 			$filesize = filesize(DATA_DIR.'uploads/'.$attach['physicalname']);
@@ -135,14 +130,11 @@ function makePostText($post, $poster)
 			$attachblock .= '<br><div class="post_attachment">';
 			
 			$fext = strtolower(substr($attach['filename'], -4));
-			if ($fext == '.png' || $fext == '.jpg' || $fext == 'jpeg' || $fext == '.gif')
-			{
+			if ($fext == '.png' || $fext == '.jpg' || $fext == 'jpeg' || $fext == '.gif') {
 				$alt = htmlspecialchars($attach['filename']).' &mdash; '.BytesToSize($filesize).', viewed '.Plural($attach['downloads'], 'time');
 				
 				$attachblock .= '<a href="'.$linkurl.'"><img src="'.$url.'" alt="'.$alt.'" title="'.$alt.'" style="max-width:300px; max-height:300px;"></a>';
-			}
-			else
-			{
+			} else {
 				$link = '<a href="'.$linkurl.'">'.htmlspecialchars($attach['filename']).'</a>';
 				
 				$desc = htmlspecialchars($attach['description']);

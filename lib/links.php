@@ -31,56 +31,6 @@ function actionLink($action, $id="", $args="", $urlname="") {
 	return $boardroot.$action.$id.($args ? '?'.$args : '');
 }
 
-function old2actionLink($action, $id="", $args="", $urlname="") {
-	$boardroot = URL_ROOT;
-	if($boardroot == "")
-		$boardroot = "./";
-
-	// Making this easir to handle later
-	$hasid = (@is_numeric($id) || is_string($id));
-
-	// rewritten links
-	if ($action == MAIN_PAGE)
-		$action = '';
-	else if ($hasid)
-		$action .= '/';
-	else
-		$action .= '';
-
-	if ($hasid) {
-		if ($urlname) $id .= '-'.urlNamify($urlname);
-		$id .= '';
-	} else
-		$id = '';
-
-	return $boardroot.$action.$id.($args ? '?'.$args : '');
-
-}
-
-
-function oldactionLink($action, $id="", $args="", $urlname="")
-{
-	$boardroot = URL_ROOT;
-	if($boardroot == "")
-		$boardroot = "./";
-
-	// non-rewritten links
-	$res = "";
-
-	if($action != MAIN_PAGE)
-		$res .= "&page=$action";
-
-	if($id != "")
-		$res .= "&id=".urlencode($id);
-	if($args)
-		$res .= "&$args";
-
-	if($res == "")
-		return $boardroot;
-	else
-		return $boardroot."?".substr($res, 1);
-}
-
 
 function pageLink($page, $params=[], $extra='') {
 	global $router;
@@ -106,17 +56,9 @@ function actionLinkTag($text, $action, $id='', $args="", $urlname="")
 {
 	return '<a href="'.htmlentities(actionLink($action, $id, $args, $urlname)).'">'.$text.'</a>';
 }
-function oldactionLinkTag($text, $action, $id='', $args="", $urlname="")
-{
-	return '<a href="'.htmlentities(oldactionLink($action, $id, $args, $urlname)).'">'.$text.'</a>';
-}
 function actionLinkTagItem($text, $action, $id='', $args="", $urlname="")
 {
 	return '<li><a href="'.htmlentities(actionLink($action, $id, $args, $urlname)).'">'.$text.'</a></li>';
-}
-function oldactionLinkTagItem($text, $action, $id='', $args="", $urlname="")
-{
-	return '<li><a href="'.htmlentities(oldactionLink($action, $id, $args, $urlname)).'">'.$text.'</a></li>';
 }
 
 function actionLinkTagConfirm($text, $prompt, $action, $id='', $args="")

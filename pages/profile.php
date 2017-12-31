@@ -3,14 +3,14 @@
 //  Access: all
 if (!defined('BLARG')) die();
 
-$id = (int)$_REQUEST['id'];
+$id = $pageParams['id'];
 
 $rUser = Query("select u.* from {users} u where u.id={0}",$id);
 if(NumRows($rUser))
 	$user = Fetch($rUser);
 else
 	Kill(__("Unknown user ID."));
-	
+
 $uname = $user['displayname'] ?: $user['name'];
 
 $ugroup = $usergroups[$user['primarygroup']];
@@ -19,8 +19,7 @@ $usgroups = array();
 $res = Query("SELECT groupid FROM {secondarygroups} WHERE userid={0}", $id);
 while ($sg = Fetch($res)) $usgroups[] = $usergroups[$sg['groupid']];
 
-if($id == $loguserid)
-{
+if($id == $loguserid) {
 	Query("update {users} set lastprofileview={1} where id={0}", $loguserid, time());
 	DismissNotification('profilecomment', $loguserid, $loguserid);
 }
@@ -28,45 +27,47 @@ if($id == $loguserid)
 $canDeleteComments = ($id == $loguserid && HasPermission('user.deleteownusercomments')) || HasPermission('admin.adminusercomments');
 $canComment = (HasPermission('user.postusercomments') && $user['primarygroup'] != Settings::get('bannedGroup')) || HasPermission('admin.adminusercomments');
 
-if($loguserid && $_REQUEST['token'] == $loguser['token'])
-{
-	if(isset($_GET['block']))
-	{
-		$block = (int)$_GET['block'];
+if($loguserid && $http->request('token') == $loguser['token']) {
+	if($http->get('block')) {
+		$block = (int)$http->get('block');
 		$rBlock = Query("select * from {blockedlayouts} where user={0} and blockee={1}", $id, $loguserid);
 		$isBlocked = NumRows($rBlock);
 		if($block && !$isBlocked)
 			$rBlock = Query("insert into {blockedlayouts} (user, blockee) values ({0}, {1})", $id, $loguserid);
 		elseif(!$block && $isBlocked)
 			$rBlock = Query("delete from {blockedlayouts} where user={0} and blockee={1} limit 1", $id, $loguserid);
-		die(header("Location: /".actionLink("profile", $id, '', $user['name'])));
+		die(header("Location: ".pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			))));
 	}
-	if($_GET['action'] == "delete")
-	{
-		$postedby = FetchResult("SELECT cid FROM {usercomments} WHERE uid={0} AND id={1}", $id, (int)$_GET['cid']);
-		if ($canDeleteComments || ($postedby == $loguserid && HasPermission('user.deleteownusercomments')))
-		{
-			Query("delete from {usercomments} where uid={0} and id={1}", $id, (int)$_GET['cid']);
-			if ($loguserid != $id)
-			{
+
+	if($http->get('action') == "delete") {
+		$postedby = FetchResult("SELECT cid FROM {usercomments} WHERE uid={0} AND id={1}", $id, (int)$http->get('cid'));
+		if ($canDeleteComments || ($postedby == $loguserid && HasPermission('user.deleteownusercomments'))) {
+			Query("delete from {usercomments} where uid={0} and id={1}", $id, (int)$http->get('cid'));
+			if ($loguserid != $id) {
 				// dismiss any new comment notification that has been sent to that user, unless there are still new comments
 				$lastcmt = FetchResult("SELECT date FROM {usercomments} WHERE uid={0} ORDER BY date DESC LIMIT 1", $id);
 				if ($lastcmt < $user['lastprofileview'])
 					DismissNotification('profilecomment', $id, $id);
 			}
-			die(header("Location: /".actionLink("profile", $id, '', $user['name'])));
+			die(header("Location: ".pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			))));
 		}
 	}
 
-	if(isset($_POST['actionpost']) && !IsReallyEmpty($_POST['text']) && $canComment)
-	{
+	if(isset($_POST['actionpost']) && !IsReallyEmpty($_POST['text']) && $canComment) {
 		$text = utfmb4String($_POST['text']);
 		$rComment = Query("insert into {usercomments} (uid, cid, date, text) values ({0}, {1}, {2}, {3})", $id, $loguserid, time(), $text);
 		if($loguserid != $id)
-		{
 			SendNotification('profilecomment', $id, $id);
-		}
-		die(header("Location: /".actionLink("profile", $id, '', $user['name'])));
+		die(header("Location: ".pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			))));
 	}
 }
 
@@ -88,9 +89,15 @@ if($loguserid)
 	$rBlock = Query("select * from {blockedlayouts} where user={0} and blockee={1}", $id, $loguserid);
 	$isBlocked = NumRows($rBlock);
 	if($isBlocked)
-		$blockLayoutLink = actionLinkTag($unblocktext, "profile", $id, "block=0&token={$loguser['token']}");
+		$blockLayoutLink = pageLinkTag($unblocktext, "profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			), "block=0&token={$loguser['token']}");
 	else
-		$blockLayoutLink = actionLinkTag($blocktext, "profile", $id, "block=1&token={$loguser['token']}");
+		$blockLayoutLink = pageLinkTag($blocktext, "profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			), "block=1&token={$loguser['token']}");
 }
 
 $daysKnown = (time()-$user['regdate'])/86400;
@@ -206,7 +213,7 @@ $profileParts[__("General information")] = $temp;
 
 $temp = array();
 $temp[__("Email address")] = $emailField;
-if($homepage)
+if(isset($homepage))
 	$temp[__("Homepage")] = $homepage;
 $profileParts[__("Contact information")] = $temp;
 
@@ -267,13 +274,12 @@ $total = FetchResult("SELECT
 					FROM {usercomments}
 					WHERE uid={0}", $id);
 
-$from = (int)$_GET["from"];
-if(!isset($_GET["from"]))
+$from = (int)$http->get('from');
+if($http->get('from') === null)
 	$from = 0;
 $realFrom = $total-$from-$cpp;
 $realLen = $cpp;
-if($realFrom < 0)
-{
+if($realFrom < 0) {
 	$realLen += $realFrom;
 	$realFrom = 0;
 }
@@ -285,11 +291,14 @@ $rComments = Query("SELECT
 		WHERE uc.uid={0}
 		ORDER BY uc.date ASC LIMIT {1u},{2u}", $id, $realFrom, $realLen);
 
-$pagelinks = PageLinksInverted(actionLink("profile", $id, "from=", $user['name']), $cpp, $from, $total);
+$pagelinks = PageLinksInverted(pageLink("profile", array(
+					'id' => $id,
+					'name' => slugify($user['name'])
+				), 'from=')
+			, $cpp, $from, $total);
 
 $comments = array();
-while($comment = Fetch($rComments))
-{
+while($comment = Fetch($rComments)) {
 	$cmt = array();
 	
 	$deleteLink = '';
@@ -310,7 +319,10 @@ $commentField = '';
 if($canComment)
 {
 	$commentField = "
-		<form name=\"commentform\" method=\"post\" action=\"".htmlentities(actionLink("profile"))."\">
+		<form name=\"commentform\" method=\"post\" action=\"".htmlentities(pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			)))."\">
 			<input type=\"hidden\" name=\"id\" value=\"$id\">
 			<input type=\"text\" name=\"text\" style=\"width: 80%;\" maxlength=\"255\">
 			<input type=\"submit\" name=\"actionpost\" value=\"".__("Post")."\">
@@ -375,9 +387,12 @@ if(HasPermission('user.sendpms'))
 $links[] = actionLinkTag(__("Show posts"), "listposts", $id, "", $user['name']);
 $links[] = actionLinkTag(__("Show threads"), "listthreads", $id, "", $user['name']);
 
-if ($loguserid) $links[] = $blockLayoutLink;
+if ($loguserid && isset($blockLayoutLink)) $links[] = $blockLayoutLink;
 
-MakeCrumbs(array(actionLink("profile", $id, '', $user['name']) => htmlspecialchars($uname)), $links);
+MakeCrumbs(array(pageLink("profile", array(
+				'id' => $id,
+				'name' => slugify($user['name'])
+			)) => htmlspecialchars($uname)), $links);
 
 $title = format(__("Profile for {0}"), htmlspecialchars($uname));
 

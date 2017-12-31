@@ -23,15 +23,8 @@ body {
 }
 
 /* hides the sidebar, header info box, and ugly header separator */
-#main-sidebar,#headerInfo,#header-sep {
+#header-sep {
   display: none !important;
-}
-
-/* centers the header banner */
-#theme_banner {
-  display: block !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 
 a:link, a:visited { 

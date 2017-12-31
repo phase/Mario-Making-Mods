@@ -9,6 +9,7 @@ home: ['GET', '/', 'home']
 # Accounts related
 login: ['GET|POST', '/accounts/login', 'login']
 logout: ['POST', '/accounts/logout', 'login']
+profile: ['GET|POST', '/profile/[i:id]-[s:name]', 'profile']
 
 # Site Settings
 forumfaq: ['GET', '/faq/forum', 'forumfaq']
@@ -18,7 +19,9 @@ leveldepot: ['GET|POST', '/depot/level', 'level']
 haxdepot: ['GET|POST', '/depot/hax', 'hax']
 remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']
 
+# moderator actions. Mainly used on GreggGlem Reregs
 nuke: ['GET|POST', '/nuke/[i:id]', 'nuke']
+ban: ['GET|POST', '/ban/[i:id]', 'banhammer']
 
 # Catch-all rule
 catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

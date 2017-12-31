@@ -1,0 +1,36 @@
+/* Stone preview file */
+
+.pstone { background-color: #0d0d0d; color: #fff; }
+
+.pstone a:link, .pstone a:visited { color: #6DBDF2; }
+.pstone a:active, .pstone a:hover { color: #fff; }
+
+.pstone tr.pheader1 th, .pstone tr.pheader0 th { 
+	background: rgb(30,30,30);
+	background: -moz-linear-gradient(top, rgba(30,30,30,1) 0%, rgba(20,20,20,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(30,30,30,1) 0%,rgba(20,20,20,1) 100%);
+	background: linear-gradient(to bottom, rgba(30,30,30,1) 0%,rgba(20,20,20,1) 100%);
+	border-top: 1px solid #383838;
+	border-left: 1px solid #383838;
+	border-right: 1px solid #000; 
+	border-bottom: 1px solid #000;
+	color: #fff;
+	padding: 8px 10px; }
+
+.pstone tr.pcell0 td, .prstone tr.pcell1 td {
+	background: #232323;
+	border-top: 1px solid #383838;
+	border-left: 1px solid #383838;
+	border-right: 1px solid #000; 
+	border-bottom: 1px solid #000;
+	color: #fff;
+	padding: 4px 4px 4px 4px; }
+	
+.pstone tr.pcell2 td {
+	background: #1e1e1e;
+	border-top: 1px solid #383838;
+	border-left: 1px solid #383838;
+	border-right: 1px solid #000; 
+	border-bottom: 1px solid #000;
+	color: #fff;
+	padding: 4px 8px; }

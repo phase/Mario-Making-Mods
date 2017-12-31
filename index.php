@@ -176,10 +176,29 @@ if($sidebarshow == true) {
 					</table>';
 					if ($showconsoles == true) {
 					$sidebar .= '<table class="outline margin">
-						<tr class="header0"><th>Console Filter</th></tr>
-								<tr class="cell0"><td><a href="/'.$depoturl.'?wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
-								<tr class="cell1"><td><a href="/'.$depoturl.'?3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
-								<tr class="cell0"><td><a href="/'.$depoturl.'?">Both</a></td></tr>
+						<tr class="header0"><th>Filter</th></tr>
+							<form action="/'.$depoturl.'">
+								<tr class="header1"><th>Console</th></tr>
+								<tr class="cell0"><td><input type="radio" name="console" value="" checked> Both</td></tr>
+								<tr class="cell0"><td><input type="radio" name="console" value="wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
+								<tr class="cell1"><td><input type="radio" name="console" value="3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
+								<tr class="header1"><th>Game Style</th></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="" checked> All</td></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="smb1">SMB1</td></tr>
+								<tr class="cell1"><td><input type="radio" name="style" value="smb3">SMB3</td></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="smw">SMW</td></tr>
+								<tr class="cell1"><td><input type="radio" name="style" value="nsmbu">NSMBU</td></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="custom">Custom</td></tr>
+								<tr class="header1"><th>Themes</th></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="" checked> All</td></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="grass"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396187499724144640/Screenshot_2017-08-06_at_12.56.45_PM.png"> Grassland</td></tr>
+								<tr class="cell1"><td><input type="radio" name="theme" value="under"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188673634467841/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underground</td></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="water"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188394004283392/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underwater</td></tr>
+								<tr class="cell1"><td><input type="radio" name="theme" value="castle"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189460754071553/Screenshot_2017-08-06_at_12.56.45_PM.png"> Castle</td></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="ghost"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189134894399508/Screenshot_2017-08-06_at_12.56.45_PM.png"> Ghost House</td></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="airship"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188140353617920/Screenshot_2017-08-06_at_12.56.45_PM.png"> Airship</td></tr>
+								<tr class="header1"><th><input type="submit" value="Submit"></th></tr>
+							</form>
 					</table>';
 					}
 			$sidebar .= '
