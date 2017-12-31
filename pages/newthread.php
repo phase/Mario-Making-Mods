@@ -371,8 +371,8 @@ if (HasPermission('mod.stickthreads', $forum['id']))
 
 
 $fields = array(
-	'title' => "<input type=\"text\" name=\"title\" size=80 maxlength=\"60\" value=\"$beefill\">",
-	'description' => "<input type=\"text\" name=\"description\" size=80 maxlength=\"50\" value=\"$trefill\">",
+	'title' => "<input type=\"text\" name=\"title\" size=80 maxlength=\"60\" value=\"$trefill\">",
+	'description' => "<input type=\"text\" name=\"description\" size=80 maxlength=\"50\" value=\"$beefill\">",
 	'icon' => $iconSettings,
 	'pollQuestion' => "<input type=\"text\" name=\"pollQuestion\" value=\"".htmlspecialchars($_POST['pollQuestion'])."\" size=80 maxlength=\"100\">",
 	'pollOptions' => $pollSettings,

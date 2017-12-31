@@ -187,7 +187,7 @@ elseif($_POST['actionedit'])
 			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], 
 			$thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'],
 			$thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'],
-			$thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $thread['theme'], $thread['style'], $tid);
+			$thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $thread['style'], $thread['theme'], $tid);
 
 		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 		
