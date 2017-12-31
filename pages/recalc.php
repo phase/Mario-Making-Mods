@@ -31,32 +31,6 @@ query("UPDATE {users} u SET posts =
 		");
 reportFix(__("Counting user's posts&hellip;"));
 
-//This is beautiful query, but doesn't work because it's reading from the same table it's updating.
-//I'll do it the dumb way.
-/*query("UPDATE {users} u SET karma =
-			5 * (SELECT COUNT(*) FROM {uservotes} v 
-			LEFT JOIN {users} u2 on u2.id = v.voter
-			WHERE v.uid = u.id AND u2.powerlevel = 0 ) + 
-			10 * (SELECT COUNT(*) FROM {uservotes} v 
-			LEFT JOIN {users} u2 on u2.id = v.voter
-			WHERE v.uid = u.id AND u2.powerlevel = 1 OR u2.powerlevel = 2 ) + 
-			15 * (SELECT COUNT(*) FROM {uservotes} v 
-			LEFT JOIN {users} u2 on u2.id = v.voter
-			WHERE v.uid = u.id AND u2.powerlevel >= 3 ) 
-		");
-reportFix(__("Counting user's karma&hellip;"));
-*/
-
-startFix();
-$aff = 0;
-/*$users = query("select id from users");
-while($user = fetch($users))
-{
-	RecalculateKarma($user["id"]);
-	$aff += affectedRows();
-}*/
-reportFix(__("Counting user's karma&hellip;"), $aff);
-
 startFix();
 query("UPDATE {threads} t SET replies =
 			(SELECT COUNT(*) FROM {posts} p WHERE p.thread = t.id) - 1

@@ -177,8 +177,10 @@ while($thread = Fetch($rThreads))
 	if($thread['downloadcostumewiiu'] !== '')
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 
-	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);
-	$pdata['title'] = '<img src="'.$thread['icon'].'">'.$pdata['titles'].'<br>'.$tags[1];
+	$pdata['title'] = '<img src="'.$thread['icon'].'"><a href="'.pageLink("entry", array(
+				'id' => $thread['id'],
+				'name' => slugify($tags[0])
+			)).'">'.$tags[0].'</a><br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
 	$pdata['userlink'] = UserLink($starter);

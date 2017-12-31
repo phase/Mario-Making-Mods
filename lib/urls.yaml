@@ -14,10 +14,11 @@ profile: ['GET|POST', '/profile/[i:id]-[s:name]', 'profile']
 # Site Settings
 forumfaq: ['GET', '/faq/forum', 'forumfaq']
 
+# Depot
 depot: ['GET|POST', '/depot', 'depot']
 leveldepot: ['GET|POST', '/depot/level', 'level']
-haxdepot: ['GET|POST', '/depot/hax', 'hax']
 remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']
+entry: ['GET|POST', '/depot/entry/[i:id]-[s:name]', 'depotentry']
 
 # moderator actions. Mainly used on GreggGlem Reregs
 nuke: ['GET|POST', '/nuke/[i:id]', 'nuke']

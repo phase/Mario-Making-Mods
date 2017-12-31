@@ -13,7 +13,7 @@ if(isset($_GET['pid']))
 	die(header("Location: ".actionLink("depost", $_GET["pid"])));
 }
 
-$tid = (int)$_GET['id'];
+$tid = (int)$pageParams['id'];
 $rThread = Query("select * from {threads} where id={0}", $tid);
 
 if(NumRows($rThread))
