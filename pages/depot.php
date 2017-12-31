@@ -1,5 +1,7 @@
 <?php
 
+MakeCrumbs(array(pageLink('depot') => 'Depot'), $links);
+
 RenderTemplate('form_welcome', array('fields' => $fields));
 
 $command = '';
@@ -107,7 +109,7 @@ $sidebarshow = true;
 $showconsoles = true;
 $depoturl = 'depot';
 
-$numThemes = FetchResult("select count(*) from {threads} where id = 3 ".$countcommand);
+$numThemes = FetchResult("select count(*) from threads where forum = 3 ".$countcommand);
 
 RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
 $fid = $forum['id'];
@@ -139,7 +141,7 @@ $rThreads = Query("	SELECT
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(pageLink('depot', [], $depotpagelinks), $tpp, $depotpage, $total);
+$pagelinks = PageLinks(pageLink('depot', [], $depotpagelinks), $tpp, $depotpage, $numThemes);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 

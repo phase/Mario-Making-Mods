@@ -1,14 +1,7 @@
 <?php
 if (!defined('BLARG')) die();
 
-if (!$loguserGroup['root']) die(header('Location: /?page=404'));
-
-/*$toignore = array();
-$ignoreforums = Query("SELECT id FROM {forums} WHERE ignoreposts=1");
-while ($ig = Fetch($ignoreforums))
-	$toignore[] = $ig['id'];
-
-if (empty($toignore)) return;*/
+if (!$loguserGroup['root']) die(header('Location: /'));
 
 // find all the users who posted in those forums
 $posters = Query("SELECT u.id FROM {users} u");
