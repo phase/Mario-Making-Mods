@@ -94,18 +94,20 @@ if ($http->get('theme')) {
 	$countcommand .= '';
 }
 
+$sidebarshow = true;
 $rFora = Query("select * from {forums} where id = {0} ", 3);
 if(NumRows($rFora))
 {
 	$forum = Fetch($rFora);
 	if(!HasPermission('forum.viewforum', $forum['id'])){
-		Kill('You May not view the Depot!');
+		Kill('You may not view the Super Mario Maker Hacking Depot Depot.');
 		return;
 	}
-} else
+} else {
+	Alert("Whoops. Seems like there were no results for the fields you selected. Why not try different fields?");
 	return;
+}
 
-$sidebarshow = true;
 $showconsoles = true;
 $depoturl = 'depot';
 

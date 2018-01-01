@@ -188,10 +188,10 @@ if($sidebarshow == true) {
 								<tr class="cell1"><td><input type="radio" name="console" value="3ds"><img src="https://cdn.discordapp.com/attachments/260105243503624193/394725088735264773/600px-3DS_Icon.svg.png">3DS</a></td></tr>
 								<tr class="header1"><th>Game Style</th></tr>
 								<tr class="cell0"><td><input type="radio" name="style" value="" checked> All</td></tr>
-								<tr class="cell0"><td><input type="radio" name="style" value="smb1">SMB1</td></tr>
-								<tr class="cell1"><td><input type="radio" name="style" value="smb3">SMB3</td></tr>
-								<tr class="cell0"><td><input type="radio" name="style" value="smw">SMW</td></tr>
-								<tr class="cell1"><td><input type="radio" name="style" value="nsmbu">NSMBU</td></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="smb1"><img src="https://cdn.discordapp.com/emojis/364096385945174016.png" height="11" width="22"> SMB1</td></tr>
+								<tr class="cell1"><td><input type="radio" name="style" value="smb3"><img src="https://cdn.discordapp.com/emojis/364096453091524610.png" height="11" width="22"> SMB3</td></tr>
+								<tr class="cell0"><td><input type="radio" name="style" value="smw"><img src="https://cdn.discordapp.com/emojis/364096482539864075.png" height="11" width="22"> SMW</td></tr>
+								<tr class="cell1"><td><input type="radio" name="style" value="nsmbu"><img src="https://cdn.discordapp.com/emojis/364096512654966784.png" height="11" width="22"> NSMBU</td></tr>
 								<tr class="cell0"><td><input type="radio" name="style" value="custom">Custom</td></tr>
 								<tr class="header1"><th>Themes</th></tr>
 								<tr class="cell0"><td><input type="radio" name="theme" value="" checked> All</td></tr>
