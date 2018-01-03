@@ -61,7 +61,7 @@
 						<ul class="dropdownMenu">
 							<li><a href="{actionLink page='board'}">Index</a></li>
 							<li><a href="{actionLink page='lastposts'}">Latest posts</a></li>
-							<li><a href="{actionLink page='faq'}">FAQ/Rules</a></li>
+							<li><a href="{actionLink page='faq/forum'}">FAQ/Rules</a></li>
 							<li><a href="{actionLink page='search'}">Search</a></li>
 							<li><a href="{actionLink page='memberlist'}">Member list</a></li>
 							<li><a href="{actionLink page='ranks'}">Ranks</a></li>

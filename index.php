@@ -156,7 +156,7 @@ if (!file_exists(__DIR__.'/'.$layout_logopic))
 	$layout_logopic = 'img/logo.jpg';
 $layout_logopic = resourceLink($layout_logopic);
 
-$favicon = resourceLink('favicon.jpg');
+$favicon = resourceLink('img/favicon.ico');
 
 $themefile = "themes/$theme/style.css";
 if(!file_exists(__DIR__.'/'.$themefile))

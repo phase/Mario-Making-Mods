@@ -1,7 +1,7 @@
 <?php
 if (!defined('BLARG')) die();
 
-$board = $_GET['id'];
+$board = $pageParams['id'];
 if (!$board || !isset($forumBoards[$board])) $board = '';
 
 if($loguserid && isset($_GET['action']) && $_GET['action'] == "markallread") {
