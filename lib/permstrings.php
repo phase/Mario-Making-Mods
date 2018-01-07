@@ -44,6 +44,7 @@ $permDescs = array
 	'mod' => array
 	(
 		'mod.editposts' => __('Edit posts'),
+		'mod.editfirstpost' => __('Edit First Post'),
 		'mod.deleteposts' => __('Delete posts'),
 		'mod.closethreads' => __('Close/Open threads'),
 		'mod.stickthreads' => __('Stick/Unstick threads'),

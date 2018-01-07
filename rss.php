@@ -61,7 +61,7 @@ print '<?xml version="1.0" encoding="UTF-8"?>';
 		$title = htmlspecialchars($entry['title']);
 		$username = $entry['udname'] ? $entry['udname'] : $entry['uname'];
 		$rfcdate = htmlspecialchars(gmdate(DATE_RFC1123, $entry['date']));
-		$entryurl = htmlspecialchars($url.actionLink('thread', $entry['id'], '', $tags[0]));
+		$entryurl = htmlspecialchars($url.'/'.actionLink('thread', $entry['id'], '', $tags[0]));
 
 		$text = $entry['text'];
 		$text = preg_replace_callback('@\[youtube\](.*?)\[/youtube\]@si', 'fixyoutube', $text);

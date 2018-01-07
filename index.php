@@ -156,6 +156,14 @@ if (!file_exists(__DIR__.'/'.$layout_logopic))
 	$layout_logopic = 'img/logo.jpg';
 $layout_logopic = resourceLink($layout_logopic);
 
+if (!file_exists("themes/$theme")) { //Are we using some invalid theme?
+	if ($loguserid) {
+		$defaultTheme = Settings::get("defaultTheme");
+		query("update {users} set theme='" . $defaultTheme . "' where id=".$loguserid);
+		$theme = $defaultTheme;
+	}
+}
+
 $favicon = resourceLink('img/favicon.ico');
 
 $themefile = "themes/$theme/style.css";

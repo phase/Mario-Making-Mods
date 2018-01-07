@@ -104,9 +104,13 @@ elseif((int)$_GET['delete'] == 3)
 if ($post['deleted'])
 	Kill(__("This post has been deleted."));
 
-if(($post['user'] != $loguserid || !HasPermission('user.editownposts')) && !HasPermission('mod.editposts', $fid))
-	Kill(__("You are not allowed to edit this post."));
-
+if($isFirstPost) {
+	if(($post['user'] != $loguserid || !HasPermission('user.editownposts')) && !HasPermission('mod.editfirstpost', $fid))
+		Kill(__("You are not allowed to edit this post."));
+} else {
+	if(($post['user'] != $loguserid || !HasPermission('user.editownposts')) && !HasPermission('mod.editposts', $fid))
+		Kill(__("You are not allowed to edit this post."));
+}
 $tags = ParseThreadTags($thread['title']);
 MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $isHidden?'':$tags[0]) => $tags[0], '' => __("Edit post")));
 

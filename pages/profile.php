@@ -27,14 +27,11 @@ if($id == $loguserid) {
 $canDeleteComments = ($id == $loguserid && HasPermission('user.deleteownusercomments')) || HasPermission('admin.adminusercomments');
 $canComment = (HasPermission('user.postusercomments') && $user['primarygroup'] != Settings::get('bannedGroup')) || HasPermission('admin.adminusercomments');
 
-if($loguserid && $http->request('token') == $loguser['token']) {
-	if($http->get('block')) {
-		$block = (int)$http->get('block');
-		$rBlock = Query("select * from {blockedlayouts} where user={0} and blockee={1}", $id, $loguserid);
-		$isBlocked = NumRows($rBlock);
-		if($block && !$isBlocked)
+if($loguserid && $_REQUEST['token'] == $loguser['token']) {
+	if($_GET['block']) {
+		if($_GET['block'] !== 0)
 			$rBlock = Query("insert into {blockedlayouts} (user, blockee) values ({0}, {1})", $id, $loguserid);
-		elseif(!$block && $isBlocked)
+		else
 			$rBlock = Query("delete from {blockedlayouts} where user={0} and blockee={1} limit 1", $id, $loguserid);
 		die(header("Location: ".pageLink("profile", array(
 				'id' => $id,
