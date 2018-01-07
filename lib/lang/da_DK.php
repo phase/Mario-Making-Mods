@@ -1,57 +1,55 @@
 <?php
 
-setlocale(LC_ALL, "en_US");
+setlocale(LC_ALL, "da_DK");
 
-$birthdayExample = "June 26, 1983";
+$birthdayExample = "26. juni, 1983";
 
 $dateformats = array("", "m-d-y", "d-m-y", "y-m-d", "Y-m-d", "m/d/Y", "d.m.y", "M j Y", "D jS M Y");
 $timeformats = array("", "h:i A", "h:i:s A", "H:i", "H:i:s");
 
 $months = [
 	"",
-	"January",
-	"February",
-	"March",
+	"Januar",
+	"Februar",
+	"Marts",
 	"April",
-	"May",
-	"June",
-	"July",
+	"Maj",
+	"Juni",
+	"Juli",
 	"August",
 	"September",
-	"October",
+	"Oktober",
 	"November",
 	"December"];
 
 $days = [
 	"",
-	"Sunday",
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday"];
+	"Søndag",
+	"Mandag",
+	"Tirsdag",
+	"Onsdag",
+	"Torsdag",
+	"Fredag",
+	"Lørdag"];
 
 function Plural($i, $s) {
+	$e = explode(" ", $a);
+
 	if($i == 1) //For 1, just return that.
 		return $i." ".$s;
-
-	if(substr($s,-1) == "y") //Grammar Nazi strikes back!
-		$s = substr($s, 0, strlen($s)-1)."ies"; //query -> queries
-	else if(substr($s,-3) == "tch") //Grammar Nazi strikes back again!
-		$s = $s."es"; //match -> matches
+	if ($s2[count($s)-1] == "indlæg")
+		$s2[count($s)-2] .= "e";
+	else if ($s2[count($s)-1] == "tråd")
+		$s2[count($s)-1] .= "e";
 	else
-		$s .= "s"; //record -> records
+		$s2[count($s)-1] .= "er"; //record -> records
 
-	return $i." ".$s;
+	return $i." ".implode(" ", $s2);
 }
 
-function HisHer($user) {
-	if($user['sex'] == 0)
-		return "his";
-	if($user['sex'] == 1)
-		return "her";
-	return "its";
+function HisHer($user)
+{
+	return "sin";
 }
 
 function stringtotimestamp($str) {

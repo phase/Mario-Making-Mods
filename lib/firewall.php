@@ -3,14 +3,14 @@ if (!defined('BLARG')) die();
 
 function do403()
 {
-	header('HTTP/1.1 403 Forbidden');
+	header('HTTP/2.0 403 Forbidden');
 	header('Status: 403 Forbidden');
 	die('403 Forbidden');
 }
 
 function do404()
 {
-	header('HTTP/1.1 404 Not Found');
+	header('HTTP/2.0 404 Not Found');
 	header('Status: 404 Not Found');
 	die('404 Not Found');
 }

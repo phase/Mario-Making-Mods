@@ -250,14 +250,9 @@ if(NumRows($badgersR))
 {
 	$badgers = "";
 	$colors = array("bronze", "silver", "gold", "platinum", "none");
-	if($badger['color'] !== 7) {
-		while($badger = Fetch($badgersR))
-			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
-	} else {
-		while($badger = Fetch($badgersR))
-			$badgers .= Format("{0}", $badger['name']);
-	}
-	$profileParts['General information']['Badges'] = $badgers;
+	while($badger = Fetch($badgersR))
+		$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+	$profileParts[__("General information")][__('Badges')] = $badgers;
 }
 
 
