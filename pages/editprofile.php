@@ -559,22 +559,14 @@ function HandlePassword($field, $item)
 function HandleDisplayname($field, $item)
 {
 	global $user;
-	if(IsReallyEmpty($_POST[$field]) || $_POST[$field] == $user['name'])
-	{
+	if(IsReallyEmpty($_POST[$field]) || $_POST[$field] == $user['name']) {
 		// unset the display name if it's really empty or the same as the login name.
 		$_POST[$field] = "";
-	}
-	else
-	{
+	} else {
 		$dispCheck = FetchResult("select count(*) from {users} where id != {0} and (name = {1} or displayname = {1})", $user['id'], $_POST[$field]);
-		if($dispCheck)
-		{
-
+		if($dispCheck) {
 			return format(__("The display name you entered, \"{0}\", is already taken."), SqlEscape($_POST[$field]));
-		}
-		else if($_POST[$field] !== ($_POST[$field] = preg_replace('/(?! )[\pC\pZ]/u', '', $_POST[$field])))
-		{
-
+		} else if($_POST[$field] !== ($_POST[$field] = preg_replace('/(?! )[\pC\pZ]/u', '', $_POST[$field]))) {
 			return __("The display name you entered cannot contain control characters.");
 		}
 	}
@@ -654,6 +646,7 @@ $themeList .= "
 	</div>";
 
 foreach($themes as $themeKey => $themeData) {
+	if(is_file("themes/".$themeKey."/style.css")) {
 	$themeName = $themeData['name'];
 	$themeAuthor = $themeData['author'];
 	$themeCategory = $themeData['category'];
@@ -667,24 +660,6 @@ foreach($themes as $themeKey => $themeData) {
 		$preview = '';
 	}
 	$preview = resourceLink($preview);
-	if ($csspreview) {
-		$preview = 
-		'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
-			<table class="outline margin previewbox p'.$themeKey.'">
-				<tr class="pheader1">
-					<th>'.$themeName.'</th>
-				</tr>
-				<tr class="pcell0">
-					<td>'.$themeAuthor.'</td>
-				</tr>
-				<tr class="pcell2">
-					<td>'.$numUsers.' users</td>
-				</tr>
-			</table>';
-	} elseif (is_file("themes/".$themeKey."/preview.png"))
-		$preview = "<tr class=\"header0\"><th style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></th></tr>"; 
-	elseif (!is_file("themes/".$themeKey."/preview.png"))
-		$preview = ""; 
 
 	if($themeAuthor)
 		$byline = nl2br($themeAuthor);
@@ -694,32 +669,54 @@ foreach($themes as $themeKey => $themeData) {
 		$selected = " checked=\"checked\"";
 	else
 		$selected = "";
+
+	if ($csspreview) {
+		$preview = 
+		'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+			<table class="outline margin previewbox p'.$themeKey.'">
+				<tr class="pheader1">
+					<th>'.$themeName.'</th>
+				</tr>';
+				
+				if ($themeAuthor)
+				$preview .= '<tr class="pcell0">
+					<td>'.$byline.'</td>
+				</tr>';
+				$preview .= '<tr class="pcell2">
+					<td>'.Plural($numUsers, "user").'</td>
+				</tr>
+			</table>';
+	} elseif (is_file("themes/".$themeKey."/preview.png"))
+		$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+	else
+		$preview = ""; 
+
 	if($csspreview) {
 		$themeList .= format(
 		"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
-		<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{3}\"{4} id=\"{3}\" onchange=\"ChangeTheme(this.value);\" />
-		<label style=\"display: inline-block; clear: left; padding: 0.5em; {6} width: 260px; vertical-align: top\" onmousedown=\"void();\" for=\"{3}\">
-			{2}
+		<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+		<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+			{1}
 		</label>
 	</div>
-	",	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"), "");
+	",	$themeName, $preview, $themeKey, $selected);
 	} else {
 		$themeList .= format(
 '
 	<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
-		<label style="display: inline-block; clear: left; padding: 0.5em; {6} width: 260px; vertical-align: top" onmousedown="void();" for="{3}">
+		<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
 			<table class="outline"><tr class="header1">
 			<th><strong>{0}</strong></th></tr>{2}
 			<tr><td>{1}</td></tr>
 			<tr><td>{5}</td></tr></table>
 		</label>
 	</div>
-',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"), "");
+',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+	}
 	}
 }
 
-if(!isset($selectedTab))
-{
+if(!isset($selectedTab)) {
 	$selectedTab = "general";
 	foreach($epPages as $id => $name)
 	{
@@ -732,12 +729,10 @@ if(!isset($selectedTab))
 }
 
 
-foreach ($epFields as $catid => $cfields)
-{
-	foreach ($cfields as $field => $item)
-	{
+foreach ($epFields as $catid => $cfields) {
+	foreach ($cfields as $field => $item) {
 		$output = '';
-		
+
 		if(isset($item['fail'])) 
 			$item['caption'] = "<span style=\"color:#f44;\">{$item['caption']}</span>";
 
@@ -746,18 +741,18 @@ foreach ($epFields as $catid => $cfields)
 			case "label":
 				$output .= $item['value']."\n";
 				break;
-				
+
 			case "password":
 				$output = "<input type=\"password\" name=\"".$field."\" size=24> | ".__("Confirm:")." <input type=\"password\" name=\"repeat".$field."\" size=24>";
 				break;
 			case "passwordonce":
 				$output = "<input type=\"password\" name=\"".$field."\" id=\"".$field."\" size=24>";
 				break;
-				
+
 			case "color":
 				$output = "<input type=\"text\" name=\"".$field."\" id=\"".$field."\" value=\"".htmlspecialchars($item['value'])."\" class=\"color{required:false}\">";
 				break;
-				
+
 			case "birthday":
 				if (!$item['value']) $bd = array('', '', '');
 				else $bd = explode('-', date('m-d-Y', $item['value']));
@@ -765,7 +760,7 @@ foreach ($epFields as $catid => $cfields)
 				$output .= __('Day: ')."<input type=\"text\" name=\"{$field}D\" value=\"{$bd[1]}\" size=4 maxlength=2> ";
 				$output .= __('Year: ')."<input type=\"text\" name=\"{$field}Y\" value=\"{$bd[2]}\" size=4 maxlength=4> ";
 				break;
-				
+
 			case "text":
 			case "email":
 				$output .= "<input id=\"".$field."\" name=\"".$field."\" type=\"".$item['type']."\" value=\"".htmlspecialchars($item['value'])."\"";
@@ -777,13 +772,13 @@ foreach ($epFields as $catid => $cfields)
 					$output .= " ".$item['more'];
 				$output .= ">\n";
 				break;
-				
+
 			case "textarea":
 				if(!isset($item['rows']))
 					$item['rows'] = 8;
 				$output .= "<textarea id=\"".$field."\" name=\"".$field."\" rows=\"".$item['rows']."\">\n".htmlspecialchars($item['value'])."</textarea>";
 				break;
-				
+
 			case "checkbox":
 				$output .= "<label><input id=\"".$field."\" name=\"".$field."\" type=\"checkbox\"";
 				if((isset($item['negative']) && !$item['value']) || (!isset($item['negative']) && $item['value']))
@@ -791,7 +786,7 @@ foreach ($epFields as $catid => $cfields)
 				$output .= "> ".$item['caption']."</label>\n";
 				$item['caption'] = '';
 				break;
-				
+
 			case "select":
 				$disabled = isset($item['disabled']) ? $item['disabled'] : false;
 				$disabled = $disabled ? "disabled=\"disabled\" " : "";
@@ -802,7 +797,7 @@ foreach ($epFields as $catid => $cfields)
 					$options .= format("<option value=\"{0}\"{1}>{2}</option>", $key, $checks[$key], $val);
 				$output .= format("<select id=\"{0}\" name=\"{0}\" size=\"1\" {2}>\n{1}\n</select>\n", $field, $options, $disabled);
 				break;
-				
+
 			case "radiogroup":
 				$checks = array();
 				$checks[$item['value']] = " checked=\"checked\"";
@@ -817,10 +812,9 @@ foreach ($epFields as $catid => $cfields)
 				break;
 				
 			case "number":
-				//$output .= "<input type=\"number\" id=\"".$field."\" name=\"".$field."\" value=\"".$item['value']."\" />";
 				$output .= "<input type=\"text\" id=\"".$field."\" name=\"".$field."\" value=\"".$item['value']."\" size=\"6\" maxlength=\"4\">";
 				break;
-				
+
 			case "datetime":
 				$output .= "<input type=\"text\" id=\"".$field."\" name=\"".$field."\" value=\"".$item['value']."\">\n";
 				$output .= __("or preset:")."\n";
@@ -829,27 +823,27 @@ foreach ($epFields as $catid => $cfields)
 					$options .= format("<option value=\"{0}\">{1}</option>", $key, $val);
 				$output .= format("<select id=\"{0}\" name=\"{0}\" size=\"1\" >\n{1}\n</select>\n", $item['presetname'], $options);
 				break;
-				
+
 			case "timezone":
 				$output .= "<input type=\"text\" name=\"".$field."H\" size=\"2\" maxlength=\"3\" value=\"".(int)($item['value']/3600)."\">\n";
 				$output .= ":\n";
 				$output .= "<input type=\"text\" name=\"".$field."M\" size=\"2\" maxlength=\"3\" value=\"".floor(abs($item['value']/60)%60)."\">";
 				break;
-				
+
 			case "bitmask":
 				foreach($item['options'] as $key => $val)
 					$output .= format("<label><input type=\"checkbox\" name=\"{1}[]\" value=\"{0}\"{2}> {3}</label> &nbsp;", 
 						$key, $field, ($item['value'] & $key) ? ' checked="checked"' : '', $val);
 				$item['caption'] = '';
 				break;
-				
+
 			case 'themeselector':
 				$output .= $themeList;
 				break;
 		}
 		if(isset($item['extra']))
 			$output .= " ".$item['extra'];
-			
+
 		$item['html'] = $output;
 		$epFields[$catid][$field] = $item;
 	}

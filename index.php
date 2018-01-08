@@ -232,7 +232,7 @@ if($_SERVER["HTTP_X_PJAX"]) {
 } else {
 ?>
 <!doctype html>
-<html lang="en">
+<html>
 <head>
 	<title><?php print $layout_title; ?></title>
 

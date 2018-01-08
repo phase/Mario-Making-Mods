@@ -55,6 +55,18 @@ if(isset($_POST["currpassword"])) {
 		//Delete all the badges of the user.
 		Query("delete from {badges} where owner = {0}", $uid);
 
+		//Delete all current sessions
+		Query("DELETE FROM {sessions} WHERE user={0}", $uid);
+		
+		//Delete all blocked Layouts
+		Query("delete from {blockedlayouts} where blockee={0} limit 1", $uid);
+
+		//Delete all ignored forums
+		Query("delete from {ignoredforums} where uid={0}", $uid);
+
+		//Delete all notifications from user
+		Query("DELETE FROM {notifications} where user={0}", $uid);
+
 		//Delete THE USER ITSELF
 		query("delete from {users}
 				where id={0}", $uid);
