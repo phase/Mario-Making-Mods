@@ -618,8 +618,8 @@ if (is_dir($dir))
 		        $themeinfo = explode("\n", $themeinfo, 2);
 
 		        $themes[$file]['name'] = trim($themeinfo[0]);
-		        $themes[$file]['author'] = trim($themeinfo[1]);
-				$themes[$file]['category'] = trim($themeinfo[2]);
+				$themes[$file]['category'] = trim($themeinfo[1]);
+		        $themes[$file]['author'] = trim($themeinfo[2]);
 		    }
 		    else
 		    {
@@ -645,74 +645,368 @@ $themeList .= "
 		<input type=\"text\" placeholder=\"".__("Search")."\" id=\"search\" onkeyup=\"searchThemes(this.value);\" />
 	</div>";
 
+AddCategory('theme', 'SMB1', __('Super Mario Bros 1 Style'));
 foreach($themes as $themeKey => $themeData) {
 	if(is_file("themes/".$themeKey."/style.css")) {
-	$themeName = $themeData['name'];
-	$themeAuthor = $themeData['author'];
-	$themeCategory = $themeData['category'];
-	$numUsers = $themeData['num'];
-	$csspreview = false;
-	$preview = "themes/".$themeKey."/preview.png";
-	if(is_file("themes/".$themeKey."/preview.css")) {
-		$csspreview = true;
-		$preview = "themes/".$themeKey."/preview.css";
-	} elseif(!is_file($preview)) {
-		$preview = '';
-	}
-	$preview = resourceLink($preview);
+		$themeName = $themeData['name'];
+		$themeAuthor = $themeData['author'];
+		$themeCategory = $themeData['category'];
+		if($themeCategory == 'SMB1') continue;
+		$numUsers = $themeData['num'];
+		$csspreview = false;
+		$preview = "themes/".$themeKey."/preview.png";
+		if(is_file("themes/".$themeKey."/preview.css")) {
+			$csspreview = true;
+			$preview = "themes/".$themeKey."/preview.css";
+		} elseif(!is_file($preview)) {
+			$preview = '';
+		}
+		$preview = resourceLink($preview);
 
-	if($themeAuthor)
-		$byline = nl2br($themeAuthor);
-	else
-		$byline = "";
-	if($themeKey == $user['theme'])
-		$selected = " checked=\"checked\"";
-	else
-		$selected = "";
+		if($themeAuthor)
+			$byline = nl2br($themeAuthor);
+		else
+			$byline = "";
+		if($themeKey == $user['theme'])
+			$selected = " checked=\"checked\"";
+		else
+			$selected = "";
 
-	if ($csspreview) {
-		$preview = 
-		'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
-			<table class="outline margin previewbox p'.$themeKey.'">
-				<tr class="pheader1">
-					<th>'.$themeName.'</th>
-				</tr>';
-				
-				if ($themeAuthor)
-				$preview .= '<tr class="pcell0">
-					<td>'.$byline.'</td>
-				</tr>';
-				$preview .= '<tr class="pcell2">
-					<td>'.Plural($numUsers, "user").'</td>
-				</tr>
-			</table>';
-	} elseif (is_file("themes/".$themeKey."/preview.png"))
-		$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
-	else
-		$preview = ""; 
+		if ($csspreview) {
+			$preview = 
+			'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+				<table class="outline margin previewbox p'.$themeKey.'">
+					<tr class="pheader1">
+						<th>'.$themeName.'</th>
+					</tr>';
 
-	if($csspreview) {
-		$themeList .= format(
-		"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
-		<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
-		<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
-			{1}
-		</label>
-	</div>
-	",	$themeName, $preview, $themeKey, $selected);
-	} else {
-		$themeList .= format(
+					if ($themeAuthor)
+					$preview .= '<tr class="pcell0">
+						<td>'.$byline.'</td>
+					</tr>';
+					$preview .= '<tr class="pcell2">
+						<td>'.Plural($numUsers, "user").'</td>
+					</tr>
+				</table>';
+		} elseif (is_file("themes/".$themeKey."/preview.png"))
+			$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+		else
+			$preview = ""; 
+
+		if($csspreview) {
+			$themeList .= format(
+			"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+			<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+			<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+				{1}
+			</label>
+		</div>
+		",	$themeName, $preview, $themeKey, $selected);
+		} else {
+			$themeList .= format(
 '
-	<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
-		<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
-			<table class="outline"><tr class="header1">
-			<th><strong>{0}</strong></th></tr>{2}
-			<tr><td>{1}</td></tr>
-			<tr><td>{5}</td></tr></table>
-		</label>
-	</div>
-',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+			<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
+				<table class="outline"><tr class="header1">
+				<th><strong>{0}</strong></th></tr>{2}
+				<tr><td>{1}</td></tr>
+				<tr><td>{5}</td></tr></table>
+			</label>
+		</div>
+	',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		}
 	}
+}
+
+AddCategory('theme', 'SMB3', __('Super Mario Bros 3 Style'));
+foreach($themes as $themeKey => $themeData) {
+	if(is_file("themes/".$themeKey."/style.css")) {
+		$themeName = $themeData['name'];
+		$themeAuthor = $themeData['author'];
+		$themeCategory = $themeData['category'];
+		if($themeCategory == 'SMB3') continue;
+		$numUsers = $themeData['num'];
+		$csspreview = false;
+		$preview = "themes/".$themeKey."/preview.png";
+		if(is_file("themes/".$themeKey."/preview.css")) {
+			$csspreview = true;
+			$preview = "themes/".$themeKey."/preview.css";
+		} elseif(!is_file($preview)) {
+			$preview = '';
+		}
+		$preview = resourceLink($preview);
+
+		if($themeAuthor)
+			$byline = nl2br($themeAuthor);
+		else
+			$byline = "";
+		if($themeKey == $user['theme'])
+			$selected = " checked=\"checked\"";
+		else
+			$selected = "";
+
+		if ($csspreview) {
+			$preview = 
+			'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+				<table class="outline margin previewbox p'.$themeKey.'">
+					<tr class="pheader1">
+						<th>'.$themeName.'</th>
+					</tr>';
+
+					if ($themeAuthor)
+					$preview .= '<tr class="pcell0">
+						<td>'.$byline.'</td>
+					</tr>';
+					$preview .= '<tr class="pcell2">
+						<td>'.Plural($numUsers, "user").'</td>
+					</tr>
+				</table>';
+		} elseif (is_file("themes/".$themeKey."/preview.png"))
+			$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+		else
+			$preview = ""; 
+
+		if($csspreview) {
+			$themeList .= format(
+			"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+			<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+			<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+				{1}
+			</label>
+		</div>
+		",	$themeName, $preview, $themeKey, $selected);
+		} else {
+			$themeList .= format(
+'
+		<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+			<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
+				<table class="outline"><tr class="header1">
+				<th><strong>{0}</strong></th></tr>{2}
+				<tr><td>{1}</td></tr>
+				<tr><td>{5}</td></tr></table>
+			</label>
+		</div>
+	',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		}
+	}
+}
+
+AddCategory('theme', 'SMW', __('Super Mario World Style'));
+foreach($themes as $themeKey => $themeData) {
+	if(is_file("themes/".$themeKey."/style.css")) {
+		$themeName = $themeData['name'];
+		$themeAuthor = $themeData['author'];
+		$themeCategory = $themeData['category'];
+		if($themeCategory == 'SMW') continue;
+		$numUsers = $themeData['num'];
+		$csspreview = false;
+		$preview = "themes/".$themeKey."/preview.png";
+		if(is_file("themes/".$themeKey."/preview.css")) {
+			$csspreview = true;
+			$preview = "themes/".$themeKey."/preview.css";
+		} elseif(!is_file($preview)) {
+			$preview = '';
+		}
+		$preview = resourceLink($preview);
+
+		if($themeAuthor)
+			$byline = nl2br($themeAuthor);
+		else
+			$byline = "";
+		if($themeKey == $user['theme'])
+			$selected = " checked=\"checked\"";
+		else
+			$selected = "";
+
+		if ($csspreview) {
+			$preview = 
+			'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+				<table class="outline margin previewbox p'.$themeKey.'">
+					<tr class="pheader1">
+						<th>'.$themeName.'</th>
+					</tr>';
+
+					if ($themeAuthor)
+					$preview .= '<tr class="pcell0">
+						<td>'.$byline.'</td>
+					</tr>';
+					$preview .= '<tr class="pcell2">
+						<td>'.Plural($numUsers, "user").'</td>
+					</tr>
+				</table>';
+		} elseif (is_file("themes/".$themeKey."/preview.png"))
+			$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+		else
+			$preview = ""; 
+
+		if($csspreview) {
+			$themeList .= format(
+			"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+			<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+			<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+				{1}
+			</label>
+		</div>
+		",	$themeName, $preview, $themeKey, $selected);
+		} else {
+			$themeList .= format(
+'
+		<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+			<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
+				<table class="outline"><tr class="header1">
+				<th><strong>{0}</strong></th></tr>{2}
+				<tr><td>{1}</td></tr>
+				<tr><td>{5}</td></tr></table>
+			</label>
+		</div>
+	',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		}
+	}
+}
+
+AddCategory('theme', 'NSMB', __('New Super Mario Bros. Style'));
+foreach($themes as $themeKey => $themeData) {
+	if(is_file("themes/".$themeKey."/style.css")) {
+		$themeName = $themeData['name'];
+		$themeAuthor = $themeData['author'];
+		$themeCategory = $themeData['category'];
+		if($themeCategory == 'NSMB') continue;
+		$numUsers = $themeData['num'];
+		$csspreview = false;
+		$preview = "themes/".$themeKey."/preview.png";
+		if(is_file("themes/".$themeKey."/preview.css")) {
+			$csspreview = true;
+			$preview = "themes/".$themeKey."/preview.css";
+		} elseif(!is_file($preview)) {
+			$preview = '';
+		}
+		$preview = resourceLink($preview);
+
+		if($themeAuthor)
+			$byline = nl2br($themeAuthor);
+		else
+			$byline = "";
+		if($themeKey == $user['theme'])
+			$selected = " checked=\"checked\"";
+		else
+			$selected = "";
+
+		if ($csspreview) {
+			$preview = 
+			'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+				<table class="outline margin previewbox p'.$themeKey.'">
+					<tr class="pheader1">
+						<th>'.$themeName.'</th>
+					</tr>';
+
+					if ($themeAuthor)
+					$preview .= '<tr class="pcell0">
+						<td>'.$byline.'</td>
+					</tr>';
+					$preview .= '<tr class="pcell2">
+						<td>'.Plural($numUsers, "user").'</td>
+					</tr>
+				</table>';
+		} elseif (is_file("themes/".$themeKey."/preview.png"))
+			$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+		else
+			$preview = ""; 
+
+		if($csspreview) {
+			$themeList .= format(
+			"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+			<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+			<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+				{1}
+			</label>
+		</div>
+		",	$themeName, $preview, $themeKey, $selected);
+		} else {
+			$themeList .= format(
+'
+		<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+			<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
+				<table class="outline"><tr class="header1">
+				<th><strong>{0}</strong></th></tr>{2}
+				<tr><td>{1}</td></tr>
+				<tr><td>{5}</td></tr></table>
+			</label>
+		</div>
+	',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		}
+	}
+}
+
+AddCategory('theme', 'Other', __('Other Styles'));
+foreach($themes as $themeKey => $themeData) {
+	if(is_file("themes/".$themeKey."/style.css")) {
+		$themeName = $themeData['name'];
+		$themeAuthor = $themeData['author'];
+		$themeCategory = $themeData['category'];
+		if($themeCategory !== 'SMB3' || $themeCategory !== 'SMB1' || $themeCategory !== 'SMW' || $themeCategory !== 'NSMB') continue;
+		$numUsers = $themeData['num'];
+		$csspreview = false;
+		$preview = "themes/".$themeKey."/preview.png";
+		if(is_file("themes/".$themeKey."/preview.css")) {
+			$csspreview = true;
+			$preview = "themes/".$themeKey."/preview.css";
+		} elseif(!is_file($preview)) {
+			$preview = '';
+		}
+		$preview = resourceLink($preview);
+
+		if($themeAuthor)
+			$byline = nl2br($themeAuthor);
+		else
+			$byline = "";
+		if($themeKey == $user['theme'])
+			$selected = " checked=\"checked\"";
+		else
+			$selected = "";
+
+		if ($csspreview) {
+			$preview = 
+			'<link rel="stylesheet" type="text/css" id="theme_preview" href="'.$preview.'">
+				<table class="outline margin previewbox p'.$themeKey.'">
+					<tr class="pheader1">
+						<th>'.$themeName.'</th>
+					</tr>';
+
+					if ($themeAuthor)
+					$preview .= '<tr class="pcell0">
+						<td>'.$byline.'</td>
+					</tr>';
+					$preview .= '<tr class="pcell2">
+						<td>'.Plural($numUsers, "user").'</td>
+					</tr>
+				</table>';
+		} elseif (is_file("themes/".$themeKey."/preview.png"))
+			$preview = "<tr class=\"cell1\"><td style=\"padding: 5px 5px 5px 5px;\"><img src=\"".$preview."\" alt=\"".$themeName."\" style=\"margin-bottom: 0.5em\"></td></tr>"; 
+		else
+			$preview = ""; 
+
+		if($csspreview) {
+			$themeList .= format(
+			"<div style=\"display: inline-block;\" class=\"theme\" title=\"{0}\">
+			<input style=\"display: none;\" type=\"radio\" name=\"theme\" value=\"{2}\"{3} id=\"{2}\" onchange=\"ChangeTheme(this.value);\" />
+			<label style=\"display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top\" onmousedown=\"void();\" for=\"{2}\">
+				{1}
+			</label>
+		</div>
+		",	$themeName, $preview, $themeKey, $selected);
+		} else {
+			$themeList .= format(
+'
+		<div style="display: inline-block;" class="theme" title="{0}"><input style="display: none;" type="radio" name="theme" value="{3}"{4} id="{3}" onchange="ChangeTheme(this.value);">
+			<label style="display: inline-block; clear: left; padding: 0.5em; width: 270px; vertical-align: top" onmousedown="void();" for="{3}">
+				<table class="outline"><tr class="header1">
+				<th><strong>{0}</strong></th></tr>{2}
+				<tr><td>{1}</td></tr>
+				<tr><td>{5}</td></tr></table>
+			</label>
+		</div>
+	',	$themeName, $byline, $preview, $themeKey, $selected, Plural($numUsers, "user"));
+		}
 	}
 }
 
