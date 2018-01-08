@@ -12,11 +12,10 @@ function makeLangList()
 			$data[$file] = $file;
 		}
 	}
-	$data["en_US"] = "en_US";
-	$data["-default"] = "Board default";
+	$data["-default"] = "en_US (Default)";
 	closedir($dir);
 	ksort($data);
 	return $data;
 }
 
-AddField('general', 'presentation', 'linguage', __('Language'), 'radiogroup', array('options'=>makeLangList()));
+AddField('general', 'presentation', 'linguage', __('Language'), 'select', array('options'=>makeLangList()));

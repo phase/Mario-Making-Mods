@@ -330,7 +330,7 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 		{
 			foreach ($subfora[$forum['id']] as $subforum)
 			{
-				$link = actionLinkTag($subforum['title'], 'forum', $subforum['id'], '', 
+				$link = actionLinkTag(__($subforum['title']), 'forum', $subforum['id'], '', 
 					HasPermission('forum.viewforum', $subforum['id'], true) ? $subforum['title'] : '');
 				
 				if ($subforum['ignored'])
