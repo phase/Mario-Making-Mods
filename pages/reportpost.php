@@ -6,7 +6,7 @@ $title = __('Report post');
 if (!$loguserid) Kill(__('You must be logged in to report posts.'));
 CheckPermission('user.reportposts');
 
-$pid = (int)$_GET['id'];
+$pid = (int)$pageParams['id'];
 $post = Fetch(Query("SELECT p.*, pt.text FROM {posts} p LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision WHERE p.id={0}", $pid));
 if (!$post) Kill(__('Invalid post ID.'));
 
@@ -49,10 +49,10 @@ if ($_POST['report'])
 		$pmid, -1, $loguserid, time(), $_SERVER['REMOTE_ADDR']);
 	
 	$report = "<strong>Post report</strong>\n\n<strong>Post:</strong> ".actionLinkTag($tags[0], 'post', $pid).
-		" (post #{$pid})\n\n<strong>Message:</strong>\n{$_POST['message']}\n\n".actionLinkTag('Mark issue as resolved', 'showprivate', $pmid, 'markread=1');
+		" (post #".$pid.")\n\n<strong>Message:</strong>\n".$_POST['message']."\n\n".actionLinkTag('Mark issue as resolved', 'showprivate', $pmid, 'markread=1');
 		
 	Query("UPDATE {pmsgs_text} SET text={0} WHERE pid={1}", $report, $pmid);
-	
+
 	SendNotification('report', $pmid, -1);
 	
 	die(header('Location: '.actionLink('post', $pid)));
@@ -74,7 +74,7 @@ $fields = array(
 );
 
 echo '
-	<form action="" method="POST">';
+	<form action="'.pageLink('reportpost', ['id'=>$pid]).'" method="POST">';
 	
 RenderTemplate('form_reportpost', array('fields' => $fields));
 

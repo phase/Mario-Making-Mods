@@ -59,7 +59,7 @@ if(isset($_POST["currpassword"])) {
 		Query("DELETE FROM {sessions} WHERE user={0}", $uid);
 		
 		//Delete all blocked Layouts
-		Query("delete from {blockedlayouts} where blockee={0} limit 1", $uid);
+		Query("delete from {blockedlayouts} where blockee={0} or user={0}", $uid);
 
 		//Delete all ignored forums
 		Query("delete from {ignoredforums} where uid={0}", $uid);
