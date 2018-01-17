@@ -4,7 +4,7 @@ CheckPermission('admin.usernuke');
 
 $title = __("Delete the user");
 
-makeCrumbs([actionlink('deleteuser') => __("Delete User")]);
+makeCrumbs([actionlink('nuke') => __("Delete User")]);
 
 $uid = (int)$pageParams['id'];
 

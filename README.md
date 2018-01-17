@@ -29,3 +29,4 @@ Credits:
 -NightYoshi370: Makerboard, and the entire depot plugin.                  
 -PickPen: Making the Depot theme icons.
 -LifeMushroom and Samplasion: Themes (they gave me permission to use their theme)
+-Samplasion & MoonlightCapital: Italian Translation

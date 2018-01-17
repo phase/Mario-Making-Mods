@@ -3,6 +3,7 @@ if (!defined('BLARG')) die();
 
 header('Cache-control: no-cache, private');
 header('X-Frame-Options: DENY');
+header("X-XSS-Protection: 1; mode=block");
 
 // I can't believe there are PRODUCTION servers that have E_NOTICE turned on. What are they THINKING? -- Kawa
 error_reporting(E_ALL ^ E_NOTICE | E_STRICT);

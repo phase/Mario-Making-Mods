@@ -2,7 +2,16 @@
 
 MakeCrumbs(array(pageLink('depot') => 'Depot'), $links);
 
-RenderTemplate('form_welcome', array('fields' => $fields));
+$header = __('Welcome to our depot');
+$text = __('Welcome to the Mario Making Mods Depot. Here, you can find the latest and best hacks from our forums!');
+$submissions = __('Specify the following in your submission.
+				<ul><li>Name of Theme
+				<li>Platform (WiiU/3DS)
+				<li>Game it replaces (SMB1/SMB3/SMW/NSMBU)
+				<li>Screenshots/Video
+				<li>Download link</ul>');
+
+RenderTemplate('form_welcome', array('header' => $header, 'text' => $text));
 
 $command = '';
 $countcommand = '';
@@ -113,7 +122,7 @@ $depoturl = 'depot';
 
 $numThemes = FetchResult("select count(*) from threads where forum = 3 ".$countcommand);
 
-RenderTemplate('form_lvluserpanel', array('form_lvluserpanel' => $fields));
+RenderTemplate('form_lvluserpanel', array('submission' => $submissions));
 $fid = $forum['id'];
 
 $total = $forum['numthreads'];

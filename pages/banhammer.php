@@ -40,7 +40,7 @@ if ($_POST['ban'])
 
 	die(header("Location: ".pageLink("profile", array(
 				'id' => $id,
-				'name' => slugify($user['name'])))));
+				'name' => $user['u_name']))));
 } else if ($_POST['unban']) {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');
 	if ($user['u_primarygroup'] != Settings::get('bannedGroup')) Kill(__('This user is not banned.'));
@@ -52,7 +52,7 @@ if ($_POST['ban'])
 
 	die(header("Location: ".pageLink("profile", array(
 				'id' => $id,
-				'name' => slugify($user['name'])))));
+				'name' => $user['u_name']))));
 }
 
 
@@ -60,7 +60,10 @@ if (isset($_GET['unban']))
 {
 	$title = __('Unban user');
 	
-	MakeCrumbs(array(actionLink("profile", $id, '', $user['u_name']) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
+	MakeCrumbs(array(pageLink("profile", array(
+				'id' => $id,
+				'name' => $user['u_name']
+			)) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
 		actionLink('banhammer', $id, 'unban=1') => __('Unban user')));
 		
 	$userlink = userLink(getDataPrefix($user, 'u_'));
@@ -77,7 +80,7 @@ else
 	
 	MakeCrumbs(array(pageLink("profile", array(
 				'id' => $id,
-				'name' => slugify($user['u_name'])
+				'name' => $user['u_name']
 			)) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
 		actionLink('banhammer', $id) => __('Ban user')));
 		

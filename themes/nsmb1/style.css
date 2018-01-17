@@ -34,6 +34,11 @@ a:hover span
 	color: #007;
 }
 
+ul.dropdownMenu li a:link, ul.dropdownMenu li a:visited, ul.dropdownMenu li a:active, ul.dropdownMenu li a:hover
+{
+	color: white;
+}
+
 .faq
 {
 	border: 1px solid #228;

@@ -251,9 +251,11 @@ if($_SERVER["HTTP_X_PJAX"]) {
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="theme-color" content="#2196F3"/>
 	<!-- Open Graph general (Facebook, Pinterest & Google+) -->
+	<meta property="og:title" content="<?php print $layout_title; ?>" />
 	<meta name="og:title" content="<?php print $layout_title; ?>">
 	<meta name="og:description" content="<?php print $metaStuff['description']; ?>">
 	<meta name="og:url" content="https://mariomods.net/">
+	<meta property="og:url" content="https://mariomods.net/" />
 	<meta name="og:site_name" content="Mario Making Mods">
 	<meta name="og:locale" content="en_US">
 	<meta name="og:type" content="website">
