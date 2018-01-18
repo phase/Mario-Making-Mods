@@ -23,7 +23,6 @@ $permDescs = array
 		'user.sendpms' => __('Send private messages'),
 		'user.postusercomments' => __('Post user comments'),
 		'user.deleteownusercomments' => __('Delete own user comments'),
-		'user.snow' => __('See the raining Snow'),
 		'user.viewhiddenforums' => __('View hidden forums'),
 	),
 	'forum' => array
@@ -35,7 +34,6 @@ $permDescs = array
 		'forum.deleteownposts' => __('Delete own posts'),
 		'forum.unlistedthreads' => __('View Unlisted Threads'),
 		'forum.hiddenthreads' => __('View Hidden Threads'),
-		'forum.hideads' => __('Hide Advertisements'),
 		'forum.reportposts' => __('Report posts'),
 		'forum.editownposts' => __('Edit own posts'),
 		'forum.renameownthreads' => __('Rename own threads'),

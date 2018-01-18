@@ -39,7 +39,9 @@ $entries = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 					WHERE t.forum={0} AND p.deleted=0
-					ORDER BY p.date DESC LIMIT 5", $fid);
+					ORDER BY p.date DESC", $fid);
+
+$item_list = [];
 
 while($entry = Fetch($entries)) {
 	$tags = ParseThreadTags($entry['title']);
@@ -48,6 +50,9 @@ while($entry = Fetch($entries)) {
 	$username = $entry['udname'] ? $entry['udname'] : $entry['uname'];
 	$rfcdate = htmlspecialchars(gmdate(DATE_RFC1123, $entry['date']));
 	$entryurl = htmlspecialchars($url.'/'.actionLink('thread', $entry['id'], '', $tags[0]));
+	
+	$download3ds = $entry['downloadtheme3ds'];
+	$downloadwiiu = $entry['downloadthemewiiu'];
 
 	$text = $entry['text'];
 	$text = preg_replace_callback('@\[youtube\](.*?)\[/youtube\]@si', 'fixyoutube', $text);
@@ -62,5 +67,18 @@ while($entry = Fetch($entries)) {
 	$text = str_replace(']]>', ']]&gt;', $text);
 
 	$username = htmlspecialchars($username);
+
+	$item = new \stdClass;
+
+	$item->title = "{$title} -- posted by {$username}";
+	$item->link = "{$entryurl}";
+	$item->pubDate = "{$rfcdate}";
+	$item->description = "{$text}";
+	$item->guid = "{$entryurl}";
+	$item->download3ds = "{$download3ds}";
+	$item->downloadu = "{$downloadwiiu}";
+
+	array_push($item_list, $item);
 }
 
+echo json_encode($item_list);
