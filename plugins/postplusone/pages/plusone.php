@@ -11,8 +11,10 @@ $pid = (int)$pageParams["id"];
 $post = Fetch(Query("SELECT * FROM {posts} WHERE id = {0}", $pid));
 if(!$post)
 	die("Unknown post");
+if(!$loguserid)
+	die("You must be logged on in order to star posts!")
 if($post["user"] == $loguserid)
-	die("Nope!");
+	die("You may not star your own posts!");
 
 $thread = Fetch(Query("SELECT * FROM {threads} WHERE id = {0}", $post["thread"]));
 if(!$thread)
@@ -42,5 +44,3 @@ $starurl = actionLink("plusone", $post["id"], "key=".$loguser["token"]);
 $starurl = htmlspecialchars($starurl);
 
 echo "<a href=\"\" onclick=\"$(this.parentElement).load('$starurl'); return false;\"><img src=\"$starimg\"></a>".$post["postplusones"];
-
-

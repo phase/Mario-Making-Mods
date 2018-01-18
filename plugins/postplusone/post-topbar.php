@@ -1,7 +1,7 @@
 <?php
 $plusOne = '<span class="postplusone">';
 
-if($poster['id'] !== $loguserid)
+if($poster['id'] !== $loguserid && $loguserid != 0)
 {
 	$url = actionLink("plusone", $post["id"], "key=".$loguser["token"]);
 	$url = htmlspecialchars($url);
@@ -12,8 +12,8 @@ if($poster['id'] !== $loguserid)
 		$starimg = 'https://i.imgur.com/gErHVso.png';
 
 	$plusOne .= "<a href=\"\" onclick=\"$(this.parentElement).load('".$url."'); return false;\"><img src=\"".$starimg."\"></a>";		
-	$show = true;
-}
+} else
+	$plusOne .= '<img src="https://i.imgur.com/zMAbCLC.png">';
 
 $plusOne .= $post["postplusones"];
 $plusOne .= '</span>';

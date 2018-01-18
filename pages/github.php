@@ -36,10 +36,11 @@ if ($_POST['payload']) {
 	foreach ($payload->commits as $commit){
 		$author = $commit->author->username;
 		$message = $commit->message;
-		$commit = $commit->url;
+		$commiturl = $commit->url;
+		$commitid = $commit->id;
 	}
 
-	$post = $author.' has made a new commit: '.$message.'<br><br>'.$commit;
+	$post = $author.' has made a new commit: '.$message.'<br><br><a href="'.$commiturl.'">Commit URL</a><br>ID: '.$commitid;
 
 	$rPostsText = Query("insert into {posts_text} (pid,text,revision,user,date) values ({0}, {1}, {2}, {3}, {4})", $pid, htmlspecialchars($post), 0, 197, time());
 

@@ -104,6 +104,8 @@ $posts = FetchResult("select count(*) from {posts} where user={0}", $id);
 $threads = FetchResult("select count(*) from {threads} where user={0}", $id);
 $averagePosts = sprintf("%1.02f", $user['posts'] / $daysKnown);
 $averageThreads = sprintf("%1.02f", $threads / $daysKnown);
+$deletedposts = FetchResult("SELECT COUNT(*) FROM {posts} p WHERE p.user={0} AND p.deleted!=0 AND p.deletedby!={0}", $id);
+$score = 0 + (15 * $user['postplusones']) + (5 * $posts) + (10 * $threads) - (20 * $deletedposts);
 
 $minipic = getMinipicTag($user);
 
@@ -146,6 +148,8 @@ $temp = array();
 $temp[__("Name")] = $minipic . htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']) . ($user['displayname'] ? " (".htmlspecialchars($user['name']).")" : "");
 if($title)
 	$temp[__("Title")] = $title;
+$temp[__("User ID")] = $id;
+$temp[__("Score")] = $score;
 	
 $glist = '<strong class="userlink" style="color: '.htmlspecialchars($ugroup['color_unspec']).';">'.htmlspecialchars($ugroup['name']).'</strong>';
 foreach ($usgroups as $sgroup)
