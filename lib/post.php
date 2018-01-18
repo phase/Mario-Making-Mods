@@ -208,9 +208,9 @@ function makePost($post, $type, $params=array())
 	{
 		$forum = $params['fid'];
 		$thread = $params['tid'];
-		
+
 		$notclosed = (!$post['closed'] || HasPermission('mod.closethreads', $forum));
-		
+
 		$extraLinks = array();
 
 		if (!$isBot)
@@ -254,7 +254,7 @@ function makePost($post, $type, $params=array())
 				}
 				
 				// plugins should add to $extraLinks
-				$bucket = "topbar"; include(__DIR__."/pluginloader.php");
+				$bucket = "post-topbar"; include(__DIR__."/pluginloader.php");
 			}
 			
 			$links['extra'] = $extraLinks;

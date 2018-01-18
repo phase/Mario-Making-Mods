@@ -1,3 +1,2 @@
-name=Post +1
-description=Allows users to upvote posts.
-version=1200
+name=Star System
+description=Allows users to star posts.

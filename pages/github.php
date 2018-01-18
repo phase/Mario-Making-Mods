@@ -1,14 +1,12 @@
 <?php
+//Mario Making Mods: Github Page
+//Todo: Have secret ID
 if (!defined('BLARG')) die();
-
-echo 'Page Boot UP!';
 
 $payload = json_decode($_POST['payload']);
 
 if ($payload === false || !isset($payload->commits))
     die('Hacking attempt...');
-
-echo 'Made it so far!<br>';
 
 if ($_POST['payload']) {
 	if($payload->repository->name == "Forum-software") {
@@ -20,6 +18,12 @@ if ($_POST['payload']) {
 	} else {
 		die('Hacking attempt...');
 	}
+
+	if (($payload->repository->full_name !== "MarioMakingMods/Forum-software" || $payload->repository->full_name !== "aboood40091/PointlessMaker")
+		|| ($payload->repository->owner->name !== "MarioMakingMods" || $payload->repository->owner->name !== "aboood40091")
+		|| ($payload->repository->url !== "https://github.com/MarioMakingMods/Forum-software" || $payload->repository->url !== "https://github.com/aboood40091/PointlessMaker")
+		|| ($payload->repository->fork !== false))
+			die('Hacking attempt...');
 
 	$rUsers = Query("update {users} set posts=posts+1, lastposttime={0} where id={1} limit 1",
 		time(), 197);
@@ -37,7 +41,7 @@ if ($_POST['payload']) {
 
 	$post = $author.' has made a new commit: '.$message.'<br><br>'.$commit;
 
-	$rPostsText = Query("insert into {posts_text} (pid,text,revision,user,date) values ({0}, {1}, {2}, {3}, {4})", $pid, $post, 0, 197, time());
+	$rPostsText = Query("insert into {posts_text} (pid,text,revision,user,date) values ({0}, {1}, {2}, {3}, {4})", $pid, htmlspecialchars($post), 0, 197, time());
 
 	$rFora = Query("update {forums} set numposts=numposts+1, lastpostdate={0}, lastpostuser={1}, lastpostid={2} where id={3} limit 1",
 		time(), 197, $pid, $fid);

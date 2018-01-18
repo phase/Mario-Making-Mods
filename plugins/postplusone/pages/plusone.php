@@ -28,7 +28,19 @@ if(!$vote) {
 	Query("UPDATE {users} SET postplusonesgiven = postplusonesgiven+1 WHERE id = {0} LIMIT 1", $loguserid);
 	Query("INSERT INTO {postplusones} (user, post) VALUES ({0}, {1})", $loguserid, $pid);
 	$post["postplusones"]++;
+	$starimg = 'https://i.imgur.com/gErHVso.png';
+} else {
+	Query("UPDATE {posts} SET postplusones = postplusones-1 WHERE id = {0} LIMIT 1", $pid);
+	Query("UPDATE {users} SET postplusones = postplusones-1 WHERE id = {0} LIMIT 1", $post["user"]);
+	Query("UPDATE {users} SET postplusonesgiven = postplusonesgiven-1 WHERE id = {0} LIMIT 1", $loguserid);
+	Query("DELETE FROM {postplusones} WHERE user = {0} AND post = {1}", $loguserid, $pid);
+	$post["postplusones"]--;
+	$starimg = 'https://i.imgur.com/zMAbCLC.png';
 }
-echo formatPlusOnes($post["postplusones"]);
+
+$starurl = actionLink("plusone", $post["id"], "key=".$loguser["token"]);
+$starurl = htmlspecialchars($starurl);
+
+echo "<a href=\"\" onclick=\"$(this.parentElement).load('$starurl'); return false;\"><img src=\"$starimg\"></a>".$post["postplusones"];
 
 

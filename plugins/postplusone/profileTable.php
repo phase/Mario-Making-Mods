@@ -24,7 +24,7 @@ while($row = fetch($res))
 if(count($plusoners))
 	$received .= "<br/>".__("From:")." ".implode(", ", $plusoners);
 
-$profileParts[__("General information")][__("Total +1s received")] = $received;
+$profileParts[__("General information")][__("Total stars received")] = $received;
 
 
 
@@ -52,4 +52,4 @@ while($row = fetch($res))
 if(count($plusoners))
 	$given .= "<br/>".__("To:")." ".implode(", ", $plusoners);
 
-$profileParts[__("General information")][__("Total +1s given")] = $given;
+$profileParts[__("General information")][__("Total stars given")] = $given;

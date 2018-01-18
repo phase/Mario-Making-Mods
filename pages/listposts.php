@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - Posts by user viewer
-//  Access: all
 if (!defined('BLARG')) die();
 
 if(!isset($_GET['id']))
@@ -25,7 +23,6 @@ $total = FetchResult("
 				LEFT JOIN {threads} t ON t.id=p.thread{$extrashit}
 			WHERE p.user={0} AND t.forum IN ({1c})",
 		$id, ForumsWithPermission('forum.viewforum'));
-
 
 $ppp = $loguser['postsperpage'];
 if(isset($_GET['from']))
@@ -68,12 +65,10 @@ $pagelinks = PageLinks(actionLink("listposts", $id, "from=", $user['name']), $pp
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
-if(NumRows($rPosts))
-{
+if(NumRows($rPosts)) {
 	while($post = Fetch($rPosts))
 		MakePost($post, POST_NORMAL, array('threadlink'=>1, 'tid'=>$post['thread'], 'fid'=>$post['fid'], 'noreplylinks'=>1));
-}
-else
+} else
 	Alert('This user has no posts.', 'Notice');
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));

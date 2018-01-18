@@ -13,13 +13,13 @@ function fixyoutube($m) {
 require(__DIR__.'/lib/common.php');
 
 $fid = Settings::get('newsForum');
-if(!HasPermission('forum.viewforum', $fid))
-	die("You aren't allowed to access this forum.");
-
-$rFora = Query("select * from {forums} where id = {0}",$fid);
-if(NumRows($rFora))
-	$forum = Fetch($rFora);
-else
+$rFora = Query("select * from {forums} where id = {0}", $fid);
+if(NumRows($rFora)){
+	if(HasPermission('forum.viewforum', $fid))
+		$forum = Fetch($rFora);
+	else 
+		die("You aren't allowed to access this forum.");
+} else
 	die("Unknown forum ID.");
 
 

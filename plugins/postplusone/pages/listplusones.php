@@ -1,6 +1,5 @@
 <?php
-//  AcmlmBoard XD - Posts by user viewer
-//  Access: all
+if (!defined('BLARG')) die();
 
 if(!isset($pageParams['id']))
 	Kill(__("User ID unspecified."));
@@ -13,16 +12,7 @@ if(NumRows($rUser))
 else
 	Kill(__("Unknown user ID."));
 
-$title = __("+1 list");
-
-$minpower = $loguser['primarygroup'];
-if($minpower < 0)
-	$minpower = 0;
-
-/*error_reporting(E_ALL);
-ini_set("display_errors", "on");
-ini_set("display_startup_errors", "on");*/
-
+$title = __("Starred Posts list");
 
 $total = FetchResult("
 			SELECT
@@ -61,7 +51,7 @@ $rPosts = Query("	SELECT
 				LEFT JOIN {forums} f ON f.id=t.forum
 				LEFT JOIN {categories} c ON c.id=f.catid
 			WHERE u.id={1} AND f.id IN ({4c}) AND p.postplusones > 0
-			ORDER BY postplusones DESC, date ASC LIMIT {3u}, {4u}", $loguserid, $id, $from, $ppp, ForumsWithPermission('forum.viewforum'));
+			ORDER BY postplusones DESC, date ASC LIMIT {2u}, {3u}", $loguserid, $id, $from, $ppp, ForumsWithPermission('forum.viewforum'));
 
 $numonpage = NumRows($rPosts);
 
@@ -69,20 +59,21 @@ $uname = $user["name"];
 if($user["displayname"])
 	$uname = $user["displayname"];
 
-if($total == 0)
-	Kill(__("This user has no +1'd posts"));
+MakeCrumbs(array(pageLink("profile", array(
+				'id' => $id,
+				'name' => $uname
+			)) => htmlspecialchars($uname), pageLink('listplusones',  ['id'=>$id]) =>  __("List of starred posts")));
 
 $pagelinks = PageLinks(actionLink("listplusones", $id, "from="), $ppp, $from, $total);
 
-if($pagelinks)
-	write("<div class=\"smallFonts pages\">".__("Pages:")." {0}</div>", $pagelinks);
+RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
-if($numonpage > 0) {
+if(NumRows($rPosts)) {
 	while($post = Fetch($rPosts))
 		MakePost($post, POST_NORMAL, array('threadlink'=>1, 'tid'=>$post['thread'], 'fid'=>$post['fid'], 'noreplylinks'=>1));
-}
+} else
+	Alert('This user has no posts.', 'Notice');
 
-if($pagelinks)
-	write("<div class=\"smallFonts pages\">".__("Pages:")." {0}</div>", $pagelinks);
+RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
 
 ?>
