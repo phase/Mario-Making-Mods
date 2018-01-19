@@ -162,8 +162,40 @@ while($user = Fetch($rUsers))
 
 	$udata['link'] = UserLink($user);
 	$udata['posts'] = $user['posts'];
+	$udata['id'] = $user['id'];
+	$udata['listposts'] = actionLinkTag(__("Show posts"), "listposts", $user['id'], "", $user['name']);
+	$udata['listthreads'] = '<br>'.actionLinkTag(__("Show threads"), "listthreads", $user['id'], "", $user['name']);
 	$udata['birthday'] = ($user['birthday'] ? cdate('M jS', $user['birthday']) : '');
 	$udata['regdate'] = cdate('M jS Y', $user['regdate']);
+
+	$udata['viewpm'] = '';
+	$udata['sendpm'] = '';
+	$udada['banuser'] = '';
+	$udata['editprofile'] = '';
+	$udata['editperms'] = '';
+	
+	if (HasPermission('admin.banusers') && $loguserid != $user['id']) {
+		if ($user['primarygroup'] != Settings::get('bannedGroup'))
+			$udata['banuser'] = '<br>'.actionLinkTag('Ban user', 'banhammer', $user['id']);
+		else
+			$udata['banuser'] = '<br>'.actionLinkTag('Unban user', 'banhammer', $user['id'], 'unban=1');
+	}
+
+	if(HasPermission('user.editprofile') && $loguserid == $user['id'])
+		$udata['editprofile'] = '<br>'.actionLinkTag(__("Edit my profile"), "editprofile");
+	else if(HasPermission('admin.editusers'))
+		$udata['editprofile'] = '<br>'.actionLinkTag(__("Edit user"), "editprofile", $user['id']);
+
+	if(HasPermission('admin.editusers'))
+		$udata['editperms'] = '<br>'.actionLinkTag(__('Edit permissions'), 'editperms', '', 'uid='.$user['id']);
+
+	if($loguserid == $user['id'])
+		$udata['viewpm'] = '<br>'.actionLinkTag(__("Show my PMs"), "private");
+	elseif(HasPermission('admin.viewpms'))
+		$udata['viewpm'] = '<br>'.actionLinkTag(__("Show PMs"), "private", "", "user=".$user['id']);
+
+	if(HasPermission('user.sendpms'))
+		$udata['sendpm'] = '<br>'.actionLinkTag(__("Send PM"), "sendprivate", "", "uid=".$user['id']);
 
 	$users[] = $udata;
 	$i++;
