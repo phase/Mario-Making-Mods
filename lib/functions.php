@@ -275,23 +275,66 @@ function formatdatenow()
 {
 	return cdate(getdateformat());
 }
-function relativedate($date)
-{
-	$diff = time() - $date;
-	if ($diff < 1) return 'right now';
-	if ($diff >= 3*86400) return formatdate($date);
-
-	if ($diff < 60) { $num = $diff; $unit = 'second'; }
-	elseif ($diff < 3600) { $num = intval($diff/60); $unit = 'minute'; }
-	elseif ($diff < 86400) { $num = intval($diff/3600); $unit = 'hour'; }
-	else { $num = intval($diff/86400); $unit = 'day'; }
-
-	return $num.' '.$unit.($num>1?'s':'').' ago';
+function relativedate($date) {
+	return '<time class="timeago" datetime="' . date(DATE_ATOM, $date) . '">' . formatdate($date) . '</time>';
 }
 
-function formatBirthday($b)
-{
+function formatBirthday($b) {
 	return format("{0} ({1} old)", date("F j, Y", $b), Plural(floor((time() - $b) / 86400 / 365.2425), "year"));
+}
+
+function unround_number($number, $decimalsonly = false) {
+	$broken_number = explode('.', $number);
+	if ($decimalsonly) return $broken_number[1];
+	return $broken_number;
+}
+
+function time_elapsed_string($ptime, $future = false, $color = false) {
+	if ($future)
+		$etime = max(time(),$ptime) - min(time(),$ptime);
+	else
+		$etime = time() - $ptime;
+
+	if ($etime < 1) {
+		return '0 seconds';
+	}
+
+	$a = [
+			12 * 30 * 24 * 60 * 60 + 20952	=>	'year', // Leap years, guys!
+			30 * 24 * 60 * 60				=>	'month',
+			 7 * 24 * 60 * 60				=>	'week',
+			24 * 60 * 60					=>	'day',
+			60 * 60							=>	'hour',
+			60								=>	'minute',
+			1								=>	'second'
+		];
+
+	foreach ($a as $secs => $str) {
+		$d = $etime / $secs;
+		if ($d >= 1) {
+			$t = unround_number($d);
+			$t[1] = unround_number(number_format(('0.'.$t[1]), 1), true);
+			if ($color) {
+				switch ($str) {
+					case 'second':
+					case 'minute':
+						$style = ' style="color: red;"';
+						break;
+					case 'hour':
+						$style = ' style="color: orange;"';
+						break;
+					case 'day':
+					case 'week':
+						$style = '';
+						break;
+					default:
+						$style = ' style="color: grey;"';
+						break;
+				}
+			} else $color = '';
+			return "<span$style>" . ($future ? 'in ' : '') . $t[0] . ($t[1] > 0 ? '.' . $t[1] : '') . ' ' . $str . (($t[0].'.'.$t[1]) > 1 ? 's' : '') . ($future ? '' : ' ago') . '</span>';
+		}
+	}
 }
 
 function getSexName($sex) {
@@ -367,7 +410,7 @@ function getBirthdaysText($ret = true) {
 	if(count($birthdays))
 		$birthdaysToday = implode(", ", $birthdays);
 	if(isset($birthdaysToday))
-		return __("Birthdays today:")." ".$birthdaysToday;
+		return __("We wish a happy birthday to:")." ".$birthdaysToday;
 	else
 		return "";
 }

@@ -471,4 +471,23 @@ function searchThemes(query) {
 $(document).ready(function() 
 {
 	$(".spoilerbutton").click(toggleSpoiler);
+	jQuery.timeago.settings.strings = {
+		prefixAgo: '',
+		prefixFromNow: '',
+		suffixAgo: 'ago',
+		suffixFromNow: 'from now',
+		seconds: '%d seconds',
+		minute: "%d minute",
+		minutes: "%d minutes",
+		hour: "%d hour",
+		hours: "%d hours",
+		day: "%d day",
+		days: "%d days",
+		month: "%d month",
+		months: "%d months",
+		year: "%d year",
+		years: "%d years"
+	};
+	//jQuery.timeago.settings.cutoff = 1000;
+	$('time.timeago').timeago();
 });

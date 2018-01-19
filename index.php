@@ -297,6 +297,7 @@ if($_SERVER["HTTP_X_PJAX"]) {
 	<script src="<?php print resourceLink("js/jquery-ui.js");?>"></script>
 	<script src="<?php print resourceLink("js/tricks.js");?>"></script>
 	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
+	<script src="<?php echo resourceLink("js/jquery.timeago.js");?>" async></script>
 	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
 	<script src="https://use.fontawesome.com/8963bac2cd.js" async></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/galleria.min.js" async></script>
