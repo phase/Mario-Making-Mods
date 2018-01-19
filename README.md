@@ -23,7 +23,7 @@ However, you can still experiment, send in some patches, features, etc...
 
 Credits:
 
--Repflez: URL Code          
+-Repflez: URL Code & TimeAgo plugin          
 -Not Jon: Randomized UID code & Multi-Language support.              
 -StapleButter: Original Blargboard code                    
 -NightYoshi370: Makerboard, and the entire depot plugin.                  
