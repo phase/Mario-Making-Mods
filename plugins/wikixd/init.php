@@ -18,11 +18,11 @@ function url2title($str)
 function getWikiPage($id, $rev = 0)
 {
 	global $canedit, $canmod;
-	
+
 	$ptitle = $id;
 	if (!$ptitle) $ptitle = 'Main_page';
 	else $ptitle = title2url($ptitle); // so that we don't have for example 'Main page' and 'Main_page' being considered different pages
-	
+
 	if ($rev < 0) $rev = 0;
 
 	$page = Query("SELECT p.*, pt.date, pt.user, pt.text FROM {wiki_pages} p LEFT JOIN {wiki_pages_text} pt ON pt.id=p.id AND pt.revision=".($rev>0 ? 'LEAST(p.revision,{1})':'p.revision')." WHERE p.id={0}", 
@@ -46,7 +46,7 @@ function getWikiPage($id, $rev = 0)
 	$page['istalk'] = (strtolower(substr($ptitle,0,5)) == 'talk:');
 	$page['ismain'] = (strtolower($ptitle) == 'main_page');
 	$page['canedit'] = $canedit && ((!($page['flags'] & WIKI_PFLAG_SPECIAL)) || HasPermission('wiki.makepagesspecial'));
-	
+
 	return $page;
 }
 

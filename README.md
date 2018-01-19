@@ -27,9 +27,9 @@ Credits:
 -Not Jon: Randomized UID code & Multi-Language support.              
 -StapleButter: Original Blargboard code                    
 -NightYoshi370: Makerboard, and the entire depot plugin.                  
--PickPen: Making the Depot theme icons.
--LifeMushroom and Samplasion: Themes (they gave me permission to use their theme)
--Samplasion & MoonlightCapital: Italian Translation
--RedDucks: Download API
--GamesWithIsaac: Ranksets
-
+-PickPen: Making the Depot theme icons.                       
+-LifeMushroom and Samplasion: Themes (they gave me permission to use their theme)                     
+-Samplasion & MoonlightCapital: Italian Translation                              
+-RedDucks: Download API                                 
+-GamesWithIsaac: Ranksets                       
+-Phase: MySQL 5.7 "fix", & Sub-forum layout
