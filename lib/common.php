@@ -72,7 +72,6 @@ Settings::checkPlugin("main");
 include(__DIR__."/functions.php");
 include(__DIR__."/language.php");
 include(__DIR__."/links.php");
-include("adsense.php");
 require_once(__DIR__.'/urlslugs.php');
 require_once(__DIR__.'/yaml.php');
 require_once(__DIR__.'/router.php');

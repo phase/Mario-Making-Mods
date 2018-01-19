@@ -26,7 +26,7 @@ if ($_POST['payload']) {
 		time(), 197);
 
 	$rPosts = Query("insert into {posts} (thread, user, date, ip, num, options, mood) values ({0},{1},{2},{3},{4}, {5}, {6})",
-		$tid, 197, time(), $_SERVER['REMOTE_ADDR'], 0, '', '');
+		$tid, 197, time(), '', 0, '', '');
 
 	$pid = InsertId();
 

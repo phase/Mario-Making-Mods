@@ -50,7 +50,7 @@ while($entry = Fetch($entries)) {
 	$username = $entry['udname'] ? $entry['udname'] : $entry['uname'];
 	$rfcdate = htmlspecialchars(gmdate(DATE_RFC1123, $entry['date']));
 	$entryurl = htmlspecialchars($url.'/'.actionLink('thread', $entry['id'], '', $tags[0]));
-	
+
 	$download3ds = $entry['downloadtheme3ds'];
 	$downloadwiiu = $entry['downloadthemewiiu'];
 

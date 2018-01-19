@@ -239,14 +239,11 @@ $pagelinks = PageLinks(actionLink("depotentry", $tid, "from=", $urlname), $ppp, 
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
-$ii = 0;
 if(NumRows($rPosts)) {
 	while($post = Fetch($rPosts)) {
 		$post['closed'] = $thread['closed'];
 		$post['firstpostid'] = $thread['firstpostid'];
 		MakePost($post, POST_NORMAL, array('tid'=>$tid, 'fid'=>$fid));
-		$ii++;
-		if ($ii == 1) makeAdsense();
 	}
 }
 

@@ -237,8 +237,8 @@ if($_SERVER["HTTP_X_PJAX"]) {
 	<title><?php print $layout_title; ?></title>
 
 	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
-	<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js'></script>
+	<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js' async></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js' async></script>
 	<link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
 	
 	<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
