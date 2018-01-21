@@ -33,3 +33,4 @@ Credits:
 -RedDucks: Download API                                 
 -GamesWithIsaac: Ranksets                       
 -Phase: MySQL 5.7 "fix", & Sub-forum layout
+-JeDaYoshi: RPG as well as port all plugins
