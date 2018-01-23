@@ -2,7 +2,11 @@
 if (!defined('BLARG')) die();
 
 $headerlinks = array
-();
+(
+	actionLink('faq') => 'FAQ',
+	pageLink('depot') => 'Depot',
+	pageLink('wiki') => 'Wiki',
+);
 
 $sidelinks = array
 (

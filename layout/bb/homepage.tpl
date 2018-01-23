@@ -1,7 +1,7 @@
 	<table class="layout-table">
 		<tr>
 			<td style="width: 50%; vertical-align: top; padding-right: 0.5em;">
-				<table class="outline margin homepage">
+				<table class="outline margin homepage" style="text-align: center;">
 					<tr class="cell1">
 						<td style="padding:5px;">
 							{$homepage}

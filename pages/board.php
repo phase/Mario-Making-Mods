@@ -45,5 +45,3 @@ if ($board == 'staff') {
 }
 
 makeForumListing(0, $board);
-
-?>

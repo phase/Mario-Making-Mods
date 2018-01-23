@@ -1,7 +1,9 @@
 <?php
 //Mario Making Mods: Github Page
-//Todo: Have secret ID
 if (!defined('BLARG')) die();
+
+if (!isset($_POST['payload'], $_GET['key']) || $_GET['key'] != $github_secret)
+	die('Hacking attempt...');
 
 $payload = json_decode($_POST['payload']);
 

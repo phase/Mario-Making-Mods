@@ -236,24 +236,24 @@ if($_SERVER["HTTP_X_PJAX"]) {
 <head>
 	<title><?php print $layout_title; ?></title>
 
-	<script src="<?php print resourceLink("js/jquery.js");?>"></script>
+	<script src="<?php echo resourceLink("js/jquery.js");?>"></script>
 	<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js' async></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js' async></script>
 	<link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
 	
 	<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta name="description" content="<?php print $metaStuff['description']; ?>">
-	<meta name="keywords" content="<?php print $metaStuff['tags']; ?>">
+	<meta name="description" content="<?php echo $metaStuff['description']; ?>">
+	<meta name="keywords" content="<?php echo $metaStuff['tags']; ?>">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<base href="<?php echo getServerURLNoSlash($ishttps)?>" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="theme-color" content="#2196F3"/>
 	<!-- Open Graph general (Facebook, Pinterest & Google+) -->
-	<meta property="og:title" content="<?php print $layout_title; ?>" />
-	<meta name="og:title" content="<?php print $layout_title; ?>">
-	<meta name="og:description" content="<?php print $metaStuff['description']; ?>">
+	<meta property="og:title" content="<?php echo $layout_title; ?>" />
+	<meta name="og:title" content="<?php echo $layout_title; ?>">
+	<meta name="og:description" content="<?php echo $metaStuff['description']; ?>">
 	<meta name="og:url" content="https://mariomods.net/">
 	<meta property="og:url" content="https://mariomods.net/" />
 	<meta name="og:site_name" content="Mario Making Mods">
@@ -262,13 +262,13 @@ if($_SERVER["HTTP_X_PJAX"]) {
 	<meta property="og:image" content="https://mariomods.net/apple-touch-icon.png" />
 	<!-- Twitter cards -->
 	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="<?php print $layout_title; ?>" />
-	<meta property="twitter:image" content="<?php print $layout_logopic; ?>" />
-	<meta name="twitter:description" content="<?php print $metaStuff['description']; ?>">
+	<meta name="twitter:title" content="<?php echo $layout_title; ?>" />
+	<meta property="twitter:image" content="<?php echo $layout_logopic; ?>" />
+	<meta name="twitter:description" content="<?php echo $metaStuff['description']; ?>">
 
-	<link rel="shortcut icon" type="image/x-icon" href="<?php print $favicon;?>">
-	<link rel="stylesheet" type="text/css" href="<?php print resourceLink("css/common.css");?>">
-	<link rel="stylesheet" type="text/css" id="theme_css" href="<?php print resourceLink($themefile); ?>">
+	<link rel="shortcut icon" type="image/x-icon" href="<?php echo $favicon;?>">
+	<link rel="stylesheet" href="<?php echo resourceLink("css/common.css");?>">
+	<link rel="stylesheet" id="theme_css" href="<?php echo resourceLink($themefile); ?>">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	<link rel="manifest" href="/manifest.json">
 	<noscript><link rel="stylesheet" href="https://use.fontawesome.com/a78963eb3c.css"></noscript>
@@ -300,7 +300,6 @@ if($_SERVER["HTTP_X_PJAX"]) {
 	<script src="<?php echo resourceLink("js/jquery.timeago.js");?>" async></script>
 	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
 	<script src="https://use.fontawesome.com/8963bac2cd.js" async></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/galleria.min.js" async></script>
 	<script>
   if ('serviceWorker' in navigator) {
     console.log("Will the service worker register?");

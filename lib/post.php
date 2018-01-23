@@ -229,7 +229,7 @@ function makePost($post, $type, $params=array())
 					if ($loguserid && HasPermission('forum.postreplies', $forum) && !$params['noreplylinks'])
 						$links['quote'] = actionLinkTag(__("Quote"), "newreply", $thread, "quote=".$post['id']);
 
-					if (($poster['id'] == $loguserid && HasPermission('forum.editownposts', $forum)) || HasPermission('mod.editposts', $forum))
+					if (($poster['id'] == $loguserid && HasPermission('forum.editownposts', $forum)) || HasPermission('mod.editposts', $forum) || ($post['id'] = $post['firstpostid'] && HasPermission('mod.editfirstpost', $forum))) {
 						$links['edit'] = actionLinkTag(__("Edit"), "editpost", $post['id']);
 
 					if (($poster['id'] == $loguserid && HasPermission('forum.deleteownposts', $forum)) || HasPermission('mod.deleteposts', $forum))

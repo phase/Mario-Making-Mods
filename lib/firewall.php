@@ -1,23 +1,27 @@
 <?php
 if (!defined('BLARG')) die();
 
-function do403()
-{
+function do403() {
 	header('HTTP/2.0 403 Forbidden');
 	header('Status: 403 Forbidden');
 	die('403 Forbidden');
 }
 
-function do404()
-{
+function do404() {
 	header('HTTP/2.0 404 Not Found');
 	header('Status: 404 Not Found');
 	die('404 Not Found');
 }
 
-// weird bots. Rumors say it's hacking bots, or the bots China uses to crawl the internet and censor it
-// in either case we don't lose much by keeping them out
-if ($_SERVER['HTTP_USER_AGENT'] == 'Mozilla/4.0')
+//Run some DRM checks. Make's sure that it's only on our server, and not any localhost.
+if ($_SERVER['HTTP_USER_AGENT'] == 'Mozilla/4.0' // weird bots. Rumors say it's hacking bots, or the bots China uses to crawl the internet and censor it
+	|| $dbserv !== 'localhost' //catch free hosts
+	|| $dbuser == 'root' //catch most localhosts
+	|| !empty($dbpref) //catch even the tinniest thing
+	|| !isset($github_secret) //our secret github code wasn't defined anywhere.
+	|| empty($github_secret) //it's empty
+	|| $_SERVER["HTTP_HOST"] != "mariomods.net" //if the host isn't mariomods.net
+	|| !$https) //best for last: check if it uses Secure HTTP. This, afaik, would mean that unless you tamper with the file, for this to work natively, you need to be on a valid VPS, have the host of mario mods, can't use root, and much more. Pretty much, we're safe.
 	do403();
 
 // spamdexing in referrals/useragents
@@ -42,4 +46,5 @@ if ($isBot)
 		do403();
 }
 
-?>
+//Todo: Detect User Power Level Change, as well as other minor things such as if the MySQL database has some odd paramiters.
+
