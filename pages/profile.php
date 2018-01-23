@@ -253,9 +253,13 @@ $badgersR = Query("select * from {badges} where owner={0} order by color", $id);
 if(NumRows($badgersR))
 {
 	$badgers = "";
-	$colors = array("bronze", "silver", "gold", "platinum", "none");
-	while($badger = Fetch($badgersR))
-		$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+	$colors = array("bronze", "silver", "gold", "platinum");
+	while($badger = Fetch($badgersR)){
+		if ($badger['color'] == '1' || $badger['color'] == '2' || $badger['color'] == '3' || $badger['color'] == '4')
+			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+		else
+			$badgers .= Format("<img src=\"{0}\" alt=\"{1}\"> ", $badger['color'], $badger['name']);
+	}
 	$profileParts[__("General information")][__('Badges')] = $badgers;
 }
 
