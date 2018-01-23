@@ -2,8 +2,22 @@
 //Mario Making Mods: Github Page
 if (!defined('BLARG')) die();
 
-if (!isset($_POST['payload'], $_GET['key']) || $_GET['key'] != $github_secret)
-	die('Hacking attempt...');
+$rawPost = NULL;
+if ($hookSecret !== NULL) {
+	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
+		die("HTTP header 'X-Hub-Signature' is missing.");
+	} elseif (!extension_loaded('hash')) {
+		die("Missing 'hash' extension to check the secret code validity.");
+	}
+	list($algo, $hash) = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + array('', '');
+	if (!in_array($algo, hash_algos(), TRUE)) {
+		die("Hash algorithm '$algo' is not supported.");
+	}
+	$rawPost = file_get_contents('php://input');
+	if ($hash !== hash_hmac($algo, $rawPost, $github_secret)) {
+		die('Hacking attempt...');
+	}
+};
 
 $payload = json_decode($_POST['payload']);
 
@@ -11,6 +25,10 @@ if ($payload === false || !isset($payload->commits))
     die('Hacking attempt...');
 
 if ($_POST['payload']) {
+	$github_ips = array('207.97.227.253', '50.57.128.197', '108.171.174.178', '50.57.231.61');
+    if (!in_array($_SERVER['REMOTE_ADDR'], $github_ips))
+		die('Hacking attempt...');
+
 	if($payload->repository->name == "Forum-software") {
 		$tid = 367;
 		$fid = 2;
