@@ -168,6 +168,10 @@ $temp[__("Total posts")] = format("{0} ({1} per day)", $posts, $averagePosts);
 $temp[__("Total threads")] = format("{0} ({1} per day)", $threads, $averageThreads);
 $temp[__("Registered on")] = format("{0} ({1} ago)", formatdate($user['regdate']), TimeUnits($daysKnown*86400));
 
+$rpgstats = getstats2($user['id']);
+
+$temp[__("EXP status")] = "Level: ".$rpgstats['lvl']."<br />EXP: ".$rpgstats["exp"]." (for the next level: ".calcexpleft($rpgstats["exp"]).")";
+
 $lastPost = Fetch(Query("
 	SELECT
 		p.id as pid, p.date as date,
@@ -204,9 +208,17 @@ if($lastPost)
 
 $temp[__("Last view")] = format("{0} ({1} ago)", formatdate($user['lastactivity']), TimeUnits(time() - $user['lastactivity']));
 
+$lkb = $user['lastknownbrowser'];
+$lkba = Array();
+
+foreach (explode(" | ", $lkb) as $lkbs)
+	$lkba[] = $lkbs;
+
+$temp[__("Last user agent")] = $lkba[0];
+
 if(HasPermission('admin.viewips'))
 {
-	$temp[__("Last user agent")] = htmlspecialchars($user['lastknownbrowser']);
+	$temp[__("Last user agent")] .= " (".$lkba[1].")";
 	$temp[__("Last IP address")] = formatIP($user['lastip']);
 }
 
@@ -248,6 +260,9 @@ if($user['birthday'])
 
 if(count($temp))
 	$profileParts[__("Personal information")] = $temp;
+
+if ($user['bio'] && $mobileLayout)
+	$profileParts[__('Bio')] = CleanUpPost($user['bio']);
 
 $badgersR = Query("select * from {badges} where owner={0} order by color", $id);
 if(NumRows($badgersR))
@@ -330,7 +345,23 @@ if($canComment)
 		</form>";
 }
 
+$rpgstatus = resourceLink("rpgstatus.php")."?u=".$id;
 
+$equipitems = "";
+
+$shops   = query('SELECT * FROM itemcateg ORDER BY corder');
+$eq      = fetch(query("SELECT * FROM usersrpg WHERE id='$id'"));
+$eqitems = query("SELECT * FROM items WHERE `id`='$eq[eq1]' OR `id`='$eq[eq2]' OR `id`='$eq[eq3]' OR `id`='$eq[eq4]' OR `id`='$eq[eq5]' OR `id`='$eq[eq6]'");
+
+while($item = fetch($eqitems))
+{
+	$items[$item['id']]=$item;
+}
+
+while($shop = fetch($shops))
+{
+	$equpitems.="<tr class=\"sfont\"><td width=\"70\">$shop[name]</td><td><a href=\"".actionLink("shop")."?action=desc&id=".$eq['eq'.$shop['id']]."\">".$items[$eq['eq'.$shop['id']]]['name']."</a></td></tr>";
+}
 
 RenderTemplate('profile', array(
 	'username' => htmlspecialchars($uname), 
@@ -340,7 +371,6 @@ RenderTemplate('profile', array(
 	'commentField' => $commentField,
 	'pagelinks' => $pagelinks));	
 
-	
 
 if (!$mobileLayout) {
 	if ($user['bio'])
