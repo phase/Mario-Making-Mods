@@ -6,7 +6,6 @@
  ini_set('display_errors', "Off");
  ini_set('display_startup_errors', "Off");
 
- include(__DIR__.'/lib/rpg/helpers.php');
  include(__DIR__.'/lib/common.php');
  include(__DIR__.'/lib/rpg/rpg.php');
 

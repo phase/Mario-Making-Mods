@@ -1,4 +1,5 @@
 <?php
+if (!defined('BLARG')) die();
 
 // Text Renderer.
 
@@ -224,4 +225,3 @@ function loadvwfdata($Filename) {
 	return $Data;
 }
 
-?>
