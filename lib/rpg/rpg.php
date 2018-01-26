@@ -86,7 +86,7 @@ function coins($p,$d) {
 }
 
 function getstats2($u) {
-	$user=fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
+	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
 						 ."FROM users u "
 						 ."LEFT JOIN usersrpg r ON r.id=u.id "
 						 ."WHERE u.id = {0}", $u));
@@ -94,9 +94,10 @@ function getstats2($u) {
 	$p=$user['posts'];
 	$d=(time()-$user['regdate'])/86400;
 
-	$it="0";
+	$it = 0;
 
-	$eqitems = fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
+	$eqitems = fetch(Query("SELECT * FROM items WHERE id = {0} OR id = {1} OR id = {2} OR id = {3} OR id = {4} OR id = {5} OR id = {6}",
+								$user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it));
 
 	while($item=$eqitems)
 		$items[$item[id]] = $item;
