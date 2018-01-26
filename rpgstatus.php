@@ -28,8 +28,7 @@ error_reporting(E_ALL);
 		$pickfont='';
 	
 
- 	$eqitems = fetch(Query("SELECT * FROM items WHERE id = {0} OR id = {1} OR id = {2} OR id = {3} OR id = {4} OR id = {5} OR id = {6}",
-								$user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it));
+ 	$eqitems=fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
 
  while($item = $eqitems)
    $items[$item[id]] = $item;
