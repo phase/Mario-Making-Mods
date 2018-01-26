@@ -7,16 +7,19 @@ ini_set("display_errors", 1);
  require(__DIR__.'/lib/rpg/rpg.php');
  require(__DIR__.'/lib/common.php');
 
-	if ($_GET['order']) {
-		$orderby	= "`cnt`";
-	} else {
-		$orderby	= "`u`.`posts`";
-	}
+	if ($_GET['order'])
+		$orderby = "`cnt`";
+	else
+		$orderby = "`u`.`posts`";
+
+	$urlfont = $_GET['font'];
+	if($font)
+		$pickfont='2';
+	else
+		$pickfont='';
 
 	$startdate	= floor((time() - (6 * 60 * 60)) / 86400) * 86400 + (6 * 60 * 60);
 	$enddate		= $startdate + 86400;
-
-//	print time() . " / $startdate / $enddate";
 
 	$users	= query("SELECT COUNT(*) as `cnt`, `u`.`name`, `u`.`posts` ".
 							"FROM `posts` `p` ".
@@ -42,7 +45,6 @@ ini_set("display_errors", 1);
  $c[bar][5]=ImageColorAllocate($img,173,231,255);
  $c[bar][6]=ImageColorAllocate($img, 57,189,255);
  $c[bar][7]=ImageColorAllocate($img, 75,222, 75);
-// ImageColorTransparent($img,0);
 
    $c[gridline]  =ImageColorAllocateAlpha($img, 200,110,100, 100);
    $c[alternate]  =ImageColorAllocateAlpha($img,   0,  0,  0, 110);
@@ -50,12 +52,9 @@ ini_set("display_errors", 1);
 
  box(0,1,64,23); //44*8=352
 
-// $fontY=fontc(255,250,240, 255,240, 80,  0, 0, 0);
-// $fontR=fontc(255,230,220, 240,160,150,  0, 0, 0);
-// $fontG=fontc(190,255,190,  60,220, 60,  0, 0, 0);
- $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0);
- $fontR=fontc(255,235,200, 255,210,160,  0, 0, 0);
- $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0);
+ $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
+ $fontR=fontc(255,235,200, 255,210,160,  0, 0, 0, $pickfont);
+ $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
  box(1,0,11,3); //44*8=352
  twrite($fontW,  2,  1, 0,"User");
@@ -65,16 +64,6 @@ ini_set("display_errors", 1);
 
  box(42,0,21,3); //44*8=352
  twrite($fontW, 43,  1, 0,"Today");
-
-/* $sc[1]=   1;
- $sc[2]=  10;
- $sc[3]=  40;
- $sc[4]= 100;
- $sc[5]= 200;
- $sc[6]= 300;
- $sc[7]= 400;
- $sc[8]=99999999;
-*/
 
  // more dramatic, better for lower post ranges
  // doubtful it'll ever go over 100 scale (you'd need 35.2k posts for that anyway)
@@ -131,7 +120,7 @@ for ($i = 384; $i <= 504; $i += 10) {
  $i	= -1;
 
  foreach($userdat as $i => $user) {
-	$name	= $user['name'];
+	$name	= mb_convert_encoding($user[name], "ISO-8859-1");
 	$posts	= $user['posts'];
 	$daily	= $user['cnt'];
 	$vline	= $i + 3;

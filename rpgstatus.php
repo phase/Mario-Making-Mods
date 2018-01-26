@@ -1,6 +1,5 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", 1);
+error_reporting(E_ALL);
 
  define("BLARG", "1");
 
@@ -18,9 +17,16 @@ ini_set("display_errors", 1);
  $p = $user['posts'];
  $d = (time()-$user['regdate'])/86400;
 
-	$it = $_GET['it'];
-	if (!is_numeric($it))
-		return false;
+ $it = $_GET['it'];
+ if (!is_numeric($it))
+	return false;
+
+	$urlfont = $_GET['font'];
+	if($font)
+		$pickfont='2';
+	else
+		$pickfont='';
+	
 
  	$eqitems = fetch(Query("SELECT * FROM items WHERE id = {0} OR id = {1} OR id = {2} OR id = {3} OR id = {4} OR id = {5} OR id = {6}",
 								$user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it));
@@ -40,31 +46,31 @@ ini_set("display_errors", 1);
 
  Header('Content-type:image/png');
  $img=ImageCreate(256,224);
- $c['bg']     =ImageColorAllocate($img, 40, 40, 90);
- $c['bxb0']   =ImageColorAllocate($img,  0,  0,  0);
- $c['bxb1']   =ImageColorAllocate($img,200,170,140);
- $c['bxb2']   =ImageColorAllocate($img,155,130,105);
- $c['bxb3']   =ImageColorAllocate($img,110, 90, 70);
+ $c['bg']	= ImageColorAllocate($img, 40, 40, 90);
+ $c['bxb0']	= ImageColorAllocate($img,  0,  0,  0);
+ $c['bxb1']	= ImageColorAllocate($img,200,170,140);
+ $c['bxb2']	= ImageColorAllocate($img,155,130,105);
+ $c['bxb3']	= ImageColorAllocate($img,110, 90, 70);
 
  for($i=0;$i<100;$i++)
-   $c[$i]   =ImageColorAllocate($img, 10, 16, 60+$i/2);
+   $c[$i]	= ImageColorAllocate($img, 10, 16, 60+$i/2);
 
- $c[barE1]  =ImageColorAllocate($img,120,150,180);
- $c[barE2]  =ImageColorAllocate($img, 30, 60, 90);
- $c[bar1][1]=ImageColorAllocate($img,215, 91,129);
- $c[bar2][1]=ImageColorAllocate($img, 90, 22, 43);
- $c[bar1][2]=ImageColorAllocate($img,255,136,154);
- $c[bar2][2]=ImageColorAllocate($img,151,  0, 38);
- $c[bar1][3]=ImageColorAllocate($img,255,139, 89);
- $c[bar2][3]=ImageColorAllocate($img,125, 37,  0);
- $c[bar1][4]=ImageColorAllocate($img,255,251, 89);
- $c[bar2][4]=ImageColorAllocate($img, 83, 81,  0);
- $c[bar1][5]=ImageColorAllocate($img, 89,255,139);
- $c[bar2][5]=ImageColorAllocate($img,  0,100, 30);
- $c[bar1][6]=ImageColorAllocate($img, 89,213,255);
- $c[bar2][6]=ImageColorAllocate($img,  0, 66, 93);
- $c[bar1][7]=ImageColorAllocate($img,196, 33, 33);
- $c[bar2][7]=ImageColorAllocate($img, 70, 12, 12);
+ $c[barE1]	 = ImageColorAllocate($img,120,150,180);
+ $c[barE2]	 = ImageColorAllocate($img, 30, 60, 90);
+ $c[bar1][1] = ImageColorAllocate($img,215, 91,129);
+ $c[bar2][1] = ImageColorAllocate($img, 90, 22, 43);
+ $c[bar1][2] = ImageColorAllocate($img,255,136,154);
+ $c[bar2][2] = ImageColorAllocate($img,151,  0, 38);
+ $c[bar1][3] = ImageColorAllocate($img,255,139, 89);
+ $c[bar2][3] = ImageColorAllocate($img,125, 37,  0);
+ $c[bar1][4] = ImageColorAllocate($img,255,251, 89);
+ $c[bar2][4] = ImageColorAllocate($img, 83, 81,  0);
+ $c[bar1][5] = ImageColorAllocate($img, 89,255,139);
+ $c[bar2][5] = ImageColorAllocate($img,  0,100, 30);
+ $c[bar1][6] = ImageColorAllocate($img, 89,213,255);
+ $c[bar2][6] = ImageColorAllocate($img,  0, 66, 93);
+ $c[bar1][7] = ImageColorAllocate($img,196, 33, 33);
+ $c[bar2][7] = ImageColorAllocate($img, 70, 12, 12);
  ImageColorTransparent($img,0);
 
  box( 0, 0,2+strlen($user[name]),3);
@@ -73,13 +79,13 @@ ini_set("display_errors", 1);
  box( 0,19,11, 9);
  box(12,19,11, 6);
 
- $fontY=fontc(255,250,240, 255,240, 80,  0, 0, 0);
- $fontR=fontc(255,230,220, 240,160,150,  0, 0, 0);
- $fontG=fontc(190,255,190,  60,220, 60,  0, 0, 0);
- $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0);
- $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0);
+ $fontY = fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
+ $fontR = fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
+ $fontG = fontc(190,255,190,  60,220, 60,  0, 0, 0, $pickfont);
+ $fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
+ $fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
- twrite($fontW, 1, 1,0,$user[name]);
+ twrite($fontW, 1, 1, 0, mb_convert_encoding($user[name], "ISO-8859-1"));
 
  twrite($fontB, 1, 5,0,'HP:      /');
  twrite($fontR, 3, 5,7,$st[HP]);

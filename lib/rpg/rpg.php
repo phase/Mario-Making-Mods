@@ -125,8 +125,8 @@ function twrite($font,$x,$y,$l,$text) {
 		ImageCopy($img,$font,$i*8+$x,$y,(ord($text[$i])%16)*8,floor(ord($text[$i])/16)*8,8,8);
 }
 
-function fontc($r1,$g1,$b1,$r2,$g2,$b2,$r3,$g3,$b3) {
-	$font = ImageCreateFromPNG(__DIR__.'/font.png');
+function fontc($r1,$g1,$b1,$r2,$g2,$b2,$r3,$g3,$b3,$pickfont) {
+	$font = ImageCreateFromPNG(__DIR__.'/font'.$pickfont.'.png');
 	ImageColorTransparent($font,1);
 	ImageColorSet($font,6,$r1,$g1,$b1);
 	ImageColorSet($font,5,($r1*2+$r2)/3,($g1*2+$g2)/3,($b1*2+$b2)/3);

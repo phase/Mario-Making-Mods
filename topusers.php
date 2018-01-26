@@ -7,14 +7,20 @@ ini_set("display_errors", 1);
  require(__DIR__.'/lib/common.php');
  require(__DIR__.'/lib/rpg/rpg.php');
 
+	$urlfont = $_GET['font'];
+	if($font)
+		$pickfont='2';
+	else
+		$pickfont='';
+
  $t = $_GET['t'];
  $u = $_GET['u'];
  if(!$n = $_GET[n]) $n=50;
  if(!$s = $_GET[s]) $s=1;
 
  $val='posts';
- if($t=='lv')  $val='pow('.sqlexpval().',2/7)*100';
- if($t=='ppd') $val='posts/('.ctime().'-regdate)*8640000';
+ if($t=='lv')  $val = 'pow('.sqlexpval().',2/7)*100';
+ if($t=='ppd') $val = 'posts/('.ctime().'-regdate)*8640000';
 
  if($s<0){
    $u=-$s;
@@ -24,7 +30,7 @@ ini_set("display_errors", 1);
    if($s<1) $s=1;
  }
 
-$users = Query("SELECT id, name, $val val "
+$users = Query("SELECT id, name, displayname, $val val "
                    ."FROM users "
                    ."ORDER BY val DESC, (id='$u') DESC "
                    ."LIMIT ".($s-1).",$n");
@@ -50,11 +56,11 @@ $users = Query("SELECT id, name, $val val "
 
  box(0,0,64,$n+2);
 
- $fontY=fontc(255,250,240, 255,240, 80,  0, 0, 0);
- $fontR=fontc(255,230,220, 240,160,150,  0, 0, 0);
- $fontG=fontc(190,255,190,  60,220, 60,  0, 0, 0);
- $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0);
- $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0);
+ $fontY=fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
+ $fontR=fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
+ $fontG=fontc(190,255,190,  60,220, 60,  0, 0, 0, $pickfont);
+ $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
+ $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
  $sc[1]=   1;
  $sc[2]=   3;
@@ -83,7 +89,7 @@ for($i=$s;$user=fetch($users);$i++) {
 	} else
 	$fontu=$fontB;
 	twrite($fontW, 0,$y,4,$rank);
-	twrite($fontu, 5,$y,0,substr($user[name],0,12));
+	twrite($fontu, 5,$y,0,substr(mb_convert_encoding($user[name], "ISO-8859-1"),0,12));
 	twrite($fontY,16,$y,6,floor($user[val]));
 	if(($sx=$user[val]/$div)>=1){
 		ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);
