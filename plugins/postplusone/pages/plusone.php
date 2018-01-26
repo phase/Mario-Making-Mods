@@ -12,7 +12,7 @@ $post = Fetch(Query("SELECT * FROM {posts} WHERE id = {0}", $pid));
 if(!$post)
 	die("Unknown post");
 if(!$loguserid)
-	die("You must be logged on in order to star posts!")
+	die("You must be logged on in order to star posts!");
 if($post["user"] == $loguserid)
 	die("You may not star your own posts!");
 

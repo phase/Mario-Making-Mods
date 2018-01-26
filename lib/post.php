@@ -144,7 +144,7 @@ function makePostText($post, $poster)
 				$attachblock .= '<div class="smallFonts">'.$desc;
 				$attachblock .= BytesToSize($filesize).__(' &mdash; Downloaded ').Plural($attach['downloads'], 'time').'</div>';
 			}
-			
+
 			$attachblock .= '</div>';
 		}
 	}
@@ -152,7 +152,7 @@ function makePostText($post, $poster)
 	$postText = $poster['postheader'].$post['text'].$attachblock.$separator.$poster['signature'];
 	$postText = ApplyTags($postText, $tags);
 	$postText = CleanUpPost($postText, $noSmilies, false);
-	
+
 	return $postText;
 }
 
@@ -168,8 +168,7 @@ define('POST_SAMPLE', 3);			// sample post box (profile sample post, newreply po
 //		* fid: the ID of the forum the thread containing the post is in (POST_NORMAL and POST_DELETED_SNOOP only)
 // 		* threadlink: if set, a link to the thread is added next to 'Posted on blahblah' (POST_NORMAL and POST_DELETED_SNOOP only)
 //		* noreplylinks: if set, no links to newreply.php (Quote/ID) are placed in the metabar (POST_NORMAL only)
-function makePost($post, $type, $params=array())
-{
+function makePost($post, $type, $params=array()) {
 	global $loguser, $loguserid, $usergroups, $isBot, $blocklayouts;
 	
 	$poster = getDataPrefix($post, 'u_');
@@ -185,19 +184,17 @@ function makePost($post, $type, $params=array())
 	if (!HasPermission('admin.viewips')) $post['ip'] = '';
 	else $post['ip'] = htmlspecialchars($post['ip']); // TODO IP formatting?
 
-	if($post['deleted'] && $type == POST_NORMAL)
-	{
+	if($post['deleted'] && $type == POST_NORMAL) {
 		$post['deluserlink'] = UserLink(getDataPrefix($post, 'du_'));
 		$post['delreason'] = htmlspecialchars($post['reason']);
 
 		$links = array();
-		if (HasPermission('mod.deleteposts', $params['fid']))
-		{
+		if (HasPermission('mod.deleteposts', $params['fid'])) {
 			$links['undelete'] = actionLinkTag(__("Undelete"), "editpost", $post['id'], "delete=2&key=".$loguser['token']);
 			$links['view'] = "<a href=\"#\" onclick=\"replacePost(".$post['id'].",true); return false;\">".__("View")."</a>";
 		}
 		$post['links'] = $links;
-		
+
 		RenderTemplate('postbox_deleted', array('post' => $post));
 		return;
 	}
@@ -232,16 +229,14 @@ function makePost($post, $type, $params=array())
 					if (($poster['id'] == $loguserid && HasPermission('forum.editownposts', $forum)) || HasPermission('mod.editposts', $forum) || ($post['id'] = $post['firstpostid'] && HasPermission('mod.editfirstpost', $forum)))
 						$links['edit'] = actionLinkTag(__("Edit"), "editpost", $post['id']);
 
-					if (($poster['id'] == $loguserid && HasPermission('forum.deleteownposts', $forum)) || HasPermission('mod.deleteposts', $forum))
-					{
-						if ($post['id'] != $post['firstpostid'])
-						{
+					if (($poster['id'] == $loguserid && HasPermission('forum.deleteownposts', $forum)) || HasPermission('mod.deleteposts', $forum)) {
+						if ($post['id'] != $post['firstpostid']) {
 							$link = htmlspecialchars(actionLink('editpost', $post['id'], 'delete=1&key='.$loguser['token']));
 							$onclick = HasPermission('mod.deleteposts', $forum) ? 
 								" onclick=\"deletePost(this);return false;\"" : ' onclick="if(!confirm(\'Really delete this post?\'))return false;"';
 							$links['delete'] = "<a href=\"{$link}\"{$onclick}>".__('Delete')."</a>";
 						}
-						
+
 						if($loguserid == 1) {
 							$link = htmlspecialchars(actionLink('editpost', $post['id'], 'delete=3&key='.$loguser['token']));
 							$onclick = ' onclick="if(!confirm(\'Really delete this post?\'))return false;"';
@@ -333,7 +328,7 @@ function makePost($post, $type, $params=array())
 
 	if($poster['lastactivity'] > time() - 300)
 		$sidebar['isonline'] = __("User is <strong>online</strong>");
-	
+
 	$sidebarExtra = array();
 	$bucket = "sidebar"; include(__DIR__."/pluginloader.php");
 	$sidebar['extra'] = $sidebarExtra;

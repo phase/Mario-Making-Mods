@@ -350,7 +350,7 @@ $rpgstatus = resourceLink("rpgstatus.php")."?u=".$id;
 $equipitems = "";
 
 $shops   = query('SELECT * FROM itemcateg ORDER BY corder');
-$eq      = fetch(query("SELECT * FROM usersrpg WHERE id='$id'"));
+$eq      = fetch(query("SELECT * FROM usersrpg WHERE id = {0}", $id));
 $eqitems = query("SELECT * FROM items WHERE `id`='$eq[eq1]' OR `id`='$eq[eq2]' OR `id`='$eq[eq3]' OR `id`='$eq[eq4]' OR `id`='$eq[eq5]' OR `id`='$eq[eq6]'");
 
 while($item = fetch($eqitems))

@@ -6,30 +6,29 @@
  ini_set('display_errors', "Off");
  ini_set('display_startup_errors', "Off");
 
- require __DIR__.'/lib/rpg/helpers.php';
- require __DIR__.'/config/database.php';
- require __DIR__.'/lib/mysql.php';
- require __DIR__.'/lib/rpg/rpg.php';
+ include(__DIR__.'/lib/rpg/helpers.php');
+ include(__DIR__.'/lib/common.php');
+ include(__DIR__.'/lib/rpg/rpg.php');
 
- $u=$_GET['u'];
+ $u = $_GET['u'];
  if(!$u) die("nice try, kid");
 
- $user=fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
+ $user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
                    ."FROM users u "
                    ."LEFT JOIN usersrpg r ON r.id=u.id "
-                   ."WHERE u.id='$u'"));
+                   ."WHERE u.id = {0}", $u));
 
- $p=$user['posts'];
- $d=(time()-$user['regdate'])/86400;
+ $p = $user['posts'];
+ $d = (time()-$user['regdate'])/86400;
 
- $it=$_GET['it'];
+ $it = $_GET['it'];
  checknumeric($it);
 
- $eqitems=fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
+ $eqitems = fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
 
- while($item=$eqitems)
-   $items[$item[id]]=$item;
- $ct=$_GET['ct'];
+ while($item = $eqitems)
+   $items[$item[id]] = $item;
+ $ct = $_GET['ct'];
  if($ct){
    $GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
    $user['eq'.$ct]=$it;
@@ -182,4 +181,4 @@ function bars(){
   if($e1)
     ImageFilledRectangle($img,8,208,7+$e1,214,$c[barE1]);
 }
-?>
+
