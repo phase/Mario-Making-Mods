@@ -1,27 +1,26 @@
 <?php
+error_reporting(-1);
+ini_set("display_errors", 1);
 
  define("BLARG", "1");
 
- error_reporting(0);
- ini_set('display_errors', "Off");
- ini_set('display_startup_errors', "Off");
-
- include(__DIR__.'/lib/common.php');
- include(__DIR__.'/lib/rpg/rpg.php');
+ require(__DIR__.'/lib/common.php');
+ require(__DIR__.'/lib/rpg/rpg.php');
 
  $u = $_GET['u'];
  if(!$u) die("nice try, kid");
 
- $user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
-                   ."FROM users u "
-                   ."LEFT JOIN usersrpg r ON r.id=u.id "
-                   ."WHERE u.id = {0}", $u));
+	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
+							."FROM users u "
+							."LEFT JOIN usersrpg r ON r.id=u.id "
+							."WHERE u.id = {0}", $u));
 
  $p = $user['posts'];
  $d = (time()-$user['regdate'])/86400;
 
- $it = $_GET['it'];
- checknumeric($it);
+	$it = $_GET['it'];
+	if (!is_numeric($it))
+		return false;
 
  	$eqitems = fetch(Query("SELECT * FROM items WHERE id = {0} OR id = {1} OR id = {2} OR id = {3} OR id = {4} OR id = {5} OR id = {6}",
 								$user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it));

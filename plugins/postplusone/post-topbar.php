@@ -1,5 +1,5 @@
 <?php
-$plusOne = '<span class="postplusone">';
+$plusOne = '<span class="postplusone" id="div1">';
 
 if($poster['id'] !== $loguserid && $loguserid != 0)
 {

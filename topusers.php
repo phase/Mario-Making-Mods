@@ -1,19 +1,16 @@
 <?php
+error_reporting(-1);
+ini_set("display_errors", 1);
 
  define("BLARG", "1");
 
- error_reporting(0);
- ini_set('display_errors', "Off");
- ini_set('display_startup_errors', "Off");
+ require(__DIR__.'/lib/common.php');
+ require(__DIR__.'/lib/rpg/rpg.php');
 
- require __DIR__.'/lib/rpg/helpers.php';
- require __DIR__.'/config/database.php';
- require __DIR__.'/lib/mysql.php';
-
- $t=$_GET[t];
- $u=$_GET[u];
- if(!$n=$_GET[n]) $n=50;
- if(!$s=$_GET[s]) $s=1;
+ $t = $_GET['t'];
+ $u = $_GET['u'];
+ if(!$n = $_GET[n]) $n=50;
+ if(!$s = $_GET[s]) $s=1;
 
  $val='posts';
  if($t=='lv')  $val='pow('.sqlexpval().',2/7)*100';
@@ -21,19 +18,19 @@
 
  if($s<0){
    $u=-$s;
-   $uval=fetchresult("SELECT $val val FROM users WHERE id=$u");
-   $rank=fetchresult("SELECT count(*) FROM users WHERE $val>$uval AND id!=$u")+1;
+   $uval = fetch(Query("SELECT {0} val FROM users WHERE id = {1}", $val, $u));
+   $rank = fetch(Query("SELECT count(*) FROM users WHERE {0} > {1} AND id != {2}", $val, $uval, $u))+1;
    $s=floor($rank-($n-1)/2);
    if($s<1) $s=1;
  }
 
- $users=query("SELECT id, name, $val val "
+$users = Query("SELECT id, name, $val val "
                    ."FROM users "
                    ."ORDER BY val DESC, (id='$u') DESC "
                    ."LIMIT ".($s-1).",$n");
 
  Header('Content-type:image/png');
- $img=ImageCreate(512,($n+2)*8);
+ $img = ImageCreate(512,($n+2)*8);
  $c[bg]    =ImageColorAllocate($img, 40, 40, 90);
  $c[bxb0]  =ImageColorAllocate($img,  0,  0,  0);
  $c[bxb1]  =ImageColorAllocate($img,200,170,140);
@@ -68,68 +65,31 @@
  $sc[7]= 200;
  $sc[8]=99999999;
 
- for($i=$s;$user=fetch($users);$i++){
-   if($user[val]!=$rval){
-     $rank=$i;
-     $rval=$user[val];
-   }
-   if($i==$s){
-     $rank=fetchresult("SELECT count(*) FROM users WHERE $val>$user[val] AND id!=$user[id]")+1;
-     for($sn=1;($user[val]/$sc[$sn])>320;$sn++);
-     $div=$sc[$sn];
-     if(!$div) $div=1;
-   }
-   $y=$i-$s+1;
-   if($user[id]==$u){
-     ImageFilledRectangle($img,8,$y*8,503,$y*8+7,$c[hlit]);
-     $fontu=$fontY;
-   }else
-     $fontu=$fontB;
-   twrite($fontW, 0,$y,4,$rank);
-   twrite($fontu, 5,$y,0,substr($user[name],0,12));
-   twrite($fontY,16,$y,6,floor($user[val]));
-   if(($sx=$user[val]/$div)>=1){
-     ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);
-     ImageFilledRectangle($img,184,$y*8  ,183+$sx,$y*8+6,$c[bar][$sn]);
-   }
- }
+for($i=$s;$user=fetch($users);$i++) {
+	if($user[val]!=$rval){
+		$rank=$i;
+		$rval=$user[val];
+	}
+	if($i==$s){
+		$rank=fetchresult("SELECT count(*) FROM users WHERE $val>$user[val] AND id!=$user[id]")+1;
+		for($sn=1;($user[val]/$sc[$sn])>320;$sn++);
+		$div=$sc[$sn];
+		if(!$div) $div=1;
+	}
+	$y=$i-$s+1;
+	if($user[id]==$u){
+		ImageFilledRectangle($img,8,$y*8,503,$y*8+7,$c[hlit]);
+		$fontu=$fontY;
+	} else
+	$fontu=$fontB;
+	twrite($fontW, 0,$y,4,$rank);
+	twrite($fontu, 5,$y,0,substr($user[name],0,12));
+	twrite($fontY,16,$y,6,floor($user[val]));
+	if(($sx=$user[val]/$div)>=1){
+		ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);
+		ImageFilledRectangle($img,184,$y*8  ,183+$sx,$y*8+6,$c[bar][$sn]);
+	}
+}
 
  ImagePNG($img);
  ImageDestroy($img);
-
-function twrite($font,$x,$y,$l,$text){
-  global $img;
-  $x*=8;
-  $y*=8;
-  $text.='';
-  if(strlen($text)<$l) $x+=($l-strlen($text))*8;
-  for($i=0;$i<strlen($text);$i++)
-    ImageCopy($img,$font,$i*8+$x,$y,(ord($text[$i])%16)*8,floor(ord($text[$i])/16)*8,8,8);
-}
-function fontc($r1,$g1,$b1,$r2,$g2,$b2,$r3,$g3,$b3){
-  $font=ImageCreateFromPNG('lib/rpg/font.png');
-  ImageColorTransparent($font,1);
-  ImageColorSet($font,6,$r1,$g1,$b1);
-  ImageColorSet($font,5,($r1*2+$r2)/3,($g1*2+$g2)/3,($b1*2+$b2)/3);
-  ImageColorSet($font,4,($r1+$r2*2)/3,($g1+$g2*2)/3,($b1+$b2*2)/3);
-  ImageColorSet($font,3,$r2,$g2,$b2);
-  ImageColorSet($font,0,$r3,$g3,$b3);
-  return $font;
-}
-function box($x,$y,$w,$h){
-  global $img,$c;
-  $x*=8;
-  $y*=8;
-  $w*=8;
-  $h*=8;
-  ImageRectangle($img,$x+0,$y+0,$x+$w-1,$y+$h-1,$c[bxb0]);
-  ImageRectangle($img,$x+1,$y+1,$x+$w-2,$y+$h-2,$c[bxb3]);
-  ImageRectangle($img,$x+2,$y+2,$x+$w-3,$y+$h-3,$c[bxb1]);
-  ImageRectangle($img,$x+3,$y+3,$x+$w-4,$y+$h-4,$c[bxb2]);
-  ImageRectangle($img,$x+4,$y+4,$x+$w-5,$y+$h-5,$c[bxb0]);
-  for($i=5;$i<$h-5;$i++){
-    $n=(1-$i/$h)*100;
-    ImageLine($img,$x+5,$y+$i,$x+$w-6,$y+$i,$c[$n]);
-  }
-}
-?>
