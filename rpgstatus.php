@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
 							."FROM users u "
 							."LEFT JOIN usersrpg r ON r.id=u.id "
-							."WHERE u.id = {0}", $u));
+							."WHERE u.id = '$u'"));
 
  $p = $user['posts'];
  $d = (time()-$user['regdate'])/86400;
@@ -28,17 +28,18 @@ error_reporting(E_ALL);
 		$pickfont='';
 	
 
- 	$eqitems=fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
+ 	$eqitems = fetch(Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'"));
 
- while($item = $eqitems)
+ while($item = $eqitems){
    $items[$item[id]] = $item;
+ }
  $ct = $_GET['ct'];
  if($ct){
    $GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
    $user['eq'.$ct]=$it;
  }
 
- $st=getstats($user,$items);
+ $st = getstats($user,$items);
  $st[GP]+=$GPdif;
  if($st[lvl]>0)
    $pct=1-calcexpleft($st[exp])/lvlexp($st[lvl]);

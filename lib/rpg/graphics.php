@@ -1,8 +1,6 @@
 <?PHP
 if (!defined('BLARG')) die();
 
-include(__DIR__.'/TextRenderer.php');
-
 class Image {
 	public $Image;
 	public $Size;
@@ -89,6 +87,7 @@ class Image {
 		return $Image;
 	}
 }
+
 function img_upload($fname,$img_targ,$img_x,$img_y,$img_size) {
 	$ftypes=array("png","jpeg","jpg","gif");
 	$img_data=getimagesize($fname['tmp_name']);
