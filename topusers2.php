@@ -13,7 +13,7 @@ ini_set("display_errors", 1);
 		$orderby = "`u`.`posts`";
 
 	$urlfont = $_GET['font'];
-	if($font)
+	if($urlfont)
 		$pickfont='2';
 	else
 		$pickfont='';

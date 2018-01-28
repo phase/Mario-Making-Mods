@@ -1,6 +1,14 @@
 <?php
 if (!defined('BLARG')) die();
 
+function checknumeric(&$var) {
+	if(!is_numeric($var)) {
+		$var=0;
+		return false;
+	}
+	return true;
+}
+
 function calclvlexp($l) {
 	if($l==1)
 		return 0;

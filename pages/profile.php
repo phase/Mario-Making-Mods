@@ -168,10 +168,6 @@ $temp[__("Total posts")] = format("{0} ({1} per day)", $posts, $averagePosts);
 $temp[__("Total threads")] = format("{0} ({1} per day)", $threads, $averageThreads);
 $temp[__("Registered on")] = format("{0} ({1} ago)", formatdate($user['regdate']), TimeUnits($daysKnown*86400));
 
-$rpgstats = getstats2($user['id']);
-
-$temp[__("EXP status")] = "Level: ".$rpgstats['lvl']."<br />EXP: ".$rpgstats["exp"]." (for the next level: ".calcexpleft($rpgstats["exp"]).")";
-
 $lastPost = Fetch(Query("
 	SELECT
 		p.id as pid, p.date as date,
@@ -367,9 +363,11 @@ RenderTemplate('profile', array(
 	'username' => htmlspecialchars($uname), 
 	'userlink' => UserLink($user),
 	'profileParts' => $profileParts,
-	'comments' => $comments,
 	'commentField' => $commentField,
-	'pagelinks' => $pagelinks));	
+	'comments' => $comments,
+	'pagelinks' => $pagelinks,
+	'rpgstatus' => $rpgstatus,
+	'equipitems' => $equipitems));	
 
 
 if (!$mobileLayout) {

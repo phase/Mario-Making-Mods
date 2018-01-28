@@ -38,9 +38,20 @@
 			</td>
 
 			<td style="vertical-align:top; padding-left:0.5em;">
+				<table class="outline margin" style="width: 275px;">
+					<tr class="header1">
+						<th colspan=2>RPG Status</th>
+					</tr>
+					
+					<tr class="cell1">
+						<td colspan=2>
+							<img src="{$rpgstatus}" alt="RPG Status" title="RPG Status for {$username}" />
+						</td>
+					</tr>
+				</table>
 				<table class="outline margin usercomments">
 					<tr class="header1">
-						<th colspan=2>Comments</th>
+						<th colspan=2>Profile Comments for {$username}</th>
 					</tr>
 					
 					{if $pagelinks}
@@ -50,7 +61,7 @@
 						</td>
 					</tr>
 					{/if}
-					
+
 					{foreach $comments as $cmt}
 					<tr class="cell{cycle values='0,1'}">
 						<td class="cell2" style="vertical-align:top; width:20%;">
@@ -69,7 +80,7 @@
 						</td>
 					</tr>
 					{/foreach}
-					
+
 					{if $pagelinks}
 					<tr class="cell1">
 						<td colspan=2>
@@ -82,6 +93,18 @@
 					<tr class="cell2">
 						<td colspan=2>
 							{$commentField}
+						</td>
+					</tr>
+					{else if !$loguserid}
+					<tr class="cell2">
+						<td colspan=2>
+							You need to be logged in to post profile comments here.
+						</td>
+					</tr>
+					{else}
+					<tr class="cell2">
+						<td colspan=2>
+							{$profilecommenterror}
 						</td>
 					</tr>
 					{/if}

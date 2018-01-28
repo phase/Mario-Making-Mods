@@ -8,7 +8,7 @@ ini_set("display_errors", 1);
  require(__DIR__.'/lib/rpg/rpg.php');
 
 	$urlfont = $_GET['font'];
-	if($font)
+	if($urlfont)
 		$pickfont='2';
 	else
 		$pickfont='';
@@ -17,6 +17,9 @@ ini_set("display_errors", 1);
  $u = $_GET['u'];
  if(!$n = $_GET[n]) $n=50;
  if(!$s = $_GET[s]) $s=1;
+ checknumeric($n);
+ checknumeric($u);
+ checknumeric($s);
 
  $val='posts';
  if($t=='lv')  $val = 'pow('.sqlexpval().',2/7)*100';

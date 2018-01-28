@@ -5,14 +5,6 @@ error_reporting(E_ALL);
 
  require(__DIR__.'/lib/common.php');
  require(__DIR__.'/lib/rpg/rpg.php');
- 
- function checknumeric(&$var){
-    if(!is_numeric($var)) {
-      $var=0;
-      return false;
-    }
-    return true;
-  }
 
  $u = $_GET['u'];
  checknumeric($u);
@@ -30,7 +22,7 @@ error_reporting(E_ALL);
  checknumeric($it);
 
 	$urlfont = $_GET['font'];
-	if($font)
+	if($urlfont)
 		$pickfont='2';
 	else
 		$pickfont='';
