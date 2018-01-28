@@ -5,6 +5,14 @@ error_reporting(E_ALL);
 
  require(__DIR__.'/lib/common.php');
  require(__DIR__.'/lib/rpg/rpg.php');
+ 
+ function checknumeric(&$var){
+    if(!is_numeric($var)) {
+      $var=0;
+      return false;
+    }
+    return true;
+  }
 
  $u = $_GET['u'];
  if(!$u) die("nice try, kid");
@@ -18,8 +26,7 @@ error_reporting(E_ALL);
  $d = (time()-$user['regdate'])/86400;
 
  $it = $_GET['it'];
- if (!is_numeric($it))
-	return false;
+ checknumeric($it);
 
 	$urlfont = $_GET['font'];
 	if($font)
