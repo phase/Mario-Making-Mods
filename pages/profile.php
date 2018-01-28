@@ -343,22 +343,6 @@ if($canComment)
 
 $rpgstatus = resourceLink("rpgstatus.php")."?u=".$id;
 
-$equipitems = "";
-
-$shops   = query('SELECT * FROM itemcateg ORDER BY corder');
-$eq      = fetch(query("SELECT * FROM usersrpg WHERE id = {0}", $id));
-$eqitems = query("SELECT * FROM items WHERE `id`='$eq[eq1]' OR `id`='$eq[eq2]' OR `id`='$eq[eq3]' OR `id`='$eq[eq4]' OR `id`='$eq[eq5]' OR `id`='$eq[eq6]'");
-
-while($item = fetch($eqitems))
-{
-	$items[$item['id']]=$item;
-}
-
-while($shop = fetch($shops))
-{
-	$equpitems.="<tr class=\"sfont\"><td width=\"70\">$shop[name]</td><td><a href=\"".actionLink("shop")."?action=desc&id=".$eq['eq'.$shop['id']]."\">".$items[$eq['eq'.$shop['id']]]['name']."</a></td></tr>";
-}
-
 RenderTemplate('profile', array(
 	'username' => htmlspecialchars($uname), 
 	'userlink' => UserLink($user),
@@ -366,8 +350,7 @@ RenderTemplate('profile', array(
 	'commentField' => $commentField,
 	'comments' => $comments,
 	'pagelinks' => $pagelinks,
-	'rpgstatus' => $rpgstatus,
-	'equipitems' => $equipitems));	
+	'rpgstatus' => $rpgstatus));	
 
 
 if (!$mobileLayout) {
