@@ -204,17 +204,9 @@ if($lastPost)
 
 $temp[__("Last view")] = format("{0} ({1} ago)", formatdate($user['lastactivity']), TimeUnits(time() - $user['lastactivity']));
 
-$lkb = $user['lastknownbrowser'];
-$lkba = Array();
-
-foreach (explode(" | ", $lkb) as $lkbs)
-	$lkba[] = $lkbs;
-
-$temp[__("Last user agent")] = $lkba[0];
-
 if(HasPermission('admin.viewips'))
 {
-	$temp[__("Last user agent")] .= " (".$lkba[1].")";
+	$temp[__("Last user agent")] = htmlspecialchars($user['lastknownbrowser']);
 	$temp[__("Last IP address")] = formatIP($user['lastip']);
 }
 

@@ -92,7 +92,7 @@ for($i=$s;$user=fetch($users);$i++) {
 	} else
 	$fontu=$fontB;
 	twrite($fontW, 0,$y,4,$rank);
-	twrite($fontu, 5,$y,0,substr(mb_convert_encoding($user[name], "ISO-8859-1"),0,12));
+	twrite($fontu, 5,$y,0,substr(mb_convert_encoding(htmlspecialchars($users['displayname'] ? $users['displayname'] : $users['name']), "ISO-8859-1"),0,12));
 	twrite($fontY,16,$y,6,floor($user[val]));
 	if(($sx=$user[val]/$div)>=1){
 		ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);

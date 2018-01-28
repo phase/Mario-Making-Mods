@@ -10,7 +10,7 @@ error_reporting(E_ALL);
  checknumeric($u);
  if(!$u) die("nice try, kid");
 
-	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, r.* "
+	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, u.displayname, r.* "
 							."FROM users u "
 							."LEFT JOIN usersrpg r ON r.id=u.id "
 							."WHERE u.id = {0}", $u));
@@ -73,7 +73,7 @@ error_reporting(E_ALL);
  $c[bar2][7] = ImageColorAllocate($img, 70, 12, 12);
  ImageColorTransparent($img,0);
 
- box( 0, 0,2+strlen($user[name]),3);
+ box( 0, 0,2+strlen(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name'])),3);
  box( 0, 4,32, 4);
  box( 0, 9,32, 9);
  box( 0,19,11, 9);
@@ -85,7 +85,7 @@ error_reporting(E_ALL);
  $fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
  $fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
- twrite($fontW, 1, 1, 0, mb_convert_encoding($user[name], "ISO-8859-1"));
+ twrite($fontW, 1, 1, 0, mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1"));
 
  twrite($fontB, 1, 5,0,'HP:      /');
  twrite($fontR, 3, 5,7,$st[HP]);

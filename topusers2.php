@@ -21,7 +21,7 @@ ini_set("display_errors", 1);
 	$startdate	= floor((time() - (6 * 60 * 60)) / 86400) * 86400 + (6 * 60 * 60);
 	$enddate		= $startdate + 86400;
 
-	$users	= query("SELECT COUNT(*) as `cnt`, `u`.`name`, `u`.`posts` ".
+	$users	= query("SELECT COUNT(*) as `cnt`, `u`.`name`, `u`.`displayname`, `u`.`posts` ".
 							"FROM `posts` `p` ".
 							"LEFT JOIN `users` `u` ON `p`.`user` = `u`.`id` ".
 							"WHERE `p`.`date` >= '$startdate' AND `p`.`date` < '$enddate' ".
@@ -120,7 +120,7 @@ for ($i = 384; $i <= 504; $i += 10) {
  $i	= -1;
 
  foreach($userdat as $i => $user) {
-	$name	= mb_convert_encoding($user[name], "ISO-8859-1");
+	$name	= mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1");
 	$posts	= $user['posts'];
 	$daily	= $user['cnt'];
 	$vline	= $i + 3;
