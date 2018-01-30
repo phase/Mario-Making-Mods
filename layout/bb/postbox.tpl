@@ -1,5 +1,5 @@
 	<table class="{if $post.fulllayout}custompost table{$post.u_id}{else}post{/if} margin" id="post{$post.id}">
-		<tr>
+		<tr class="{if $post.fulllayout} topbar{$post.u_id}_3{/if}">
 			<td class="side userlink{if $post.fulllayout} topbar{$post.u_id}_1{/if}">
 				{$post.userlink}
 			</td>
@@ -19,21 +19,21 @@
 				<ul class="pipemenu">
 				{if $post.type == $smarty.const.POST_NORMAL}
 					<li><a href="{actionLink page='post' id=$post.id}">Link</a>
-					{if $post.links.quote}<li>{$post.links.quote}{/if}
-					{if $post.links.edit}<li>{$post.links.edit}{/if}
-					{if $post.links.delete}<li>{$post.links.delete}{/if}
-					{if $post.links.wipe}<li>{$post.links.wipe}{/if}
-					{if $post.links.report}<li>{$post.links.report}{/if}
+					{if $post.links.quote}<li>{$post.links.quote}</li>{/if}
+					{if $post.links.edit}<li>{$post.links.edit}</li>{/if}
+					{if $post.links.delete}<li>{$post.links.delete}</li>{/if}
+					{if $post.links.wipe}<li>{$post.links.wipe}</li>{/if}
+					{if $post.links.report}<li>{$post.links.report}</li>{/if}
 					{foreach $post.links.extra as $link}
-						<li>{$link}
+						<li>{$link}</li>
 					{/foreach}
 				{else if $post.type == $smarty.const.POST_DELETED_SNOOP}
-					<li>Post deleted
-					{if $post.links.undelete}<li>{$post.links.undelete}{/if}
-					{if $post.links.close}<li>{$post.links.close}{/if}
+					<li>Post deleted</li>
+					{if $post.links.undelete}<li>{$post.links.undelete}</li>{/if}
+					{if $post.links.close}<li>{$post.links.close}</li>{/if}
 				{/if}
-					{if $post.id}<li>#{$post.id}{/if}
-					{if $post.ip}<li>{$post.ip}{/if}
+					{if $post.id}<li>#{$post.id}</li>{/if}
+					{if $post.ip}<li>{$post.ip}</li>{/if}
 				</ul>
 			</td>
 		</tr>

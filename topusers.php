@@ -4,13 +4,18 @@ ini_set("display_errors", 1);
 
  define("BLARG", "1");
 
- require(__DIR__.'/lib/common.php');
+ require(__DIR__.'/lib/mysql.php');
  require(__DIR__.'/lib/rpg/rpg.php');
 
 	$urlfont = $_GET['font'];
-	if($urlfont)
-		$pickfont='2';
-	else
+	if($urlfont){
+		if($urlfont == '1')
+			$pickfont = '1';
+		else if($urlfont == '2')
+			$pickfont = '2';
+		else
+			$pickfont = '';
+	} else
 		$pickfont='';
 
  $t = $_GET['t'];
@@ -86,14 +91,14 @@ for($i=$s;$user=fetch($users);$i++) {
 		if(!$div) $div=1;
 	}
 	$y=$i-$s+1;
-	if($user[id]==$u){
+	if($user[id]==$u) {
 		ImageFilledRectangle($img,8,$y*8,503,$y*8+7,$c[hlit]);
 		$fontu=$fontY;
 	} else
-	$fontu=$fontB;
-	twrite($fontW, 0,$y,4,$rank);
-	twrite($fontu, 5,$y,0,substr(mb_convert_encoding(htmlspecialchars($users['displayname'] ? $users['displayname'] : $users['name']), "ISO-8859-1"),0,12));
-	twrite($fontY,16,$y,6,floor($user[val]));
+		$fontu=$fontB;
+	twrite($fontW, 0,$y,4,$rank, $pickfont);
+	twrite($fontu, 5,$y,0,substr(mb_convert_encoding(htmlspecialchars($users['displayname'] ? $users['displayname'] : $users['name']), "ISO-8859-1"),0,12), $pickfont);
+	twrite($fontY,16,$y,6,floor($user[val]), $pickfont);
 	if(($sx=$user[val]/$div)>=1){
 		ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);
 		ImageFilledRectangle($img,184,$y*8  ,183+$sx,$y*8+6,$c[bar][$sn]);

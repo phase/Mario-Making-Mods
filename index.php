@@ -171,7 +171,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 	$themefile = "themes/$theme/style.php";
 
 $layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], [user=20] [url=/memberlist?page=memberlist&sort=&order=desc&group=staff&name=]& others[/url]
+'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
 Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' seconds (with '.$queries.' SQL queries and '.sprintf('%.03f',memory_get_usage() / 1024).'K of RAM).';
 
 $sidebar = '';

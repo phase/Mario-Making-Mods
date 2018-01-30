@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 
  define("BLARG", "1");
 
- require(__DIR__.'/lib/common.php');
+ require(__DIR__.'/lib/mysql.php');
  require(__DIR__.'/lib/rpg/rpg.php');
 
  $u = $_GET['u'];
@@ -22,9 +22,14 @@ error_reporting(E_ALL);
  checknumeric($it);
 
 	$urlfont = $_GET['font'];
-	if($urlfont)
-		$pickfont='2';
-	else
+	if($urlfont){
+		if($urlfont == '1')
+			$pickfont = '1';
+		else if($urlfont == '2')
+			$pickfont = '2';
+		else
+			$pickfont = '';
+	} else
 		$pickfont='';
 	
 
@@ -85,32 +90,32 @@ error_reporting(E_ALL);
  $fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
  $fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
- twrite($fontW, 1, 1, 0, mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1"));
+ twrite($fontW, 1, 1, 0, mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1"), $pickfont);
 
- twrite($fontB, 1, 5,0,'HP:      /');
- twrite($fontR, 3, 5,7,$st[HP]);
- twrite($fontY,11, 5,5,$st[HP]);
- twrite($fontB, 1, 6,0,'MP:      /');
- twrite($fontR, 3, 6,7,$st[MP]);
- twrite($fontY,11, 6,5,$st[MP]);
+ twrite($fontB, 1, 5,0,'HP:      /', $pickfont);
+ twrite($fontR, 3, 5,7,$st[HP], $pickfont);
+ twrite($fontY,11, 5,5,$st[HP], $pickfont);
+ twrite($fontB, 1, 6,0,'MP:      /', $pickfont);
+ twrite($fontR, 3, 6,7,$st[MP], $pickfont);
+ twrite($fontY,11, 6,5,$st[MP], $pickfont);
 
  for($i=2;$i<9;$i++){
-   twrite($fontB, 1,8+$i,0,"$stat[$i]:");
-   twrite($fontY, 4,8+$i,6,$st[$stat[$i]]);
+   twrite($fontB, 1,8+$i,0,"$stat[$i]:", $pickfont);
+   twrite($fontY, 4,8+$i,6,$st[$stat[$i]], $pickfont);
  }
 
- twrite($fontB, 1,20,0,'Level');
- twrite($fontY, 6,20,4,$st[lvl]);
- twrite($fontB, 1,22,0,'EXP:');
- twrite($fontY, 1,23,9,$st[exp]);
- twrite($fontB, 1,24,0,'Next:');
- twrite($fontY, 1,25,9,calcexpleft($st[exp]));
+ twrite($fontB, 1,20,0,'Level', $pickfont);
+ twrite($fontY, 6,20,4,$st[lvl], $pickfont);
+ twrite($fontB, 1,22,0,'EXP:', $pickfont);
+ twrite($fontY, 1,23,9,$st[exp], $pickfont);
+ twrite($fontB, 1,24,0,'Next:', $pickfont);
+ twrite($fontY, 1,25,9,calcexpleft($st[exp]), $pickfont);
 
- twrite($fontB,13,20,0,'Coins:');
- twrite($fontY,13,22,0,chr(0));
- twrite($fontG,13,23,0,chr(0));
- twrite($fontY,14,22,8,$st[GP]);
- twrite($fontG,14,23,8,$user[gcoins]);
+ twrite($fontB,13,20,0,'Coins:', $pickfont);
+ twrite($fontY,13,22,0,chr(0), $pickfont);
+ twrite($fontG,13,23,0,chr(0), $pickfont);
+ twrite($fontY,14,22,8,$st[GP], $pickfont);
+ twrite($fontG,14,23,8,$user[gcoins], $pickfont);
 
  $sc[1]=   1;
  $sc[2]=   5;

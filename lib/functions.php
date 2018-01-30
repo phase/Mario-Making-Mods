@@ -152,23 +152,6 @@ function TimeUnits($sec)
 	return floor($sec/86400)." day".($sec >= 172800 ? "s" : "");
 }
 
-// TODO remove
-function RecalculateKarma($uid)
-{
-	$karma = 100;
-	$karmaWeights = array(5, 10, 10, 15, 15);
-	$rKarma = Query("select powerlevel, up from {uservotes} left join {users} on id=voter where uid={0} and powerlevel > -1", $uid);
-	while($k = Fetch($rKarma))
-	{
-		if($k['up'])
-			$karma += $karmaWeights[$k['powerlevel']];
-		else
-			$karma -= $karmaWeights[$k['powerlevel']];
-	}
-	Query("update {users} set karma={0} where id={1}", $karma, $uid);
-	return $karma;
-}
-
 
 function cdate($format, $date = 0)
 {

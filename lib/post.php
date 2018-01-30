@@ -170,19 +170,19 @@ define('POST_SAMPLE', 3);			// sample post box (profile sample post, newreply po
 //		* noreplylinks: if set, no links to newreply.php (Quote/ID) are placed in the metabar (POST_NORMAL only)
 function makePost($post, $type, $params=array()) {
 	global $loguser, $loguserid, $usergroups, $isBot, $blocklayouts;
-	
+
 	$poster = getDataPrefix($post, 'u_');
 	$post['userlink'] = UserLink($poster);
-	
+
 	LoadBlockLayouts();
 	$pltype = Settings::get('postLayoutType');
 	$isBlocked = $poster['globalblock'] || $loguser['blocklayouts'] || $post['options'] & 1 || isset($blocklayouts[$poster['id']]);
-	
+
 	$post['type'] = $type;
 	$post['formattedDate'] = formatdate($post['date']);
-	
-	if (!HasPermission('admin.viewips')) $post['ip'] = '';
-	else $post['ip'] = htmlspecialchars($post['ip']); // TODO IP formatting?
+
+	if (HasPermission('admin.viewips')) htmlspecialchars($post['ip']);
+	else $post['ip'] = ''; // TODO IP formatting?
 
 	if($post['deleted'] && $type == POST_NORMAL) {
 		$post['deluserlink'] = UserLink(getDataPrefix($post, 'du_'));
@@ -201,8 +201,7 @@ function makePost($post, $type, $params=array()) {
 
 	$links = array();
 
-	if ($type != POST_SAMPLE)
-	{
+	if ($type != POST_SAMPLE) {
 		$forum = $params['fid'];
 		$thread = $params['tid'];
 
@@ -210,19 +209,14 @@ function makePost($post, $type, $params=array()) {
 
 		$extraLinks = array();
 
-		if (!$isBot)
-		{
-			if ($type == POST_DELETED_SNOOP)
-			{
+		if (!$isBot) {
+			if ($type == POST_DELETED_SNOOP) {
 				if ($notclosed && HasPermission('mod.deleteposts', $forum))
 					$links['undelete'] = actionLinkTag(__("Undelete"), "editpost", $post['id'], "delete=2&key=".$loguser['token']);
 				
 				$links['close'] = "<a href=\"#\" onclick=\"replacePost(".$post['id'].",false); return false;\">".__("Close")."</a>";
-			}
-			else if ($type == POST_NORMAL)
-			{
-				if ($notclosed)
-				{
+			} else if ($type == POST_NORMAL) {
+				if ($notclosed) {
 					if ($loguserid && HasPermission('forum.postreplies', $forum) && !$params['noreplylinks'])
 						$links['quote'] = actionLinkTag(__("Quote"), "newreply", $thread, "quote=".$post['id']);
 
@@ -256,21 +250,18 @@ function makePost($post, $type, $params=array()) {
 		}
 
 		//Threadlinks for listpost.php
-		if ($params['threadlink'])
-		{
+		if ($params['threadlink']) {
 			$thread = array();
 			$thread['id'] = $post['thread'];
 			$thread['title'] = $post['threadname'];
 			$thread['forum'] = $post['fid'];
 
 			$post['threadlink'] = makeThreadLink($thread);
-		}
-		else
+		} else
 			$post['threadlink'] = '';
 
 		//Revisions
-		if($post['revision'])
-		{
+		if($post['revision']) {
 			$ru_link = UserLink(getDataPrefix($post, "ru_"));
 			$revdetail = ' '.format(__('by {0} on {1}'), $ru_link, formatdate($post['revdate']));
 
@@ -298,16 +289,13 @@ function makePost($post, $type, $params=array()) {
 
 	$sidebar['syndrome'] = GetSyndrome(getActivity($poster['id']));
 
-	if($post['mood'] > 0)
-	{
+	if($post['mood'] > 0) {
 		$mExt = FetchResult("select ext from {moodavatars} where uid={0} and mid = {1}", $poster['id'], $post['mood']);
 		$ft = ['','gif','jpg','png'];
 
 		if(file_exists(DATA_DIR."avatars/".$poster['id']."_".$post['mood'].'.'.$ft[$mExt]))
 			$sidebar['avatar'] = "<img src=\"".DATA_URL."avatars/".$poster['id']."_".$post['mood'].'.'.$ft[$mExt]."\" alt=\"\">";
-	}
-	else if ($poster['picture'])
-	{
+	} else if ($poster['picture']) {
 		$pic = str_replace('$root/', DATA_URL, $poster['picture']);
 		$sidebar['avatar'] = "<img src=\"".htmlspecialchars($pic)."\" alt=\"\">";
 	}
@@ -339,9 +327,8 @@ function makePost($post, $type, $params=array()) {
 	
 	$post['haslayout'] = false;
 	$post['fulllayout'] = false;
-	
-	if(!$isBlocked)
-	{
+
+	if(!$isBlocked) {
 		$poster['postheader'] = $pltype ? trim($poster['postheader']) : '';
 		$poster['signature'] = trim($poster['signature']);
 		
@@ -350,9 +337,7 @@ function makePost($post, $type, $params=array()) {
 		
 		if (!$post['haslayout'] && $poster['signature'])
 			$poster['signature'] = '<div class="signature">'.$poster['signature'].'</div>';
-	}
-	else
-	{
+	} else {
 		$poster['postheader'] = '';
 		$poster['signature'] = '';
 	}
@@ -360,6 +345,6 @@ function makePost($post, $type, $params=array()) {
 	$post['contents'] = makePostText($post, $poster);
 
 	//PRINT THE POST!
-	
+
 	RenderTemplate('postbox', array('post' => $post));
 }

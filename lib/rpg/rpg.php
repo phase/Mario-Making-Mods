@@ -123,14 +123,19 @@ function getstats2($u) {
 	return $st;
 }
 
-function twrite($font,$x,$y,$l,$text) {
+function twrite($font,$x,$y,$l,$text,$pickfont) {
 	global $img;
 	$x*=8;
 	$y*=8;
 	$text.='';
 	if(strlen($text)<$l) $x+=($l-strlen($text))*8;
-	for($i=0;$i<strlen($text);$i++)
-		ImageCopy($img,$font,$i*8+$x,$y,(ord($text[$i])%16)*8,floor(ord($text[$i])/16)*8,8,8);
+	if($pickfont == "2") {
+		for($i=0;$i<strlen($text);$i++)
+			ImageCopy($img,$font,$i*5+$x,$y,(ord($text[$i])%16)*8,floor(ord($text[$i])/16)*8,6,8);
+	} else {
+		for($i=0;$i<strlen($text);$i++)
+			ImageCopy($img,$font,$i*8+$x,$y,(ord($text[$i])%16)*8,floor(ord($text[$i])/16)*8,8,8);
+	}
 }
 
 function fontc($r1,$g1,$b1,$r2,$g2,$b2,$r3,$g3,$b3,$pickfont) {

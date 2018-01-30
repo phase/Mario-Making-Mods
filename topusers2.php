@@ -5,7 +5,7 @@ ini_set("display_errors", 1);
  define("BLARG", "1");
 
  require(__DIR__.'/lib/rpg/rpg.php');
- require(__DIR__.'/lib/common.php');
+ require(__DIR__.'/lib/mysql.php');
 
 	if ($_GET['order'])
 		$orderby = "`cnt`";
@@ -13,9 +13,14 @@ ini_set("display_errors", 1);
 		$orderby = "`u`.`posts`";
 
 	$urlfont = $_GET['font'];
-	if($urlfont)
-		$pickfont='2';
-	else
+	if($urlfont){
+		if($urlfont == '1')
+			$pickfont = '1';
+		else if($urlfont == '2')
+			$pickfont = '2';
+		else
+			$pickfont = '';
+	} else
 		$pickfont='';
 
 	$startdate	= floor((time() - (6 * 60 * 60)) / 86400) * 86400 + (6 * 60 * 60);
@@ -57,13 +62,13 @@ ini_set("display_errors", 1);
  $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
  box(1,0,11,3); //44*8=352
- twrite($fontW,  2,  1, 0,"User");
+ twrite($fontW,  2,  1, 0,"User", $pickfont);
 
  box(13,0,28,3); //44*8=352
- twrite($fontW, 14,  1, 0,"Total");
+ twrite($fontW, 14,  1, 0,"Total", $pickfont);
 
  box(42,0,21,3); //44*8=352
- twrite($fontW, 43,  1, 0,"Today");
+ twrite($fontW, 43,  1, 0,"Today", $pickfont);
 
  // more dramatic, better for lower post ranges
  // doubtful it'll ever go over 100 scale (you'd need 35.2k posts for that anyway)
@@ -125,10 +130,10 @@ for ($i = 384; $i <= 504; $i += 10) {
 	$daily	= $user['cnt'];
 	$vline	= $i + 3;
 
-	twrite($fontR,  1,$vline    , 0,substr($name,0,12));
-	twrite($fontW, 13,$vline    , 5,$posts);
+	twrite($fontR,  1,$vline    , 0,substr($name,0,12), $pickfont);
+	twrite($fontW, 13,$vline    , 5,$posts, $pickfont);
 
-	twrite($fontW, 42,$vline, 5,$daily);
+	twrite($fontW, 42,$vline, 5,$daily, $pickfont);
 
    
 	ImageFilledRectangle($img,153,$vline*8+1,152+$posts/$sc[$s],$vline*8+7,$c[bxb0]);
