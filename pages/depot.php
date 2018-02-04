@@ -31,7 +31,6 @@ if ($http->get('console')) {
 			$console = '';
 			$command = '';
 			$countcommand = '';
-			break;
 	}
 } else {
 	$console = '';
@@ -70,7 +69,6 @@ if ($http->get('style')) {
 			$style = '';
 			$command .= '';
 			$countcommand .= '';
-			break;
 	}
 } else {
 	$style = '';
@@ -114,7 +112,6 @@ if ($http->get('theme')) {
 			$smmtheme = '';
 			$command .= '';
 			$countcommand .= '';
-			break;
 	}
 } else {
 	$smmtheme = '';
@@ -126,10 +123,9 @@ $sidebarshow = true;
 $rFora = Query("select * from {forums} where id = {0} ", 3);
 if(NumRows($rFora))
 {
-	$forum = Fetch($rFora);
 	if(!HasPermission('forum.viewforum', $forum['id']))
 		return;
-	else 
+	else
 		$forum = Fetch($rFora);
 } else {
 	Alert("Whoops. Seems like there were no results for the fields you selected. Why not try different fields?");
