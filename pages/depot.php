@@ -31,6 +31,7 @@ if ($http->get('console')) {
 			$console = '';
 			$command = '';
 			$countcommand = '';
+			break;
 	}
 } else {
 	$console = '';
@@ -69,6 +70,7 @@ if ($http->get('style')) {
 			$style = '';
 			$command .= '';
 			$countcommand .= '';
+			break;
 	}
 } else {
 	$style = '';
@@ -92,22 +94,27 @@ if ($http->get('theme')) {
 			$smmtheme = 'water';
 			$command .= " AND t.theme = 'water' ";
 			$countcommand .= " AND theme = 'water' ";
+			break;
 		case 'castle':
 			$smmtheme = 'castle';
 			$command .= " AND t.theme = 'castle' ";
 			$countcommand .= " AND theme = 'water' ";
+			break;
 		case 'ghost':
 			$smmtheme = 'ghost';
 			$command .= " AND t.theme = 'ghost' ";
 			$countcommand .= " AND theme = 'ghost' ";
+			break;
 		case 'airship':
 			$smmtheme = 'airship';
 			$command .= " AND t.theme = 'airship' ";
 			$countcommand .= " AND theme = 'ghost' ";
+			break;
 		default:
 			$smmtheme = '';
 			$command .= '';
 			$countcommand .= '';
+			break;
 	}
 } else {
 	$smmtheme = '';
