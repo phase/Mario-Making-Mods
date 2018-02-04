@@ -36,12 +36,28 @@ function cleanUpPost($postText, $poster = "", $noSmilies = false, $noBr = false)
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*'(.*?)'@si", 'ApplyNetiquetteToLinks', $s);
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*([^\"'][^\s>]*)@si", 'ApplyNetiquetteToLinks', $s);
 
+	$s = str_ireplace('mariomakingmods.net', 'mariomods.net', $s); //old URL
+	$s = str_ireplace('/shrug/', '¯\_(ツ)_/¯', $s); // emote
+
+
+	/* Filter all Piracy sites */
 	$s = str_ireplace('3dsiso.com', 'that ISO site', $s);
 	$s = str_ireplace('chaosgamez.com', 'that chaos site', $s);
-	$s = str_ireplace('wiiu.titlekeys.gq', 'that wiiu titlekey site', $s);
-	$s = str_ireplace('3ds.titlekeys.gq', 'that 3DS titlekey site', $s);
-	$s = str_ireplace('mariomakingmods.net', 'mariomods.net', $s);
+	$s = str_ireplace('3dschaos.com', 'that chaos site', $s);
+	$s = str_ireplace('wiiuchaos.com', 'that chaos site', $s);
+	$s = str_ireplace('wiiu.titlekeys.gq', 'that titlekey site', $s);
+	$s = str_ireplace('3ds.titlekeys.gq', 'that titlekey site', $s);
+	$s = str_ireplace('wiiu.titlekeys.com', 'that titlekey site', $s);
+	$s = str_ireplace('3ds.titlekeys.com', 'that titlekey site', $s);
+	$s = str_ireplace('darkumbra.net', 'that Dark Piracy Site', $s);
+	$s = str_ireplace('portalroms.com', 'that Portal site', $s);
+	$s = str_ireplace('theisozone.com', 'that Piracy Zone site', $s);
+	$s = str_ireplace('wiiiso.com', 'that ISO site', $s);
 	
+	/* Filter all NSFW sites */
+	
+	$s = str_ireplace('pornhub.com', 'that NSFWHub site', $s);
+
 
 	$s = str_ireplace('autoplay', 'auto<i></i>play', $s);
 

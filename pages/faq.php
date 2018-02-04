@@ -127,5 +127,3 @@ function DoGeshi($code)
 {
 	return "<code>".htmlspecialchars($code)."</code>";
 }
-
-?>

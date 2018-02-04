@@ -16,18 +16,21 @@ RenderTemplate('form_welcome', array('header' => $header, 'text' => $text));
 $command = '';
 $countcommand = '';
 if ($http->get('console')) {
-	if ($http->get('console') == '3ds') {
-		$console = '3ds';
-		$command .= " AND t.downloadtheme3ds <> '' ";
-		$countcommand .= " AND downloadtheme3ds <> '' ";
-	} elseif ($http->get('console') == 'wiiu') {
-		$console = 'wiiu';
-		$command .= " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
-		$countcommand .= " AND (downloadthemewiiu <> '' OR downloadcostumewiiu <> '') ";
-	} else {
-		$console = '';
-		$command = '';
-		$countcommand = '';
+	switch ($http->get('console')) {
+		case '3ds':
+			$console = '3ds';
+			$command .= " AND t.downloadtheme3ds <> '' ";
+			$countcommand .= " AND downloadtheme3ds <> '' ";
+			break;
+		case 'wiiu':
+			$console = 'wiiu';
+			$command .= " AND (t.downloadthemewiiu <> '' OR t.downloadcostumewiiu <> '') ";
+			$countcommand .= " AND (downloadthemewiiu <> '' OR downloadcostumewiiu <> '') ";
+			break;
+		default:
+			$console = '';
+			$command = '';
+			$countcommand = '';
 	}
 } else {
 	$console = '';
@@ -36,30 +39,36 @@ if ($http->get('console')) {
 }
 
 if ($http->get('style')) {
-	if ($http->get('style') == 'smb1') {
-		$style = 'smb1';
-		$command .= " AND t.style = 'smb1' ";
-		$countcommand .= " AND style = 'smb1' ";
-	} else if ($http->get('style') == 'smb3') {
-		$style = 'smb3';
-		$command .= " AND t.style = 'smb3' ";
-		$countcommand .= " AND style = 'smb3' ";
-	} else if ($http->get('style') == 'smw') {
-		$style = 'smw';
-		$command .= " AND t.style = 'smw' ";
-		$countcommand .= " AND style = 'smw' ";
-	} else if ($http->get('style') == 'nsmbu') {
-		$style = 'nsmbu';
-		$command .= " AND t.style = 'nsmbu' ";
-		$countcommand .= " AND style = 'nsmbu' ";
-	} else if ($http->get('style') == 'custom') {
-		$style = 'custom';
-		$command .= " AND t.style = 'custom' ";
-		$countcommand .= " AND style = 'custom' ";
-	} else {
-		$style = '';
-		$command .= '';
-		$countcommand .= '';
+	switch ($http->get('style')) {
+		case 'smb1':
+			$style = 'smb1';
+			$command .= " AND t.style = 'smb1' ";
+			$countcommand .= " AND style = 'smb1' ";
+			break;
+		case 'smb3':
+			$style = 'smb3';
+			$command .= " AND t.style = 'smb3' ";
+			$countcommand .= " AND style = 'smb3' ";
+			break;
+		case 'smw':
+			$style = 'smw';
+			$command .= " AND t.style = 'smw' ";
+			$countcommand .= " AND style = 'smw' ";
+			break;
+		case 'nsmbu':
+			$style = 'nsmbu';
+			$command .= " AND t.style = 'nsmbu' ";
+			$countcommand .= " AND style = 'nsmbu' ";
+			break;
+		case 'custom':
+			$style = 'custom';
+			$command .= " AND t.style = 'custom' ";
+			$countcommand .= " AND style = 'custom' ";
+			break;
+		default:
+			$style = '';
+			$command .= '';
+			$countcommand .= '';
 	}
 } else {
 	$style = '';
@@ -68,34 +77,37 @@ if ($http->get('style')) {
 }
 
 if ($http->get('theme')) {
-	if ($http->get('theme') == 'grass') {
-		$smmtheme = 'grass';
-		$command .= " AND t.theme = 'grass' ";
-		$countcommand .= " AND theme = 'grass' ";
-	} else if ($http->get('theme') == 'under') {
-		$smmtheme = 'under';
-		$command .= " AND t.theme = 'under' ";
-		$countcommand .= " AND theme = 'under' ";
-	} else if ($http->get('theme') == 'water') {
-		$smmtheme = 'water';
-		$command .= " AND t.theme = 'water' ";
-		$countcommand .= " AND theme = 'water' ";
-	} else if ($http->get('theme') == 'castle') {
-		$smmtheme = 'castle';
-		$command .= " AND t.theme = 'castle' ";
-		$countcommand .= " AND theme = 'water' ";
-	} else if ($http->get('theme') == 'ghost') {
-		$smmtheme = 'ghost';
-		$command .= " AND t.theme = 'ghost' ";
-		$countcommand .= " AND theme = 'ghost' ";
-	} else if ($http->get('theme') == 'airship') {
-		$smmtheme = 'airship';
-		$command .= " AND t.theme = 'airship' ";
-		$countcommand .= " AND theme = 'ghost' ";
-	} else {
-		$smmtheme = '';
-		$command .= '';
-		$countcommand .= '';
+	switch ($http->get('theme')) {
+		case 'grass':
+			$smmtheme = 'grass';
+			$command .= " AND t.theme = 'grass' ";
+			$countcommand .= " AND theme = 'grass' ";
+			break;
+		case 'under':
+			$smmtheme = 'under';
+			$command .= " AND t.theme = 'under' ";
+			$countcommand .= " AND theme = 'under' ";
+			break;
+		case 'water':
+			$smmtheme = 'water';
+			$command .= " AND t.theme = 'water' ";
+			$countcommand .= " AND theme = 'water' ";
+		case 'castle':
+			$smmtheme = 'castle';
+			$command .= " AND t.theme = 'castle' ";
+			$countcommand .= " AND theme = 'water' ";
+		case 'ghost':
+			$smmtheme = 'ghost';
+			$command .= " AND t.theme = 'ghost' ";
+			$countcommand .= " AND theme = 'ghost' ";
+		case 'airship':
+			$smmtheme = 'airship';
+			$command .= " AND t.theme = 'airship' ";
+			$countcommand .= " AND theme = 'ghost' ";
+		default:
+			$smmtheme = '';
+			$command .= '';
+			$countcommand .= '';
 	}
 } else {
 	$smmtheme = '';

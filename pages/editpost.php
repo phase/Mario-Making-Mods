@@ -28,6 +28,8 @@ if(NumRows($rPost))
 else
 	Kill(__("Unknown post ID."));
 
+checknumeric($pid);
+
 $rUser = Query("select * from {users} where id={0}", $post['user']);
 if(NumRows($rUser))
 	$user = Fetch($rUser);

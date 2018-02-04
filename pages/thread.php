@@ -29,6 +29,8 @@ else
 if (!HasPermission('forum.viewforum', $fid))
 	Kill(__('You may not access this forum.'));
 
+checknumeric($fid);
+checknumeric($tid)
 
 $threadtags = ParseThreadTags($thread['title']);
 $title = $threadtags[0];

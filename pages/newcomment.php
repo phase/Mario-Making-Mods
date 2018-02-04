@@ -28,8 +28,8 @@ if(NumRows($rThread))
 	$fid = $thread['forum'];
 }
 else
-	Kill(__("Unknown thread ID."));
-	
+	Kill(__("Unknown entry ID."));
+
 if (!HasPermission('forum.viewforum', $fid))
 	Kill(__('You may not access this forum.'));
 
@@ -42,6 +42,9 @@ if(NumRows($rFora))
 else
 	Kill("Unknown forum ID.");
 $fid = $forum['id'];
+
+checknumeric($fid);
+checknumeric($tid)
 
 $isHidden = !HasPermission('forum.viewforum', $fid, true);
 

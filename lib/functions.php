@@ -478,3 +478,22 @@ function utfmb4_fix($string) {
 function utfmb4String($string) {
 	return utfmb4_fix(preg_replace_callback('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'entity_fix__callback', $string));
 }
+
+function echo_memory_usage() { 
+	$mem_usage = memory_get_usage(true); 
+
+	if ($mem_usage < 1024) 
+		$memoryusage = $mem_usage." bytes"; 
+	elseif ($mem_usage < 1048576) 
+		$memoryusage = round($mem_usage/1024,2)." kilobytes"; 
+	else 
+		$memoryusage = round($mem_usage/1048576,2)." megabytes";
+}
+
+function checknumeric(&$var) {
+	if(!is_numeric($var)) {
+		$var=0;
+		return false;
+	}
+	return true;
+}

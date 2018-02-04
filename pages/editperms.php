@@ -8,14 +8,14 @@ if (isset($_GET['uid']))
 	CheckPermission('admin.editusers');
 	$applyto = 1;
 	$id = (int)$_GET['uid'];
-	
+
 	$user = Fetch(Query("SELECT name,displayname,primarygroup FROM {users} WHERE id={0}", $id));
 	if (!$user) Kill(__('Invalid user ID.'));
 	$targetrank = $usergroups[$user['primarygroup']]['rank'];
-	
+
 	if ($targetrank > $loguserGroup['rank'])
 		Kill(__('You may not edit permissions for this user.'));
-	
+
 	MakeCrumbs(array(actionLink('admin') => __('Admin'), 
 		'' => __('Edit permissions for user: ').htmlspecialchars($user['displayname']?$user['displayname']:$user['name'])));
 }
@@ -24,7 +24,7 @@ else if (isset($_GET['gid']))
 	CheckPermission('admin.editgroups');
 	$applyto = 0;
 	$id = (int)$_GET['gid'];
-	
+
 	if (!$usergroups[$id]) Kill(__('Invalid group ID.'));
 	$targetrank = $usergroups[$id]['rank'];
 	
@@ -33,10 +33,10 @@ else if (isset($_GET['gid']))
 	
 	MakeCrumbs(array(actionLink('admin') => __('Admin'), 
 		'' => __('Edit permissions for group: ').htmlspecialchars($usergroups[$id]['name'])));
-}
-else
+} else
 	Kill(__('Invalid parameters.'));
 
+checknumeric($id);
 
 if ($_POST['saveaction'] || $_POST['addfpermaction'])
 {

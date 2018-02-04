@@ -292,14 +292,12 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 						}
 					}
 				}
-			}
-			else
+			} else
 				$fdata['link'] = '<a href="'.htmlspecialchars($redir).'">'.$forum['title'].'</a>';
-		}
-		else
+		} else
 			$fdata['link'] = actionLinkTag($forum['title'], "forum",  $forum['id'], '', 
 				HasPermission('forum.viewforum', $forum['id'], true) ? $forum['title'] : '');
-				
+
 		$fdata['ignored'] = $forum['ignored'];
 
 		$newstuff = 0;
@@ -312,10 +310,8 @@ function makeForumListing($parent, $board='', $template="forumlist") {
 
 		$fdata['description'] = $forum['description'];
 
-		if (isset($mods[$forum['id']]))
-		{
-			foreach($mods[$forum['id']] as $user)
-			{
+		if (isset($mods[$forum['id']])) {
+			foreach($mods[$forum['id']] as $user) {
 				if ($user['groupid'])
 					$localMods .= htmlspecialchars($usergroups[$user['groupid']]['name']).', ';
 				else
@@ -454,12 +450,12 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 			$tdata['pagelinks'] = actionLinkTag(1, "thread", $thread['id'], '', $urlname).$pl;
 		else
 			$tdata['pagelinks'] = '';
-			
+
 		if ($showforum)
 			$tdata['forumlink'] = actionLinkTag(htmlspecialchars($thread["f_title"]), "forum", $thread["f_id"], "", $ispublic?$thread["f_title"]:'');
-			
+
 		$tdata['startuser'] = UserLink($starter);
-		
+
 		$tdata['replies'] = $thread['replies'];
 		$tdata['views'] = $thread['views'];
 
@@ -468,91 +464,95 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 		$tdata['lastpostlink'] = actionLink("post", $thread['lastpostid']);
 		
 		$threadlist[$tdata['id']] = $tdata;
+
+		checknumeric($tdata['views']);
+		checknumeric($tdata['replies']);
+		checknumeric($ppp);
 	}
 	
 	RenderTemplate('threadlist', array('threads' => $threadlist, 'pagelinks' => $pagelinks, 'dostickies' => $dostickies, 'showforum' => $showforum));
 }
 
-function makeAnncBar() {
+function makeAnncBar($staffboard) {
     global $loguserid;
 
-    $anncforum = Settings::get('anncForum');
+	if($staffboard == false) {
+		$anncforum = Settings::get('anncForum');
 
-    if ($anncforum > 0)    {
-        if (($adata = cacheGet('anncBar', 3600)) === null) {
-            $annc = Query("    SELECT
-                                t.id, t.title, t.icon, t.poll, t.forum,
-                                t.date anncdate,
-                                ".($loguserid ? "tr.date readdate," : '')."
-                                u.(_userfields)
-                            FROM
-                                {threads} t
-                                ".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
-                                LEFT JOIN {users} u ON u.id=t.user
-                            WHERE forum={0}
-                            ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
-
-            if ($annc && NumRows($annc)) {
-                $annc = Fetch($annc);
-                $adata = [];
-
-                $adata['new'] = '';
-                if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
-                    ($loguserid && $annc['anncdate'] > $annc['readdate']))
-                    $adata['new'] = "<div class=\"statusIcon new\"></div>";
-
-                $adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
-                $adata['link'] = MakeThreadLink($annc);
-				$adata['name'] = "Announcements";
-
-                $user = getDataPrefix($annc, 'u_');
-                $adata['user'] = UserLink($user);
-                $adata['date'] = formatdate($annc['anncdate']);
-
-                cachePut('anncBar', $adata, 3600);
-            }
-        }
-        RenderTemplate('anncbar', ['annc' => $adata]);
-    }
-}
-
-function makeStaffAnncBar() {
-	global $loguserid;
-
-	$anncforum = Settings::get('StaffanncForum');
-	if ($anncforum > 0) {
-		$annc = Query("	SELECT 
-							t.id, t.title, t.icon, t.poll, t.forum,
-							t.date anncdate,
-							".($loguserid ? "tr.date readdate," : '')."
-							u.(_userfields)
-						FROM 
-							{threads} t 
-							".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
-							LEFT JOIN {users} u ON u.id=t.user
-						WHERE forum={0}
+		if ($anncforum > 0)    {
+			if (($adata = cacheGet('anncBar', 3600)) === null) {
+				$annc = Query("    SELECT
+									t.id, t.title, t.icon, t.poll, t.forum,
+									t.date anncdate,
+									".($loguserid ? "tr.date readdate," : '')."
+									u.(_userfields)
+								FROM
+									{threads} t
+									".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
+									LEFT JOIN {users} u ON u.id=t.user
+								WHERE forum={0}
+						
 						ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
 
-		if ($annc && NumRows($annc)) {
-			$annc = Fetch($annc);
-			$adata = array();
+				if ($annc && NumRows($annc)) {
+					$annc = Fetch($annc);
+					$adata = [];
 
-			$adata['new'] = '';
-			if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
-				($loguserid && $annc['anncdate'] > $annc['readdate']))
-				$adata['new'] = "<div class=\"statusIcon new\"></div>";
+					$adata['new'] = '';
+					if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
+						($loguserid && $annc['anncdate'] > $annc['readdate']))
+						$adata['new'] = "<div class=\"statusIcon new\"></div>";
 
-			$adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
-			$adata['link'] = MakeThreadLink($annc);
-			$adata['name'] = "Staff Announcements";
+					$adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
+					$adata['link'] = MakeThreadLink($annc);
+					$adata['name'] = "Announcements";
 
-			$user = getDataPrefix($annc, 'u_');
-			$adata['user'] = UserLink($user);
-			$adata['date'] = formatdate($annc['anncdate']);
+					$user = getDataPrefix($annc, 'u_');
+					$adata['user'] = UserLink($user);
+					$adata['date'] = formatdate($annc['anncdate']);
 
+					cachePut('anncBar', $adata, 3600);
+				}
+			}
+			RenderTemplate('anncbar', ['annc' => $adata]);
+		}
+	} else {
+		$anncforum = Settings::get('StaffanncForum');
+		if ($anncforum > 0) {
+			if (($adata = cacheGet('staffanncBar', 3600)) === null) {
+				$annc = Query("	SELECT 
+									t.id, t.title, t.icon, t.poll, t.forum,
+									t.date anncdate,
+									".($loguserid ? "tr.date readdate," : '')."
+									u.(_userfields)
+								FROM 
+									{threads} t 
+									".($loguserid ? "LEFT JOIN {threadsread} tr ON tr.thread=t.id AND tr.id={1}" : '')."
+									LEFT JOIN {users} u ON u.id=t.user
+								WHERE forum={0}
+								ORDER BY anncdate DESC LIMIT 1", $anncforum, $loguserid);
+
+				if ($annc && NumRows($annc)) {
+					$annc = Fetch($annc);
+					$adata = array();
+
+					$adata['new'] = '';
+					if ((!$loguserid && $annc['anncdate'] > (time()-900)) ||
+						($loguserid && $annc['anncdate'] > $annc['readdate']))
+						$adata['new'] = "<div class=\"statusIcon new\"></div>";
+
+					$adata['poll'] = ($annc['poll'] ? "<img src=\"".resourceLink('img/poll.png')."\" alt=\"Poll\"/> " : '');
+					$adata['link'] = MakeThreadLink($annc);
+					$adata['name'] = "Staff Announcements";
+
+					$user = getDataPrefix($annc, 'u_');
+					$adata['user'] = UserLink($user);
+					$adata['date'] = formatdate($annc['anncdate']);
+
+					cachePut('staffanncBar', $adata, 3600);
+				}
+			}
 			RenderTemplate('anncbar', array('annc' => $adata));
 		}
 	}
 }
-
-?>

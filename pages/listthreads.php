@@ -1,6 +1,9 @@
 <?php
 if (!defined('BLARG')) die();
 
+if(!isset($_GET['id']))
+	Kill(__("User ID unspecified."));
+
 $uid = (int)$_GET['id'];
 
 $rUser = Query("select * from {users} where id={0}", $uid);
@@ -15,7 +18,10 @@ $uname = $user["name"];
 if($user["displayname"])
 	$uname = $user["displayname"];
 
-MakeCrumbs(array(actionLink("profile", $uid, "", $user["name"]) => htmlspecialchars($uname), '' => __("List of threads")));
+MakeCrumbs(array(pageLink("profile", array(
+				'id' => $uid,
+				'name' => $uname
+			)) => htmlspecialchars($uname), actionLink('listthreads', $uid) =>  __("List of threads")));
 
 $viewableforums = ForumsWithPermission('forum.viewforum');
 
@@ -32,6 +38,10 @@ else
 	$from = 0;
 
 if(!$tpp) $tpp = 50;
+
+checknumeric($tpp);
+checknumeric($from);
+checknumeric($uid);
 
 $rThreads = Query("	SELECT
 						t.*,
@@ -54,10 +64,7 @@ $ppp = $loguser['postsperpage'];
 if(!$ppp) $ppp = 20;
 
 if(NumRows($rThreads))
-{
 	makeThreadListing($rThreads, $pagelinks, false, true);
-}
 else
-	Alert(__("No threads found."), __("Notice"));
+	Kill(__("No threads found."), __("Notice"));
 
-?>

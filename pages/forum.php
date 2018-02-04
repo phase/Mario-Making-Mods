@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - Thread listing page
-//  Access: all
 if (!defined('BLARG')) die();
 
 if(!isset($_GET['id']))
@@ -16,14 +14,14 @@ if(NumRows($rFora))
 	$forum = Fetch($rFora);
 else
 	Kill(__("Unknown forum ID."));
-	
+
+checknumeric($fid);
+
 if ($forum['redirect'])
 	die(header('Location: /'.forumRedirectURL($forum['redirect'])));
 	
-if($loguserid)
-{
-	if($_GET['action'] == "markasread")
-	{
+if($loguserid) {
+	if($_GET['action'] == "markasread") {
 		Query("REPLACE INTO {threadsread} (id,thread,date) SELECT {0}, {threads}.id, {1} FROM {threads} WHERE {threads}.forum={2}",
 			$loguserid, time(), $fid);
 
@@ -31,14 +29,11 @@ if($loguserid)
 	}
 	
 	$isIgnored = FetchResult("select count(*) from {ignoredforums} where uid={0} and fid={1}", $loguserid, $fid) == 1;
-	if(isset($_GET['ignore']))
-	{
+	if(isset($_GET['ignore'])) {
 		if(!$isIgnored)
 			Query("insert into {ignoredforums} values ({0}, {1})", $loguserid, $fid);
 		die(header("Location: ".$_SERVER['HTTP_REFERER']));
-	}
-	else if(isset($_GET['unignore']))
-	{
+	} else if(isset($_GET['unignore'])) {
 		if($isIgnored)
 			Query("delete from {ignoredforums} where uid={0} and fid={1}", $loguserid, $fid);
 		die(header("Location: ".$_SERVER['HTTP_REFERER']));
@@ -53,8 +48,7 @@ $links = array();
 if($loguserid)
 	$links[] = actionLinkTag(__("Mark forum read"), "forum", $fid, "action=markasread", $urlname);
 
-if($loguserid)
-{
+if($loguserid) {
 	if($isIgnored)
 		$links[] = actionLinkTag(__("Unignore forum"), "forum", $fid, "unignore", $urlname);
 	else
@@ -70,7 +64,7 @@ $metaStuff['tags'] = getKeywords(strip_tags($forum['title']));
 $OnlineUsersFid = $fid;
 MakeCrumbs(forumCrumbs($forum), $links);
 
-makeAnncBar();
+makeAnncBar(false);
 
 makeForumListing($fid);
 
@@ -200,4 +194,3 @@ function ForumJump()
 	RenderTemplate('forumjump', array('forumlist' => $theList));
 }
 
-?>

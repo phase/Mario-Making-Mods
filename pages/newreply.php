@@ -17,6 +17,7 @@ if(!isset($_GET['id']))
 	Kill(__("Thread ID unspecified."));
 
 $tid = (int)$_GET['id'];
+checknumeric($tid);
 
 $rThread = Query("select * from {threads} where id={0}", $tid);
 if(NumRows($rThread))
@@ -190,8 +191,9 @@ else if(isset($_POST['actionpost']))
 
 $prefill = htmlspecialchars($_POST['text']);
 
-if($_GET['quote'])
-{
+if($_GET['quote']) {
+	$getquote = (int)$_GET['quote'];
+	checknumeric($getquote);
 	$rQuote = Query("	select
 					p.id, p.deleted, pt.text,
 					t.forum fid, 
@@ -200,7 +202,7 @@ if($_GET['quote'])
 					left join {posts_text} pt on pt.pid = p.id and pt.revision = p.currentrevision
 					left join {threads} t on t.id=p.thread
 					left join {users} u on u.id=p.user
-				where p.id={0}", (int)$_GET['quote']);
+				where p.id={0}", $getquote);
 
 	if(NumRows($rQuote))
 	{

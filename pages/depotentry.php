@@ -36,8 +36,7 @@ $threadtags = ParseThreadTags($thread['title']);
 $title = $threadtags[0];
 $urlname = HasPermission('forum.viewforum', $fid, true) ? $title : '';
 
-if(isset($_GET['vote']))
-{
+if(isset($_GET['vote'])) {
 	CheckPermission('forum.votepolls', $fid);
 	
 	if(!$loguserid)

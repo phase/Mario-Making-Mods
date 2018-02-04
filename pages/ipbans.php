@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - IP ban management tool
-//  Access: administrators only
 if (!defined('BLARG')) die();
 
 $title = __("IP bans");
@@ -93,6 +91,3 @@ print "
 		</tr>
 	</table>
 </form>";
-
-
-?>

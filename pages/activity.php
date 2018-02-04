@@ -3,10 +3,16 @@ if (!defined('BLARG')) die();
 
 $ajaxPage = true;
 
-if(!isset($_GET['u']))
-	die("No user specified!");
+if(isset($_GET['id']))
+	$u = (int)$_GET['id'];
+else {
+	if(!$loguserid)
+		die('No user specified! Please specify a user.');
+	else
+		$u = $loguserid;
+}
 
-$u = (int)$_GET['u'];
+checknumeric($u);
 
 $user = Fetch(Query("select regdate from {users} where id = {0}", $u));
 

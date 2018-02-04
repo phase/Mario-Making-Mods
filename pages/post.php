@@ -11,7 +11,7 @@ else if (isset($_GET['tid']) && isset($_GET['time']))
 		$_GET['tid'], $_GET['time']);
 }
 else
-	Kill('blarg');
+	Kill('Please put a post ID.');
 
 if(NumRows($rPost))
 	$post = Fetch($rPost);
@@ -20,6 +20,9 @@ else
 
 $pid = $post['id'];
 $tid = $post['thread'];
+
+checknumeric($pid);
+checknumeric($tid);
 
 $rThread = Query("select id,title,forum from {threads} where id={0}", $tid);
 

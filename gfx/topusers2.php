@@ -4,8 +4,8 @@ ini_set("display_errors", 1);
 
  define("BLARG", "1");
 
- require(__DIR__.'/lib/rpg/rpg.php');
- require(__DIR__.'/lib/mysql.php');
+ require __DIR__ . '/../lib/common.php';
+ require __DIR__ . '/../lib/rpg/rpg.php';
 
 	if ($_GET['order'])
 		$orderby = "`cnt`";

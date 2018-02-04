@@ -32,6 +32,9 @@ However please make sure that you only report posts that are in direct violation
 Please do not report posts simply because you disagree with them or that you find them offensive. Remember that Mario Making Mods is a place where the exchange of opinions is important to everyone.
 If you are not sure whether a post is breaking the rules, either read the rules again or simply do not report it.'));
 
+checknumeric($fid);
+checknumeric($pid);
+
 $tags = ParseThreadTags($thread['title']);
 $isHidden = !HasPermission('forum.viewforum', $fid, true);
 

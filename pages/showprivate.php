@@ -8,9 +8,8 @@ $title = __("Private messages");
 if(!$loguserid)
 	Kill(__("You must be logged in to view your private messages."));
 	
-$id = (int)$_REQUEST['id'];
-if (!$id) Kill(__("No PM specified."));
-$pmid = $id;
+$pmid = (int)$_REQUEST['id'];
+if (!$pmid) Kill(__("No PM specified."));
 
 $staffpms = '';
 if (HasPermission('admin.viewstaffpms')) $staffpms = ' OR userto={2}';

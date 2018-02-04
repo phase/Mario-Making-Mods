@@ -11,12 +11,14 @@ if(!$loguserid)
 $user = $loguserid;
 $userGet = '';
 $snoop = '';
-if(isset($_GET['user']) && HasPermission('admin.viewpms'))
+if(isset($_GET['user']) && HasPermission('admin.viewpms') && $_GET['user'] !== $loguserid)
 {
 	$user = (int)$_GET['user'];
 	$snoop = "&snooping=1";
 	$userGet = "&user=".$user;
 }
+
+checknumeric($user);
 
 if(isset($_POST['action']))
 {

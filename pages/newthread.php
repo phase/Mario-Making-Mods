@@ -30,6 +30,8 @@ if(NumRows($rFora))
 else
 	Kill(__("Unknown forum ID."));
 
+checknumeric($fid);
+
 if($forum['locked'])
 	Kill(__("This forum is locked."));
 

@@ -38,10 +38,9 @@ if ($board == '') {
 	RenderTemplate('boardstats', array('stats' => $statData));
 }
 
-if ($board == 'staff') {
-	makeStaffAnncBar();
-} else {
-	makeAnncBar();
-}
+$stafboard = false;
+if ($board == 'staff')
+	$stafboard = true;
 
+makeAnncBar($stafboard);
 makeForumListing(0, $board);

@@ -1,7 +1,7 @@
 <?php
 if (!defined('BLARG')) die();
 
-if(Settings::get("mailResetSender") == "")
+if(empty(Settings::get("mailResetSender")))
 	Kill(__("No sender specified for reset emails."));
 
 if(isset($_GET['key']) && isset($_GET['id']))

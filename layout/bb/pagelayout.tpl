@@ -26,7 +26,7 @@
 					{$numnotifs=count($notifications)}
 					<div id="notifMenuContainer" class="dropdownContainer {if $numnotifs}hasNotifs{else}noNotif{/if}" style="margin-right: 2px;">
 						<div id="notifMenuButton" class="navButton">
-							Notifications
+							<a href="{actionLink page='notifications'}">Notifications</a>
 							<span id="notifCount">{$numnotifs}</span>
 							<i class="icon-caret-down"></i>
 						</div>

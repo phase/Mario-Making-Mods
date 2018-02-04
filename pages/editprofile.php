@@ -21,6 +21,8 @@ if (HasPermission('admin.editusers')) {
 	$userid = $loguserid;
 }
 
+checknumeric($userid);
+
 $user = Fetch(Query("select * from {users} where id={0}", $userid));
 $usergroup = $usergroups[$user['primarygroup']];
 
@@ -34,7 +36,7 @@ if($editUserMode && $loguserid != $userid && $usergroup['rank'] > $loguserGroup[
 $uname = $user['name'];
 if($user['displayname'])
 	$uname = $user['displayname'];
-	
+
 $title = __('Edit profile');
 
 makeCrumbs(array(actionLink("profile", $userid, "", $user['name']) => htmlspecialchars($uname), '' => __("Edit profile")));
@@ -72,15 +74,14 @@ AddCategory('general', 'appearance', __('Appearance'));
 
 if ($editUserMode || HasPermission('user.editdisplayname'))
 	AddField('general', 'appearance', 'displayname', __('Display name'), 'text', array('width'=>24, 'length'=>20, 'hint'=>__('Leave this empty to use your login name.'), 'callback'=>'HandleDisplayname'));
-	
+
 AddField('general', 'appearance', 'rankset', __('Rankset'), 'select', array('options'=>$ranksets));
 
 if ($editUserMode || (HasPermission('user.edittitle') && (HasPermission('user.havetitle') || $user['posts'] >= Settings::get('customTitleThreshold'))))
 	AddField('general', 'appearance', 'title', __('Title'), 'text', array('width'=>80, 'length'=>255));
 
 
-if ($editUserMode || HasPermission('user.editavatars'))
-{
+if ($editUserMode || HasPermission('user.editavatars')) {
 	AddCategory('general', 'avatar', __('Avatar'));
 
 	AddField('general', 'avatar', 'picture', __('Avatar'), 'displaypic', array('hint'=>__('Maximum size is 200x200 pixels.')));

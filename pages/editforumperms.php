@@ -3,24 +3,22 @@ if (!defined('BLARG')) die();
 
 $title = 'Forum permissions editor';
 
-if (isset($_GET['fid']))
-{
+if (isset($_GET['id'])) {
 	CheckPermission('admin.editforums');
 	$applyto = 1;
-	$id = (int)$_GET['fid'];
-	
+	$id = (int)$_GET['id'];
+
 	$forum = Fetch(Query("SELECT title FROM {forums} WHERE id={0}", $id));
 	if (!$forum) Kill(__('Invalid forum ID.'));
-	
+
 	MakeCrumbs(array(actionLink('admin') => __('Admin'), 
 		'' => __('Edit permissions for forum: ').htmlspecialchars($forum['title'])));
-}
-else
+} else
 	Kill(__('Invalid parameters.'));
 
+checknumeric($id);
 
-if ($_POST['saveaction'])
-{
+if ($_POST['saveaction']) {
 	if ($_POST['token'] !== $loguser['token'])
 		Kill(__('No.'));
 	

@@ -3,7 +3,7 @@ if (!defined('BLARG')) die();
 
 //Category/forum editor -- By Nikolaj
 //Secured and improved by Dirbaio
-// Adapted to Blargboard by StapleButter.
+//Adapted to Blargboard by StapleButter.
 
 $title = __("Edit forums");
 
@@ -27,10 +27,10 @@ MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("editfora") => _
 	- editforum: Returns the HTML code for the forum settings in right panel.
 		- editforumnew: Returns the forum edit box to create a new forum. This way the huge HTML won't be duplicated in the code.
 		- editforum: Returns the forum edit box to edit a forum.
-		
-		
+
+
 	PERMISSION EDITING PRESETS
-	
+
 	* Full: full access
 	* Standard: view, post threads, reply to threads
 	* Reply-only: view, reply to threads (ie announcement forum)
@@ -38,7 +38,7 @@ MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("editfora") => _
 	* No access: (none)
 	* Custom
 
-**/
+*/
 
 $noFooter = true;
 
@@ -71,25 +71,25 @@ if (isset($_REQUEST['action']) && isset($_POST['key']))
 			//Get new forum data
 			$id = (int)$_POST['id'];
 			$title = $_POST['title'];
-			if($title == "") dieAjax(__("Title can't be empty."));
+			if(empty($title)) dieAjax(__("Title can't be empty."));
 			$description = $_POST['description'];
 			$category = ($_POST['ptype'] == 0) ? (int)$_POST['category'] : -(int)$_POST['pforum'];
 			$forder = (int)$_POST['forder'];
-			
+
 			$catid = recursionCheck($id, $category);
 			$board = FetchResult("SELECT board FROM {categories} WHERE id={0}", $catid);
-			
+
 			// L/R tree shiz
 			$oldlr = Fetch(Query("SELECT l,r FROM {forums} WHERE id={0}", $id));
 			$diff = $oldlr['r'] - $oldlr['l'] + 1;
-			
+
 			$c = Query("SELECT id FROM {forums} WHERE l>{0} AND r<{1}", $oldlr['l'], $oldlr['r']);
 			$children = array();
 			while ($blarg = Fetch($c)) $children[] = $blarg['id'];
-			
+
 			Query("UPDATE {forums} SET l=l-{0} WHERE l>{1}", $diff, $oldlr['r']);
 			Query("UPDATE {forums} SET r=r-{0} WHERE r>{1}", $diff, $oldlr['r']);
-			
+
 			$l = FetchResult("SELECT MAX(r) FROM {forums} WHERE catid={0} AND (forder<{1} OR (forder={1} AND id<{2}))", $category, $forder, $id);
 			if (!$l || $l == -1)
 			{
@@ -100,7 +100,7 @@ if (isset($_REQUEST['action']) && isset($_POST['key']))
 			}
 			$l++;
 			$r = $l + $diff - 1;
-			
+
 			if (!empty($children))
 			{
 				Query("UPDATE {forums} SET l=l+{0} WHERE l>={1} AND id NOT IN ({2c})", $diff, $l, $children);
@@ -200,7 +200,7 @@ if (isset($_REQUEST['action']) && isset($_POST['key']))
 
 			dieAjax('Ok|'.InsertId());
 			break;
-			
+
 		case 'deleteforum':
 			//Get Forum ID
 			$id = (int)$_POST['id'];
@@ -213,17 +213,15 @@ if (isset($_REQUEST['action']) && isset($_POST['key']))
 			//Check that forum has threads.
 			if (FetchResult("SELECT COUNT(*) FROM {threads} WHERE forum={0}", $id) > 0)
 				dieAjax(__('Cannot delete a forum that contains threads.'));
-				
-			//
-			
+
 			// L/R tree shiz
 			$oldlr = Fetch(Query("SELECT l,r FROM {forums} WHERE id={0}", $id));
 			$diff = $oldlr['r'] - $oldlr['l'] + 1;
-			
+
 			$c = FetchResult("SELECT COUNT(*) FROM {forums} WHERE l>{0} AND r<{1}", $oldlr['l'], $oldlr['r']);
 			if ($c > 0)
 				dieAjax(__('Cannot delete a forum that has subforums. Delete them or move them first.'));
-			
+
 			Query("UPDATE {forums} SET l=l-{0} WHERE l>{1}", $diff, $oldlr['r']);
 			Query("UPDATE {forums} SET r=r-{0} WHERE r>{1}", $diff, $oldlr['r']);
 
@@ -626,16 +624,14 @@ function MakeCatSelect($i, $cats, $fora, $v, $fid)
 // -1: deny
 // 0: neutral
 // 1: allow
-function GetForumPerms($fid)
-{
+function GetForumPerms($fid) {
 	$ret = array();
-	
+
 	// global perms
 	$perms = Query("SELECT id,perm,value FROM {permissions} WHERE applyto=0 AND (SUBSTR(perm,1,6)={0} OR SUBSTR(perm,1,4)={1}) AND arg=0", 
 		'forum.', 'mod.');
 
-	while ($perm = Fetch($perms))
-	{
+	while ($perm = Fetch($perms)) {
 		$val = $perm['value'];
 		if ($val == -1)
 			$ret[$perm['id']][$perm['perm']] = -2;

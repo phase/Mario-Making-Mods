@@ -128,4 +128,3 @@ while($thread = Fetch($rThreads))
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
 
-?>

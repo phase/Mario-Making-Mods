@@ -6,31 +6,8 @@ However, you can still experiment, send in some patches, features, etc...
 
 **Todo**
 
--Full PJAX. Currently buggy with Online Users.         
--Cosmetics           
--Forum Icon               
--Categories Page                   
--Homepage Threads                    
--TimeAgo                
--Rankset Categories                 
--Theme Categories                 
--Extend Notification system (report things such as favorite threads)                     
--3rd party login (Facebook, Twitter, Google)                    
--CemUI API                 
--Announcements report to discord        
--Remove Nested Quotes             
--Per-User Site Layout             
+Please take a look at [our github page](https://github.com/MarioMakingMods/Forum-software/projects).
 
 Credits:
 
--Repflez: URL Code & TimeAgo plugin          
--Not Jon: Randomized UID code & Multi-Language support.              
--StapleButter: Original Blargboard code                    
--NightYoshi370: Makerboard, and the entire depot plugin.                  
--PickPen: Making the Depot theme icons.                       
--LifeMushroom and Samplasion: Themes (they gave me permission to use their theme)                     
--Samplasion & MoonlightCapital: Italian Translation                              
--RedDucks: Download API                                 
--GamesWithIsaac: Ranksets                       
--Phase: MySQL 5.7 "fix", & Sub-forum layout
--JeDaYoshi: RPG as well as port all plugins
+The credits can be found on our (website)[https://mariomods.net/credits]

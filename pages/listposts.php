@@ -4,9 +4,9 @@ if (!defined('BLARG')) die();
 if(!isset($_GET['id']))
 	Kill(__("User ID unspecified."));
 
-$id = (int)$_GET['id'];
+$uid = (int)$_GET['id'];
 
-$rUser = Query("select * from {users} where id={0}", $id);
+$rUser = Query("select * from {users} where id={0}", $uid);
 if(NumRows($rUser))
 	$user = Fetch($rUser);
 else
@@ -22,7 +22,7 @@ $total = FetchResult("
 				{posts} p
 				LEFT JOIN {threads} t ON t.id=p.thread{$extrashit}
 			WHERE p.user={0} AND t.forum IN ({1c})",
-		$id, ForumsWithPermission('forum.viewforum'));
+		$uid, ForumsWithPermission('forum.viewforum'));
 
 $ppp = $loguser['postsperpage'];
 if(isset($_GET['from']))
@@ -31,6 +31,10 @@ else
 	$from = 0;
 
 if(!$ppp) $ppp = 25;
+
+checknumeric($tpp);
+checknumeric($from);
+checknumeric($id);
 
 
 $rPosts = Query("	SELECT
@@ -51,7 +55,7 @@ $rPosts = Query("	SELECT
 				LEFT JOIN {forums} f ON f.id=t.forum
 				LEFT JOIN {categories} c ON c.id=f.catid
 			WHERE u.id={1} AND f.id IN ({4c}){$extrashit}
-			ORDER BY date ASC LIMIT {2u}, {3u}", $loguserid, $id, $from, $ppp, ForumsWithPermission('forum.viewforum'));
+			ORDER BY date ASC LIMIT {2u}, {3u}", $loguserid, $uid, $from, $ppp, ForumsWithPermission('forum.viewforum'));
 
 $numonpage = NumRows($rPosts);
 
@@ -59,9 +63,12 @@ $uname = $user["name"];
 if($user["displayname"])
 	$uname = $user["displayname"];
 
-MakeCrumbs(array(actionLink("profile", $id, "", $user["name"]) => htmlspecialchars($uname),'' =>  __("List of posts")));
+MakeCrumbs(array(pageLink("profile", array(
+				'id' => $uid,
+				'name' => $uname
+			)) => htmlspecialchars($uname), actionLink('listposts', $uid) =>  __("List of posts")));
 
-$pagelinks = PageLinks(actionLink("listposts", $id, "from=", $user['name']), $ppp, $from, $total);
+$pagelinks = PageLinks(actionLink("listposts", $uid, "from=", $user['name']), $ppp, $from, $total);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
@@ -69,7 +76,7 @@ if(NumRows($rPosts)) {
 	while($post = Fetch($rPosts))
 		MakePost($post, POST_NORMAL, array('threadlink'=>1, 'tid'=>$post['thread'], 'fid'=>$post['fid'], 'noreplylinks'=>1));
 } else
-	Alert('This user has no posts.', 'Notice');
+	Kill('This user has no posts.', 'Notice');
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
 

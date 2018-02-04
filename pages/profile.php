@@ -5,6 +5,11 @@ if (!defined('BLARG')) die();
 
 $id = $pageParams['id'];
 
+if(!isset($id))
+	Kill(__("Unknown user ID."));
+
+checknumeric($id);
+
 $rUser = Query("select u.* from {users} u where u.id={0}",$id);
 if(NumRows($rUser))
 	$user = Fetch($rUser);
@@ -56,7 +61,7 @@ if($loguserid && $_REQUEST['token'] == $loguser['token']) {
 		}
 	}
 
-	if(isset($_POST['actionpost']) && !IsReallyEmpty($_POST['text']) && $canComment) {
+	if(isset($_POST['actionpost']) && !empty($_POST['text']) && $canComment) {
 		$text = utfmb4String($_POST['text']);
 		$rComment = Query("insert into {usercomments} (uid, cid, date, text) values ({0}, {1}, {2}, {3})", $id, $loguserid, time(), $text);
 		if($loguserid != $id)
@@ -303,14 +308,14 @@ $pagelinks = PageLinksInverted(pageLink("profile", array(
 $comments = array();
 while($comment = Fetch($rComments)) {
 	$cmt = array();
-	
+
 	$deleteLink = '';
 	if($canDeleteComments || ($comment['cid'] == $loguserid && HasPermission('user.deleteownusercomments')))
 		$deleteLink = "<small style=\"float: right; margin: 0px 4px;\">".
 			actionLinkTag("&#x2718;", "profile", $id, "action=delete&cid=".$comment['id']."&token={$loguser['token']}")."</small>";
-			
+
 	$cmt['deleteLink'] = $deleteLink;
-	
+
 	$cmt['userlink'] = UserLink(getDataPrefix($comment, 'u_'));
 	$cmt['formattedDate'] = relativedate($comment['date']);
 	$cmt['text'] = CleanUpPost($comment['text']);
@@ -333,7 +338,7 @@ if($canComment)
 		</form>";
 }
 
-$rpgstatus = resourceLink("rpgstatus.php")."?u=".$id;
+$rpgstatus = resourceLink("gfx/rpgstatus.php")."?u=".$id;
 
 RenderTemplate('profile', array(
 	'username' => htmlspecialchars($uname), 

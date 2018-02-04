@@ -32,6 +32,11 @@ $tags = ParseThreadTags($thread['title']);
 
 $ppp = $loguser['postsperpage'];
 if(!$ppp) $ppp = 20;
+
+checknumeric($ppp);
+checknumeric($tid);
+checknumeric($pid);
+
 $from = (floor(FetchResult("SELECT COUNT(*) FROM {posts} WHERE thread={1} AND date<={2} AND id!={0}", $pid, $tid, $post['date']) / $ppp)) * $ppp;
 $url = actionLink("depotentry", $thread['id'], $from?"from=$from":"", HasPermission('forum.viewforum', $thread['forum'], true)?$tags[0]:'')."#post".$pid;
 

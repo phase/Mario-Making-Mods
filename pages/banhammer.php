@@ -11,6 +11,8 @@ if (!$user)
 if ($usergroups[$user['u_primarygroup']]['rank'] >= $loguserGroup['rank'])
 	Kill('You may not ban a user whose level is equal to or above yours.');
 
+checknumeric($id);
+
 if ($_POST['ban'])
 {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');

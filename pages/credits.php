@@ -22,21 +22,22 @@ I also have a website that you can play some retro games on with the Nesbox emul
 	I\'m Hüseyin the Mighty. I\'m admin on Mario Making Mods and like to mod Super Mario Maker 3DS. I mod other games like New Super Mario Bros. Wii or New Super Mario Bros. 2 aswell. I\'ve played Mario Games since I was four years old. My first console was the Nintendo 64. I have some experience with C#. If you have questions, ask me!</td></tr>
 	<tr class="cell2"><td><h1>[user=5]</h1>
 	Hey there! I\'m Abood, also known as MasterVermilli0n on Discord. I\'m the dev of PointlessMaker, the SMM editor (haha), and Miyamoto!, the NSMBU editor.
-I hack both SMM and NSMBU.
-Programming languages I know: Python, Cython, C.
-If you have any questions you think I may be able to answer, don\'t hesitate to ask!</td></tr>
+	I hack both SMM and NSMBU.
+	Programming languages I know: Python, Cython, C.
+	If you have any questions you think I may be able to answer, don\'t hesitate to ask!</td></tr>
 	<tr class="header1"><th>Software Credits</th></tr>
 	<tr class="cell1"><td>-Repflez: URL Code & TimeAgo plugin
--Not Jon: Randomized UID code & Multi-Language support.
--StapleButter: Original Blargboard code
--NightYoshi370: Makerboard, and the entire depot plugin.
--PickPen: Making the Depot theme icons.
--LifeMushroom and Samplasion: Themes (they gave me permission to use their theme)
--Samplasion & MoonlightCapital: Italian Translation
--RedDucks: Download API
--GamesWithIsaac: Ranksets
--Phase: MySQL 5.7 "fix", & Sub-forum layout
--JeDaYoshi: RPG as well as port all plugins</td></tr>
+	-[user=23]: Randomized UID code & Multi-Language support.
+	-StapleButter: Original Blargboard code
+	-[user=1]: Makerboard.
+	-PickPen: Making the Depot theme icons.
+	-[user=91] & [user=171]: Themes (they gave me permission to use their theme)
+	-[user=171] & [user=14]: Italian Translation
+	-RedDucks: JSON download API
+	-[user=57]: Ranksets
+	-Phase: MySQL 5.7 "fix", & Sub-forum layout
+	-[user=3]: Port both a WIP RPG system (from acmlmboard2) as well as all the ABXD plugins over to Blargboard
+	-[user=109]: Making the new Logo/Icon</td></tr>
 </table>';
 
 echo parseBBCode($credits);

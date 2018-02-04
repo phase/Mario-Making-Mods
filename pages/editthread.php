@@ -24,6 +24,8 @@ if(NumRows($rThread))
 	$thread = Fetch($rThread);
 else
 	Kill(__("Unknown thread ID."));
+
+checknumeric($tid);
 	
 
 $canClose = HasPermission('mod.closethreads', $thread['forum']);

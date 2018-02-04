@@ -8,7 +8,7 @@ CheckPermission('admin.viewadminpanel');
 
 $title = __("Administration");
 
-MakeCrumbs(array(pageLink("admin") => __('Admin')));
+MakeCrumbs(array(actionLink("admin") => __('Admin')));
 
 
 if (function_exists('curl_init'))

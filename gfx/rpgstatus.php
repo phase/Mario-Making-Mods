@@ -3,8 +3,8 @@ error_reporting(E_ALL);
 
  define("BLARG", "1");
 
- require(__DIR__.'/lib/mysql.php');
- require(__DIR__.'/lib/rpg/rpg.php');
+ require __DIR__ . '/../lib/common.php';
+ require __DIR__ . '/../lib/rpg/rpg.php';
 
  $u = $_GET['u'];
  checknumeric($u);
@@ -20,6 +20,8 @@ error_reporting(E_ALL);
 
  $it = $_GET['it'];
  checknumeric($it);
+ if(isset($_GET['sig']))
+	 $sig = true;
 
 	$urlfont = $_GET['font'];
 	if($urlfont){

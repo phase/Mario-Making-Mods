@@ -31,9 +31,8 @@ if ($_POST['payload']) {
 	} elseif($payload->repository->name == "PointlessMaker") {
 		$fid = 18;
 		$tid = 378;
-	} else {
+	} else
 		die('Hacking attempt...');
-	}
 
 	if ($payload->repository->fork !== false)
 		die('Hacking attempt...');
@@ -65,4 +64,4 @@ if ($_POST['payload']) {
 	
 	echo 'Succes!';
 } else
-	echo 'Error';
+	die('Hacking attempt...');

@@ -73,7 +73,7 @@ function notifsort($a, $b)
 	return ($a['date'] > $b['date']) ? -1 : 1;
 }
 
-function GetNotifications()
+function GetNotifications($getall)
 {
 	global $loguserid, $NotifFormat;
 	$notifs = array();
@@ -84,18 +84,20 @@ function GetNotifications()
 	$staffnotif = '';
 	if (HasPermission('admin.viewstaffpms')) $staffnotif = ' OR user=-1';
 
-	$ndata = Query("SELECT type,id,date,args FROM {notifications} WHERE user={0}{$staffnotif} ORDER BY date DESC", $loguserid);
-	while ($n = Fetch($ndata))
-	{
+	$getallnotifs = ' AND SEEN = 0 ';
+	if($getall == true) $getallnotifs = '';
+
+	$ndata = Query("SELECT type,id,date,args FROM {notifications} WHERE user={0}{$staffnotif}{$getallnotifs} ORDER BY date DESC", $loguserid);
+	while ($n = Fetch($ndata)) {
 		$ncb = $NotifFormat[$n['type']];
 		if (function_exists($ncb))
 			$ndesc = $ncb($n['id'], $n['args']?unserialize($n['args']):null);
 		else
 			$ndesc = htmlspecialchars($n['type'].':'.$n['id']);
-			
+
 		$ts = '<span class="nobr">'; $te = '</span>';
 		$ndesc = $ts.str_replace("\n", $te.'<br>'.$ts, $ndesc).$te;
-			
+
 		$notifs[] = array
 		(
 			'date' => $n['date'], 
@@ -116,7 +118,7 @@ function SendNotification($type, $id, $user, $args=null)
 	$now = time();
 	
 	Query("
-		INSERT INTO {notifications} (type,id,user,date,args) VALUES ({0},{1},{2},{3},{4})
+		INSERT INTO {notifications} (type,id,user,date,args) VALUES ( {0} , {1} , {2} , {3} , {4} )
 		ON DUPLICATE KEY UPDATE date={3}, args={4}",
 		$type, $id, $user, $now, $argstr);
 		
@@ -125,7 +127,7 @@ function SendNotification($type, $id, $user, $args=null)
 
 function DismissNotification($type, $id, $user)
 {
-	Query("DELETE FROM {notifications} WHERE type={0} AND id={1} AND user={2}", $type, $id, $user);
+	Query("UPDATE {notifications} SET seen={3} WHERE type={0} AND id={1} AND user={2}", $type, $id, $user, 1);
 	
 	$bucket = 'dismissNotification'; include(__DIR__.'/pluginloader.php');
 }

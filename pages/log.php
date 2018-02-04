@@ -5,15 +5,12 @@ CheckPermission('admin.viewlog');
 
 MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("log") => __("Log")));
 
-//$here = "http://helmet.kafuka.org/nikoboard";
 $full = GetFullURL();
 $here = substr($full, 0, strrpos($full, "/"))."/";
-$there = "./"; //"/";
+$there = "./";
 
 $logR = Query("select * from {reports} order by time desc");
-while($item = Fetch($logR))
-{
-	//print $item['text'];
+while($item = Fetch($logR)) {
 	$blar = $item['text'];
 	$blar = htmlspecialchars($blar);
 	$blar = str_replace("[g]", "", $blar);
