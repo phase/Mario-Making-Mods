@@ -225,7 +225,7 @@ elseif($action == "vc")	//View Counter
 }
 else if ($action == 'no') // notification list
 {
-	$notif = getNotifications(false);
+	$notif = getNotifications();
 	die(json_encode($notif));
 }
 

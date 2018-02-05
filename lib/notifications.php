@@ -73,7 +73,7 @@ function notifsort($a, $b)
 	return ($a['date'] > $b['date']) ? -1 : 1;
 }
 
-function GetNotifications($getall)
+function GetNotifications()
 {
 	global $loguserid, $NotifFormat;
 	$notifs = array();
@@ -84,10 +84,7 @@ function GetNotifications($getall)
 	$staffnotif = '';
 	if (HasPermission('admin.viewstaffpms')) $staffnotif = ' OR user=-1';
 
-	$getallnotifs = ' AND SEEN = 0 ';
-	if($getall == true) $getallnotifs = '';
-
-	$ndata = Query("SELECT type,id,date,args FROM {notifications} WHERE user={0}{$staffnotif}{$getallnotifs} ORDER BY date DESC", $loguserid);
+	$ndata = Query("SELECT type,id,date,args FROM {notifications} WHERE user={0}{$staffnotif} ORDER BY date DESC", $loguserid);
 	while ($n = Fetch($ndata)) {
 		$ncb = $NotifFormat[$n['type']];
 		if (function_exists($ncb))
@@ -127,8 +124,8 @@ function SendNotification($type, $id, $user, $args=null)
 
 function DismissNotification($type, $id, $user)
 {
-	Query("UPDATE {notifications} SET seen={3} WHERE type={0} AND id={1} AND user={2}", $type, $id, $user, 1);
-	
+	Query("DELETE FROM {notifications} WHERE type={0} AND id={1} AND user={2}", $type, $id, $user);
+
 	$bucket = 'dismissNotification'; include(__DIR__.'/pluginloader.php');
 }
 

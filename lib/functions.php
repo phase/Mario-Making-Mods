@@ -485,9 +485,11 @@ function echo_memory_usage() {
 	if ($mem_usage < 1024) 
 		$memoryusage = $mem_usage." bytes"; 
 	elseif ($mem_usage < 1048576) 
-		$memoryusage = round($mem_usage/1024,2)." kilobytes"; 
-	else 
-		$memoryusage = round($mem_usage/1048576,2)." megabytes";
+		$memoryusage = round($mem_usage/1024,2)." kB"; 
+	else
+		$memoryusage = round($mem_usage/1048576,2)." MB";
+	
+	return $memoryusage;
 }
 
 function checknumeric(&$var) {

@@ -129,7 +129,7 @@ else $mobileswitch .= '<a href="?forcelayout=1" rel="nofollow">Force mobile view
 //=======================
 // Notification bars
 
-$notifications = getNotifications(false);
+$notifications = getNotifications();
 
 //=======================
 // Misc stuff
@@ -172,7 +172,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
-Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' seconds (with '.$queries.' SQL queries and '.$memoryusage.' of RAM).';
+Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
 
 $sidebar = '';
 if($sidebarshow == true) {
