@@ -35,37 +35,29 @@ function cleanUpPost($postText, $poster = "", $noSmilies = false, $noBr = false)
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*\"(.*?)\"@si", 'ApplyNetiquetteToLinks', $s);
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*'(.*?)'@si", 'ApplyNetiquetteToLinks', $s);
 	$s = preg_replace_callback("@<a[^>]+href\s*=\s*([^\"'][^\s>]*)@si", 'ApplyNetiquetteToLinks', $s);
-
-	$s = str_ireplace('mariomakingmods.net', 'mariomods.net', $s); //old URL
-	$s = str_ireplace('/shrug/', '¯\_(ツ)_/¯', $s); // emote
-
-
-	/* Filter all Piracy sites */
-	$s = str_ireplace('3dsiso.com', 'that ISO site', $s);
-	$s = str_ireplace('chaosgamez.com', 'that chaos site', $s);
-	$s = str_ireplace('3dschaos.com', 'that chaos site', $s);
-	$s = str_ireplace('wiiuchaos.com', 'that chaos site', $s);
-	$s = str_ireplace('wiiu.titlekeys.gq', 'that titlekey site', $s);
-	$s = str_ireplace('3ds.titlekeys.gq', 'that titlekey site', $s);
-	$s = str_ireplace('wiiu.titlekeys.com', 'that titlekey site', $s);
-	$s = str_ireplace('3ds.titlekeys.com', 'that titlekey site', $s);
-	$s = str_ireplace('darkumbra.net', 'that Dark Piracy Site', $s);
-	$s = str_ireplace('portalroms.com', 'that Portal site', $s);
-	$s = str_ireplace('theisozone.com', 'that Piracy Zone site', $s);
-	$s = str_ireplace('wiiiso.com', 'that ISO site', $s);
 	
-	/* Filter all NSFW sites */
+	$badsites = [
+		'mariomakingmods.net' => 'mariomods.net',
+		'/shrug/' => '¯\_(ツ)_/¯',
+		'3dsiso.com' => 'that ISO site',
+		'chaosgamez.com' => 'that chaos site',
+		'3dschaos.com' => 'that chaos site',
+		'wiiuchaos.com' => 'that chaos site',
+		'wiiu.titlekeys.gq' => 'that titlekey site',
+		'3ds.titlekeys.gq' => 'that titlekey site',
+		'darkumbra.net' => 'that Dark Piracy Site',
+		'portalroms.com' => 'that Portal site',
+		'theisozone.com' => 'that Piracy Zone site',
+		'wiiiso.com' => 'that ISO site',
+		'pornhub.com' => 'that NSFWHub site',
+		'rule34.xxx' => '1sfw.png',
+		'deloton.com' => '',
+		'onclickads.net' => '';
+		'autoplay' => 'auto<i></i>play',
+	];
 	
-	$s = str_ireplace('pornhub.com', 'that NSFWHub site', $s);
-
-	/* Filter all ads site. If someone thinks that they can spam us with this link just to make a moron some money, then so be it.
-	Todo: Make it so that adfly links and others change so that way they go to the direct URL. */
+	$s = str_ireplace(array_keys($badsites), $badsites, $s);
 	
-	$s = str_ireplace('deloton.com', '', $s);
-	$s = str_ireplace('onclickads.net', '', $s);
-
-	$s = str_ireplace('autoplay', 'auto<i></i>play', $s);
-
 	$s = securityPostFilter($s);
 
 	return $s;
