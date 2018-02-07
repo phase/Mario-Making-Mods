@@ -18,13 +18,13 @@ $snoop = isset($_GET['snooping']) && HasPermission('admin.viewpms');
 
 if($snoop)
 {
-	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where {pmsgs}.id = {0}", $id);
-	Query("INSERT INTO {spieslog} (userid,date,pmid) VALUES ({0},UNIX_TIMESTAMP(),{1})", $loguserid, $id);
+	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where {pmsgs}.id = {0}", $pmid);
+	Query("INSERT INTO {spieslog} (userid,date,pmid) VALUES ({0},UNIX_TIMESTAMP(),{1})", $loguserid, $pmid);
 	
 	Alert(__("You are snooping."));
 }
 else
-	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where (userto = {1} or userfrom = {1}{$staffpms}) and {pmsgs}.id = {0}", $id, $loguserid, -1);
+	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where (userto = {1} or userfrom = {1}{$staffpms}) and {pmsgs}.id = {0}", $pmid, $loguserid, -1);
 
 if(NumRows($rPM))
 	$pm = Fetch($rPM);
@@ -42,15 +42,12 @@ else
 	
 $links = array();
 
-if(!$snoop && $pm['userto'] == $loguserid)
-{
+if(!$snoop && $pm['userto'] == $loguserid) {
 	Query("update {pmsgs} set msgread=1 where id={0}", $pm['id']);
 	DismissNotification('pm', $pm['id'], $loguserid);
-	
+
 	$links[] = actionLinkTag(__("Send reply"), "sendprivate", "", "pid=".$pm['id']);
-}
-else if ($_GET['markread'])
-{
+} else if ($_GET['markread']) {
 	Query("update {pmsgs} set msgread=1 where id={0}", $pm['id']);
 	DismissNotification('report', $pm['id'], -1);
 
@@ -58,8 +55,7 @@ else if ($_GET['markread'])
 }
 
 
-$pmtitle = htmlspecialchars($pm['title']);
-MakeCrumbs(array(actionLink("private") => __("Private messages"), '' => $pmtitle), $links);
+MakeCrumbs(array(actionLink("private") => __("Private messages"), '' => htmlspecialchars($pm['title'])), $links);
 
 $pm['num'] = 0;
 $pm['posts'] = $user['posts'];
@@ -69,5 +65,3 @@ foreach($user as $key => $value)
 	$pm['u_'.$key] = $value;
 
 MakePost($pm, POST_PM);
-
-?>

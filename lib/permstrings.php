@@ -24,6 +24,7 @@ $permDescs = array
 		'user.postusercomments' => __('Post user comments'),
 		'user.deleteownusercomments' => __('Delete own user comments'),
 		'user.viewhiddenforums' => __('View hidden forums'),
+		'user.use-item-shop' => __('Use Item Shop'),
 	),
 	'forum' => array
 	(
@@ -70,6 +71,7 @@ $permDescs = array
 		'admin.adminusercomments' => __('Administrate user comments'),
 		'admin.viewstaffpms' => __('Receive staff PMs'),
 		'admin.nolink' => __('No links'),
+		'admin.manage-shop-items' => __('Manage Shop Items'),
 	),
 );
 

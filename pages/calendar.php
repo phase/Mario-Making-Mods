@@ -13,6 +13,12 @@ if((int)$_GET['month'])
 	$day = 0;
 }
 
+if((int)$_GET['year'])
+{
+	$year = (int)$_GET['year'];
+	$day = 0;
+}
+
 $d = getdate(mktime(0, 0, 0, $month, 1, $year));
 $i = 1 - $d['wday'];
 $d = getdate(mktime(0, 0, 0, $month + 1, 0, $year));
