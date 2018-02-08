@@ -49,6 +49,19 @@
 						</td>
 					</tr>
 				</table>
+				<br />
+				<table class="outline margin">
+					<tr class="header1">
+						<th colspan=2>Equipped Items</th>
+					</tr>
+							{$equipitems}
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table class="layout-table">
+		<tr>
+			<td>
 				<table class="outline margin usercomments">
 					<tr class="header1">
 						<th colspan=2>Profile Comments for {$username}</th>
@@ -99,12 +112,6 @@
 					<tr class="cell2">
 						<td colspan=2>
 							You need to be logged in to post profile comments here.
-						</td>
-					</tr>
-					{else}
-					<tr class="cell2">
-						<td colspan=2>
-							{$profilecommenterror}
 						</td>
 					</tr>
 					{/if}
