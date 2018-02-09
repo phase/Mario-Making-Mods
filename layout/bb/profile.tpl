@@ -1,6 +1,6 @@
 	<table class="layout-table">
 		<tr>
-			<td style="width:60%; vertical-align:top; padding-right:0.5em;">
+			<td style="width:90%; vertical-align:top; padding-right:0.5em;">
 			{foreach $profileParts as $name=>$fields}
 				<table class="outline margin profiletable">
 					
@@ -11,7 +11,7 @@
 					</tr>
 					{foreach $fields as $label=>$val}
 						<tr class="cell{cycle values='0,1'}">
-							<td class="cell2 center" style="width:20%;">
+							<td class="cell2 center" style="width:15%;">
 								{$label}
 							</td>
 							<td>
@@ -50,7 +50,7 @@
 					</tr>
 				</table>
 				<br />
-				<table class="outline margin">
+				<table class="outline margin" style="width: 275px;">
 					<tr class="header1">
 						<th colspan=2>Equipped Items</th>
 					</tr>
@@ -77,7 +77,7 @@
 
 					{foreach $comments as $cmt}
 					<tr class="cell{cycle values='0,1'}">
-						<td class="cell2" style="vertical-align:top; width:20%;">
+						<td class="cell2" style="vertical-align:top; width:10%;">
 							{$cmt.userlink}<br>
 							<small>{$cmt.formattedDate}</small>
 						</td>

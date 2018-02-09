@@ -3,24 +3,6 @@
 include BOARD_ROOT.'/lib/rpg/rpg.php';
 
   $rdmsg="";
-  if($_COOKIE['pstbon']){
-	header("Set-Cookie: pstbon=".$_COOKIE['pstbon']."; Max-Age=1; Version=1");
- $rdmsg="<script language=\"javascript\">
-	function dismiss()
-	{
-		document.getElementById(\"postmes\").style['display'] = \"none\";
-	}
-</script>
-	<div id=\"postmes\" onclick=\"dismiss()\" title=\"Click to dismiss.\"><br>
-".      "<table cellspacing=\"0\" class=\"c1\" width=\"100%\" id=\"edit\"><tr class=\"h\"><td class=\"b h\">";
-
-if($_COOKIE['pstbon'] == -1) {
-	$rdmsg.="Item Sold<div style=\"float: right\"><a style=\"cursor: pointer;\" onclick=\"dismiss()\">[x]</a></td></tr>
-".	"<tr><td class=\"b cell1\" align=\"left\">The $pitem[name] has been unequipped and sold.</td></tr></table></div>";
-} elseif($_COOKIE['pstbon'] == -2) {
-	$rdmsg.="Item Bought<div style=\"float: right\"><a style=\"cursor: pointer;\" onclick=\"dismiss()\">[x]</a></td></tr>
-".	"<tr><td class=\"b cell1\" align=\"left\">The $item[name] has been bought and equipped!</td></tr></table></div>"; }
-}
 
 $rURPG = Query("select * from {usersrpg} where id = {0}",$loguserid);
 if(!NumRows($rURPG))
@@ -79,6 +61,9 @@ fclose($f);
 	$d = (time() - $user[regdate])/86400;
 	$st = getstats($user);
 	$GP = $st[GP];
+	
+	Alert("Welcome to the Mario Making Mods item shop! Here is where you can buy items (such as weapons, Armor, and more) using your coins. In order to obtain coins, you'll need to post on the board.
+			In the future, these items will allow you to battle another person with your items.");
 
 	switch($action){
 		case 'delete': //Added (Sukasa)
@@ -156,7 +141,7 @@ print       "<br>
 				$statlist .= "	<td class=\"b cell2 align=\"center\"'><input type=\"text\" name='$stat[$i]' size='4' value='$st'></td>";
 				$stathdr .= "		<td class=\"b cell1\" align=\"center\" width=6%>$stat[$i]</td>";
 			}
-			print	"<form action='/shop?action=save&id=$item[id]' method='post'><table cellspacing=\"0\" class=\"c1\">
+			print	"<form action='/shop?action=save&id=$item[id]' method='post'><table cellspacing=\"0\" class=\"cell1 outline margin\">
 						<td class=\"b cell1\" align=\"center\"><a href=/shop>Return to shop list</a>
 					</table> <br>
 					<img src=gfx/rpgstatus.php?u=$loguserid><br>
@@ -209,54 +194,53 @@ print       "<br>
 				} else
 					$cl = '';
 
-			$statlist .= "	<td class=\"b cell2 align=\"center\" $cl'>$st</td>";
-			$stathdr .= "	<td class=\"b cell1 align=\"center\" width=6%>$stat[$i]</td>";
-		}
-		print "	<table cellspacing=\"0\" class=\"outline\">
-					<td class=\"b cell1\" align=\"center\"><a href=shop.php>Return to shop list</a>
-				</table> <br>
-				<img src=gfx/rpgstatus.php?u=$loguserid><br>
-				<br>
-				<table cellspacing=\"0\" class=\"c1\" style=width:300px>
-".            "  <tr class=\"header1\" align=left>
-".            "    <th class=\"b h\" colspan=9>$item[name]$edit</th>
-".            "  <tr>
-".            "    $stathdr
-".            "  <tr>
-".            "    $statlist
-".            "  <tr>
-".            "    <td class=\"b cell2\" colspan=9><font class=sfont>$item[desc]</font></td>
-".            "</table>
-";
-      break;
-      case 'items':
+				$statlist .= "	<td class=\"b cell2 align=\"center\" $cl'>$st</td>";
+				$stathdr .= "	<td class=\"b cell1 align=\"center\" width=6%>$stat[$i]</td>";
+			}
+			print "	<table cellspacing=\"0\" class=\"margin outline\">
+						<td class=\"b cell1\" align=\"center\"><a href=/shop>Return to shop list</a>
+					</table> <br>
+					<img src=gfx/rpgstatus.php?u=$loguserid><br>
+					<br>
+					<table cellspacing=\"0\" class=\"outline margin\" style=width:300px>
+						<tr class=\"header1\" align=left>
+							<th class=\"b h\" colspan=9>$item[name]$edit</th>
+						<tr>
+							$stathdr
+						<tr>
+							$statlist
+						<tr>
+							<td class=\"b cell2\" colspan=9><font class=sfont>$item[desc]</font></td>
+					</table>";
+			break;
+		case 'items':
         
-        $eq=fetch(query("SELECT eq$cat AS e FROM usersrpg WHERE id=$loguserid"));
-        $eqitem=fetch(query("SELECT * FROM items WHERE id=$eq[e]"));
+			$eq = fetch(query("SELECT eq$cat AS e FROM usersrpg WHERE id=$loguserid"));
+			$eqitem = fetch(query("SELECT * FROM items WHERE id=$eq[e]"));
 
-        $edit="";
-        if (HasPermission('admin.manage-shop-items'))
-          $edit=" | <a href='/shop?action=edit&id=-1&cat=$cat'>Add new item</a>";
+			$edit = "";
+			if (HasPermission('admin.manage-shop-items'))
+				$edit = " | <a href='/shop?action=edit&id=-1&cat=$cat'>Add new item</a>";
 
-  $title = 'Item shop';
-        print "<script>
-".            "  function preview(user,item,cat,name){
-".            "    document.getElementById('prev').src='gfx/rpgstatus.php?u='+user+'&it='+item+'&ct='+cat+'&'+Math.random();
-".            "    document.getElementById('pr').innerHTML='Equipped with<br>'+name+'<br>---------->';
-".            "  }
-".            "</script>
-".            "<style>
-".            "   .disabled {color:#888888}
-".            "   .higher   {color:#abaffe}
-".            "   .equal    {color:#ffea60}
-".            "   .lower    {color:#ca8765}
+			$title = 'Item shop';
+			print 	"<script>
+						function preview(user,item,cat,name){
+							document.getElementById('prev').src='gfx/rpgstatus.php?u='+user+'&it='+item+'&ct='+cat+'&'+Math.random();
+							document.getElementById('pr').innerHTML='Equipped with<br>'+name+'<br>---------->';
+						}
+					</script>
+					<style>
+						.disabled {color:#888888}
+						.higher   {color:#abaffe}
+						.equal    {color:#ffea60}
+						.lower    {color:#ca8765}
 ".            "</style>
 ".            "
-".            "<table cellspacing=\"0\" class=\"c1\">
+".            "<table cellspacing=\"0\" class=\"c1 outline margin\">
 ".            "  <td class=\"b cell1\" align=\"center\"><a href=/shop>Return to shop list</a> $edit
 ".            "</table>
 ".            "<br>
-".            "<table cellspacing=\"0\" id=status>
+".            "<table cellspacing=\"0\" class=\"c1\" id=status>
 ".            "  <td class=\"nb\" width=256><img src=gfx/rpgstatus.php?u=$loguserid></td>
 ".            "  <td class=\"nb\" align=\"center\" width=150>
 ".            "    <font class=fonts>
@@ -281,7 +265,7 @@ print       "<br>
                           ."WHERE (cat=$cat OR cat=0) AND `hidden` <= $seehidden "
                           .'ORDER BY type,coins');
 
-        print "<table cellspacing=\"0\" class=\"c1\">
+        print "<table cellspacing=\"0\" class=\"c1 outline margin\">
 ".            "  <tr class=\"header1\">
 ".            "    <th class=\"b h\" width=100>Commands</th>
 ".            "    <th class=\"b cell2\" width=1 rowspan=10000>&nbsp;</th>
@@ -294,7 +278,7 @@ print       "<br>
         while($item=fetch($items)){
           $buy = "<a href=/shop?action=buy&id=$item[id]>Buy</a>";
           $sell = "<a href=/shop?action=sell&cat=$cat>Sell</a>";
-          $preview = "<a href='' onclick=\"preview($loguserid,$item[id],$cat,'".addslashes($item[name])."')\">Preview</a>";
+          $preview = "<a href='javascript:;' onclick=\"preview($loguserid,$item[id],$cat,'".addslashes($item[name])."')\">Preview</a>";
 
               if($item[id] && $item[id]==$eq[e])						$comm = $sell;
           elseif($item[id] && $item[coins]<=$GP && $item[coins2]<=0)	$comm = "$buy | $preview";

@@ -167,8 +167,7 @@ elseif($_POST['actionedit'])
 				else
 					$iconurl = $_POST['iconurl'];
 			}
-		}
-		else
+		} else
 			$iconurl = $thread['icon'];
 
 		$thread['screenshot'] = $_POST['screenshot'];
@@ -184,7 +183,9 @@ elseif($_POST['actionedit'])
 		$thread['theme'] = $_POST['theme'];
 
 		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, 
-			screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7}, downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10}, downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13}, style={14}, theme={15} 
+			screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7},
+			downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10},
+			downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13}, style={14}, theme={15} 
 			where id={16} limit 1", 
 			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], 
 			$thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'],
@@ -209,23 +210,26 @@ $fields = array();
 if ($canRename)
 {
 	$match = array();
-	if($thread['icon'] == "") //Has no icon
+	if (preg_match("@^img/icons/icon(\d+)\..{3,}\$@si", $thread['icon'], $match))
+		$iconid = $match[1];
+	elseif($thread['icon'] == "") //Has no icon
 		$iconid = 0;
 	else //Has custom icon
 	{
 		$iconid = 255;
 		$iconurl = $thread['icon'];
 	}
-
 	if(!isset($iconid)) $iconid = 0;
-
 	$icons = "";
 	$i = 1;
 	while(is_file("img/icons/icon".$i.".png"))
 	{
 		$check = "";
 		if($iconid == $i) $check = "checked=\"checked\" ";
-		$icons .= "";
+		$icons .= "	<label>
+						<input type=\"radio\" $check name=\"iconid\" value=\"$i\">
+						<img src=\"".resourceLink("img/icons/icon$i.png")."\" alt=\"Icon $i\" onclick=\"javascript:void()\">
+					</label>";
 		$i++;
 	}
 	$check[0] = "";
@@ -236,7 +240,12 @@ if ($canRename)
 		$check[1] = "checked=\"checked\" ";
 	}
 
-	$iconSettings = "<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
+	$iconSettings = "
+					<label>
+						<input type=\"radio\" {$check[1]} name=\"iconid\" value=\"255\">
+						<span>".__("Custom")."</span>
+					</label>
+					<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['description'])."\">";

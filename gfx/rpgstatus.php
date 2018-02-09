@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL);
 
  define("BLARG", "1");
 
@@ -33,7 +32,7 @@ error_reporting(E_ALL);
 			$pickfont = '';
 	} else
 		$pickfont='';
-	
+
 
  	$eqitems = Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'");
 
@@ -132,5 +131,11 @@ error_reporting(E_ALL);
 
  ImagePNG($img);
  ImageDestroy($img);
- // die(); // prevent board showing up stuff
 
+ if(isset($_GET['color'])) {
+	ImageDestroy($fontY);
+	ImageDestroy($fontR);
+	ImageDestroy($fontG);
+	ImageDestroy($fontB);
+	ImageDestroy($fontW);
+ }
