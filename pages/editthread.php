@@ -192,12 +192,11 @@ elseif($_POST['actionedit'])
 			$thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'],
 			$thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $thread['style'], $thread['theme'], $tid);
 
-		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
+		$ref = $_POST['ref'] ?: '/'.actionLink('thread', $tid, '', $urlname);
+		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> $ref", $isHidden);
 		
 		$tags = ParseThreadTags($thread['title']);
 		$urlname = $isHidden?'':$tags[0];
-		$ref = $_POST['ref'] ?: '/'.actionLink('thread', $tid, '', $urlname);
-
 		die(header("Location: ".$ref));
 	}
 	else

@@ -1,6 +1,6 @@
 <?php
 
-$starttime = microtime(true);
+$startime = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
 define('BLARG', 1);
 
 $sidebarshow = false;
@@ -56,47 +56,49 @@ if ($loguser['flags'] & 0x2)
 
 if (!$fakeerror) {
 	try {
-		// Throw the 404 page if we don't have a match already.
-		if ($match === false)
-			throw new Exception(404);
-		else {
-			// Set up the stuff for our page loader.
-			$pageName = $match['target'];
-			$pageParams = $match['params'];
+		try {
+			// Throw the 404 page if we don't have a match already.
+			if ($match === false)
+				throw new Exception(404);
+			else {
+				// Set up the stuff for our page loader.
+				$pageName = $match['target'];
+				$pageParams = $match['params'];
 
-			// MabiPro: Set this to Smarty for template purposes
-			$tpl->assign('currentPage', $pageName);
+				// MabiPro: Set this to Smarty for template purposes
+				$tpl->assign('currentPage', $pageName);
 
-			// Check first for plugin pages.
-			if(array_key_exists($pageName, $pluginpages)) {
-				// TODO: Make this cleaner than a hack.
-				$plugin = $pluginpages[$pageName];
-				$self = $plugins[$plugin];
+				// Check first for plugin pages.
+				if(array_key_exists($pageName, $pluginpages)) {
+					// TODO: Make this cleaner than a hack.
+					$plugin = $pluginpages[$pageName];
+					$self = $plugins[$plugin];
 
-				$page = __DIR__.'/plugins/' . $self['dir'] . '/pages/' . $pageName . '.php';
-				if (file_exists($page))
-					require_once($page);
-				else
-					throw new Exception(404);
-			} else {
-				// Check now for core pages.
-				$page = __DIR__.'/pages/' . $pageName . '.php';
+					$page = __DIR__.'/plugins/' . $self['dir'] . '/pages/' . $pageName . '.php';
+					if (file_exists($page))
+						require_once($page);
+					else
+						throw new Exception(404);
+				} else {
+					// Check now for core pages.
+					$page = __DIR__.'/pages/' . $pageName . '.php';
 
-				if (file_exists($page))
-					require_once($page);
-				else
-					throw new Exception(404);
+					if (file_exists($page))
+						require_once($page);
+					else
+						throw new Exception(404);
+				}
 			}
 		}
-	}
-	catch(Exception $e) {
-		// is this used at all?
-		if ($e->getMessage() != 404) throw $e;
-		require_once(__DIR__.'/pages/404.php');
+		catch(Exception $e) {
+			// is this used at all?
+			if ($e->getMessage() != 404) throw $e;
+			require_once(__DIR__.'/pages/404.php');
+		}
 	}
 	catch(KillException $e)
 	{
-		// Nothing. Just ignore this exception.
+		//Nothing, just ignore
 	}
 }
 
@@ -172,7 +174,7 @@ if(!file_exists(__DIR__.'/'.$themefile))
 
 $layout_credits = 
 '<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
-Page rendered in '.sprintf('%.03f',microtime(true)-$starttime).' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
+Page rendered in '.$startime.' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
 
 $sidebar = '';
 if($sidebarshow == true) {
