@@ -31,17 +31,14 @@ $desc = Settings::get('rssDesc');
 $url = "http".($ishttps?'s':'')."://{$_SERVER['SERVER_NAME']}{$serverport}";
 $fullurl = getServerURLNoSlash($ishttps);
 
-print '<?xml version="1.0" encoding="UTF-8"?>';
-?>
-
+print '<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title><?php echo htmlspecialchars($title); ?></title>
-		<link><?php echo htmlspecialchars($url); ?></link>
-		<description><?php echo htmlspecialchars($desc); ?></description>
-		<atom:link href="<?php echo htmlspecialchars($fullurl); ?>/rss.php" rel="self" type="application/rss+xml" />
+		<title>'.htmlspecialchars($title).'</title>
+		<link>'.htmlspecialchars($url).'</link>
+		<description>'.htmlspecialchars($desc).'</description>
+		<atom:link href="'.htmlspecialchars($fullurl).'/rss.php" rel="self" type="application/rss+xml" />';
 
-<?php
 	$entries = Query("	SELECT 
 							t.id, t.title, 
 							p.date,
@@ -85,8 +82,7 @@ print '<?xml version="1.0" encoding="UTF-8"?>';
 			<description><![CDATA[{$text}]]></description>
 			<guid>{$entryurl}</guid>
 		</item>
-";
-	}
-?>
 	</channel>
-</rss>
+</rss>";
+	}
+

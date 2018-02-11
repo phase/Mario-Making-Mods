@@ -52,11 +52,11 @@
 
  Header('Content-type:image/png');
  $img=ImageCreate(256,224);
- $c['bg']	= ImageColorAllocate($img, 40, 40, 90);
- $c['bxb0']	= ImageColorAllocate($img,  0,  0,  0);
- $c['bxb1']	= ImageColorAllocate($img,200,170,140);
- $c['bxb2']	= ImageColorAllocate($img,155,130,105);
- $c['bxb3']	= ImageColorAllocate($img,110, 90, 70);
+ $c[bg]	= ImageColorAllocate($img, 40, 40, 90);
+ $c[bxb0]	= ImageColorAllocate($img,  0,  0,  0);
+ $c[bxb1]	= ImageColorAllocate($img,200,170,140);
+ $c[bxb2]	= ImageColorAllocate($img,155,130,105);
+ $c[bxb3]	= ImageColorAllocate($img,110, 90, 70);
 
  for($i=0;$i<100;$i++)
    $c[$i]	= ImageColorAllocate($img, 10, 16, 60+$i/2);
@@ -82,8 +82,8 @@
  box( 0, 0,2+strlen(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name'])),3);
  box( 0, 4,32, 4);
  box( 0, 9,32, 9);
- box( 0,19,11, 9);
- box(12,19,11, 6);
+ box( 0,19,18, 6);
+ box(19,19,13, 6);
 
  $fontY = fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
  $fontR = fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
@@ -106,17 +106,17 @@
  }
 
  twrite($fontB, 1,20,0,'Level', $pickfont);
- twrite($fontY, 6,20,4,$st[lvl], $pickfont);
+ twrite($fontY, 13,20,4,$st[lvl], $pickfont);
  twrite($fontB, 1,22,0,'EXP:', $pickfont);
- twrite($fontY, 1,23,9,$st[exp], $pickfont);
- twrite($fontB, 1,24,0,'Next:', $pickfont);
- twrite($fontY, 1,25,9,calcexpleft($st[exp]), $pickfont);
+ twrite($fontY, 8,22,9,$st[exp], $pickfont);
+ twrite($fontB, 1,23,0,'Next:', $pickfont);
+ twrite($fontY, 8,23,9,calcexpleft($st[exp]), $pickfont);
 
- twrite($fontB,13,20,0,'Coins:', $pickfont);
- twrite($fontY,13,22,0,chr(0), $pickfont);
- twrite($fontG,13,23,0,chr(0), $pickfont);
- twrite($fontY,14,22,8,$st[GP], $pickfont);
- twrite($fontG,14,23,8,$user[gcoins], $pickfont);
+ twrite($fontB,20,20,0,'Coins:', $pickfont);
+ twrite($fontY,20,22,0,chr(0), $pickfont);
+ twrite($fontG,20,23,0,chr(0), $pickfont);
+ twrite($fontY,21,22,8,$st[GP], $pickfont);
+ twrite($fontG,21,23,8,$user[gcoins], $pickfont);
 
  $sc[1]=   1;
  $sc[2]=   5;

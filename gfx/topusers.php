@@ -85,7 +85,7 @@ for($i=$s;$user=fetch($users);$i++) {
 		$rval=$user[val];
 	}
 	if($i==$s){
-		$rank=fetchresult("SELECT count(*) FROM users WHERE $val>$user[val] AND id!=$user[id]")+1;
+		$rank=fetchresult("SELECT count(*) FROM {users} WHERE $val>$user[val] AND id!=$user[id]")+1;
 		for($sn=1;($user[val]/$sc[$sn])>320;$sn++);
 		$div=$sc[$sn];
 		if(!$div) $div=1;
@@ -97,7 +97,7 @@ for($i=$s;$user=fetch($users);$i++) {
 	} else
 		$fontu=$fontB;
 	twrite($fontW, 0,$y,4,$rank, $pickfont);
-	twrite($fontu, 5,$y,0,substr(mb_convert_encoding(htmlspecialchars($users['displayname'] ? $users['displayname'] : $users['name']), "ISO-8859-1"),0,12), $pickfont);
+	twrite($fontu, 5,$y,0,substr(mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1"),0,12), $pickfont);
 	twrite($fontY,16,$y,6,floor($user[val]), $pickfont);
 	if(($sx=$user[val]/$div)>=1){
 		ImageFilledRectangle($img,185,$y*8+1,184+$sx,$y*8+7,$c[bxb0]);

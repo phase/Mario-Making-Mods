@@ -40,13 +40,13 @@ if(!$canMod)
 	Kill(__("You are not allowed to edit this thread."));
 
 $rFora = Query("select * from {forums} where id={0}", $thread['forum']);
-if(NumRows($rFora))
-	$forum = Fetch($rFora);
-else
+if(NumRows($rFora)) {
+	if (HasPermission('forum.viewforum', $forum['id']))
+		$forum = Fetch($rFora);
+	else
+		Kill(__('You may not access this forum.'));
+} else
 	Kill(__("Unknown forum ID."));
-
-if (!HasPermission('forum.viewforum', $forum['id']))
-	Kill(__('You may not access this forum.'));
 
 $OnlineUsersFid = $thread['forum'];
 $isHidden = !HasPermission('forum.viewforum', $forum['id'], true);
@@ -132,7 +132,7 @@ elseif($_POST['actionedit'])
 		$dest = Fetch(Query("select * from {forums} where id={0}", $moveto));
 		if(!$dest)
 			Kill(__("Unknown forum ID."));
-			
+
 		$isHidden = HasPermission('forum.viewforum', $moveto, true);
 
 		//Tweak forum counters
@@ -167,20 +167,20 @@ elseif($_POST['actionedit'])
 				else
 					$iconurl = $_POST['iconurl'];
 			}
+
+			$thread['screenshot'] = $_POST['screenshot'];
+			$thread['downloadtheme3ds'] = $_POST['downloadtheme3ds'];
+			$thread['downloadthemewiiu'] = $_POST['downloadthemewiiu'];
+			$thread['downloadthemepc'] = $_POST['downloadthemepc'];
+			$thread['downloadlevel3ds'] = $_POST['downloadlevel3ds'];
+			$thread['downloadlevelwiiu'] = $_POST['downloadlevelwiiu'];
+			$thread['downloadlevelpc'] = $_POST['downloadlevelpc'];
+			$thread['downloadcostumepc'] = $_POST['downloadcostumepc'];
+			$thread['downloadcostumewiiu'] = $_POST['downloadcostumewiiu'];
+			$thread['style'] = $_POST['style'];
+			$thread['theme'] = $_POST['theme'];
 		} else
 			$iconurl = $thread['icon'];
-
-		$thread['screenshot'] = $_POST['screenshot'];
-		$thread['downloadtheme3ds'] = $_POST['downloadtheme3ds'];
-		$thread['downloadthemewiiu'] = $_POST['downloadthemewiiu'];
-		$thread['downloadthemepc'] = $_POST['downloadthemepc'];
-		$thread['downloadlevel3ds'] = $_POST['downloadlevel3ds'];
-		$thread['downloadlevelwiiu'] = $_POST['downloadlevelwiiu'];
-		$thread['downloadlevelpc'] = $_POST['downloadlevelpc'];
-		$thread['downloadcostumepc'] = $_POST['downloadcostumepc'];
-		$thread['downloadcostumewiiu'] = $_POST['downloadcostumewiiu'];
-		$thread['style'] = $_POST['style'];
-		$thread['theme'] = $_POST['theme'];
 
 		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, 
 			screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7},
@@ -246,6 +246,21 @@ if ($canRename)
 						<span>".__("Custom")."</span>
 					</label>
 					<input type=\"text\" name=\"iconurl\" size=60 maxlength=\"100\" value=\"".htmlspecialchars($iconurl)."\">";
+	
+	
+	$level = false;
+	$costume = false;
+	$console = false;
+	if($forum['id'] == 7) {
+		$level = true;
+		$console = true;
+	}else if ($forum['id'] == 3) {
+		$costume = true;
+		$console = true;
+	}else if($forum['id'] == 32){
+		$level = true;
+		$costume = true;
+	}
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['description'])."\">";
@@ -281,7 +296,7 @@ if ($canClose) $fields['closed'] = "<label><input type=\"checkbox\" name=\"isClo
 if ($canStick) $fields['sticky'] = "<label><input type=\"text\" name=\"isSticky\" size=3 value=\"".htmlspecialchars($thread['sticky'])."\"> ".__('Sticky')."</label>";
 if ($canMove) $fields['forum'] = makeForumList('moveTo', $thread['forum']);
 
-$fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\"".__("Edit")."\">";
+$fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\"".__("Save New Thread Settings")."\">";
 
 echo "
 	<script src=\"".resourceLink("js/threadtagging.js")."\"></script>
@@ -292,6 +307,9 @@ RenderTemplate('form_editthread', array(
 	'canRename' => $canRename,
 	'canClose' => $canClose,
 	'canStick' => $canStick,
+	'level' => $level,
+	'costume' => $costume,
+	'console' => $console,
 	'canMove' => $canMove));
 	
 echo "
