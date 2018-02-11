@@ -254,7 +254,7 @@ print       "<br>
 ";
         $atrlist='';
         for($i=0;$i<9;$i++)
-          $atrlist.="    <td class=\"b h\" width=6%>$stat[$i]</td>
+          $atrlist.="    <th class=\"b h\" width=6%>$stat[$i]</th>
 ";
 
         $seehidden = 0;
@@ -315,7 +315,7 @@ print       "<br>
           print
               "  <tr$color>
 ".            "    <td class=\"b cell2\" align=\"center\">$comm</td>
-".            "    <td class=\"b cell1\"><b><a href=/shop?action=desc&id=$item[id]>$item[name]</a></b></td>
+".            "    <td class=\"b cell1\"><b><a href=/shop?action=desc&id=$item[id]>$item[name]</a></b><br>$item[desc]</td>
 ".            "$atrlist
 ".            "    <td class=\"b cell1\" align=\"right\">$item[coins]</td>
 ".            "    <td class=\"b cell1\" align=\"right\">$item[coins2]</td>

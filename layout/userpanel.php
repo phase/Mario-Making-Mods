@@ -8,6 +8,7 @@ if($loguserid) {
 		$userMenu[actionLink('editprofile')] = __('Edit profile');
 		if (HasPermission('user.editavatars'))
 			$userMenu[actionLink('editavatars')] = __('Mood avatars');
+		$userMenu[actionLink('shop')] = __('Item Shop');
 	}
 	
 	$userMenu[actionLink('private')] = __('Private messages');

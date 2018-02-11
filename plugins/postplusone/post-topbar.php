@@ -1,5 +1,7 @@
 <?php
-$plusOne = '<span class="postplusone" id="div1">';
+//One problem with this method is that it requires JS.
+//TODO: Make a <noscript> option
+$plusOne = '<span class="postplusone">';
 
 if($poster['id'] !== $loguserid && $loguserid != 0)
 {
@@ -11,7 +13,7 @@ if($poster['id'] !== $loguserid && $loguserid != 0)
 	else
 		$starimg = 'https://i.imgur.com/gErHVso.png';
 
-	$plusOne .= "<a href=\"\" onclick=\"$(this.parentElement).load('".$url."'); return false;\"><img src=\"".$starimg."\"></a>";		
+	$plusOne .= "<a href=\"\" onclick=\"$(this.parentElement).load('".$url."'); return false;\"><img src=\"".$starimg."\"></a>";	
 } else
 	$plusOne .= '<img src="https://i.imgur.com/zMAbCLC.png">';
 
