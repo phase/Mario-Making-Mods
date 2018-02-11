@@ -51,7 +51,7 @@
    $pct=1-calcexpleft($st[exp])/lvlexp($st[lvl]);
 
  Header('Content-type:image/png');
- $img=ImageCreate(256,224);
+ $img=ImageCreate(256,200);
  $c[bg]	= ImageColorAllocate($img, 40, 40, 90);
  $c[bxb0]	= ImageColorAllocate($img,  0,  0,  0);
  $c[bxb1]	= ImageColorAllocate($img,200,170,140);
@@ -115,8 +115,8 @@
  twrite($fontB,20,20,0,'Coins:', $pickfont);
  twrite($fontY,20,22,0,chr(0), $pickfont);
  twrite($fontG,20,23,0,chr(0), $pickfont);
- twrite($fontY,21,22,8,$st[GP], $pickfont);
- twrite($fontG,21,23,8,$user[gcoins], $pickfont);
+ twrite($fontY,21,22,10,$st[GP], $pickfont);
+ twrite($fontG,21,23,10,$user[gcoins], $pickfont);
 
  $sc[1]=   1;
  $sc[2]=   5;
@@ -131,11 +131,3 @@
 
  ImagePNG($img);
  ImageDestroy($img);
-
- if(isset($_GET['color'])) {
-	ImageDestroy($fontY);
-	ImageDestroy($fontR);
-	ImageDestroy($fontG);
-	ImageDestroy($fontB);
-	ImageDestroy($fontW);
- }

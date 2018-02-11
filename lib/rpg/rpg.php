@@ -174,10 +174,10 @@ function bars(){
 		ImageFilledRectangle($img,88,64+$i*8,87+$st[$stat[$i]]/$sc[$s], 70+$i*8,$c[bar1][$s]);
 	}
 
-	$e1=72*$pct;
-	ImageFilledRectangle($img,9,209,8+72,215,$c[bxb0]);
-	ImageFilledRectangle($img,8,208,7+72,214,$c[barE2]);
+	$e1=128*$pct;
+	ImageFilledRectangle($img,8,170,7+128,173,$c[bxb0]);
+	ImageFilledRectangle($img,8,170,7+128,172,$c[barE2]);
 	if($e1)
-		ImageFilledRectangle($img,8,208,7+$e1,214,$c[barE1]);
+		ImageFilledRectangle($img,8,170,7+$e1,172,$c[barE1]);
 }
 
