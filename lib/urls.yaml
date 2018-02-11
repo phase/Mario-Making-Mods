@@ -20,10 +20,14 @@ leveldepot: ['GET|POST', '/depot/level', 'level']
 remakerdepot: ['GET|POST', '/depot/remaker', 'remaker']
 entry: ['GET|POST', '/depot/entry/[i:id]-[s:name]', 'depotentry']
 
-# moderator actions. Mainly used on GreggGlem Reregs
+# moderator actions.
 nuke: ['GET|POST', '/nuke/[i:id]', 'nuke']
 ban: ['GET|POST', '/ban/[i:id]', 'banhammer']
 reportpost: ['GET|POST', '/reportpost/[i:id]', 'reportpost']
+
+#admin stuff
+admin: ['GET', '/admin', 'admin']
+secgroups: ['GET|POST', '/admin/secgroups', 'secgroups']
 
 # Catch-all rule
 catchall: ['GET|POST', '/[a:page]/[a:id]?-[s:name]?', 'catchall']

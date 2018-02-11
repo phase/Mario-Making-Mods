@@ -146,6 +146,7 @@ if(isset($_GET['depotpage']))
 	$depotpage = (int)$_GET['depotpage'];
 else
 	$depotpage = 0;
+
 $tpp = 12;
 
 $depotpagelinks = 'console='.$console.'&style='.$style.'&theme='.$smmtheme.'&depotpage=';
