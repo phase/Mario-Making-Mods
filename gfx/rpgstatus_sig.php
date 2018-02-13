@@ -9,7 +9,7 @@
  checknumeric($u);
  if(!$u) die("nice try, kid");
 
-	$user = fetch(Query("SELECT u.name, u.posts, u.regdate, u.displayname, r.* "
+	$user = fetch(Query("SELECT u.posts, u.regdate, r.* "
 							."FROM users u "
 							."LEFT JOIN usersrpg r ON r.id=u.id "
 							."WHERE u.id = {0}", $u));
@@ -19,8 +19,6 @@
 
  $it = $_GET['it'];
  checknumeric($it);
- if(isset($_GET['sig']))
-	 $sig = true;
 
 	$urlfont = $_GET['font'];
 	if($urlfont){
@@ -51,7 +49,7 @@
    $pct=1-calcexpleft($st[exp])/lvlexp($st[lvl]);
 
  Header('Content-type:image/png');
- $img=ImageCreate(256,200);
+ $img=ImageCreate(520,88);
  $urlcolor = $_GET['color'];
 	if($urlcolor){
 		if($urlcolor == '1') {
@@ -138,11 +136,11 @@
 		ImageColorTransparent($img,0);
 	}
 
- box( 0, 0,2+strlen(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name'])),3);
- box( 0, 4,32, 4);
- box( 0, 9,32, 9);
- box( 0,19,18, 6);
- box(19,19,13, 6);
+
+ box( 0, 0,32, 4);
+ box( 0, 5,18, 6);
+ box(19, 5,13, 6);
+ box(33, 0,32, 9);
 
  $fontY = fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
  $fontR = fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
@@ -150,32 +148,30 @@
  $fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
  $fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
- twrite($fontW, 1, 1, 0, mb_convert_encoding(htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']), "ISO-8859-1"), $pickfont);
-
- twrite($fontB, 1, 5,0,'HP:      /', $pickfont);
- twrite($fontR, 3, 5,7,$st[HP], $pickfont);
- twrite($fontY,11, 5,5,$st[HP], $pickfont);
- twrite($fontB, 1, 6,0,'MP:      /', $pickfont);
- twrite($fontR, 3, 6,7,$st[MP], $pickfont);
- twrite($fontY,11, 6,5,$st[MP], $pickfont);
+ twrite($fontB, 1, 1,0,'HP:      /', $pickfont);
+ twrite($fontR, 3, 1,7,$st[HP], $pickfont);
+ twrite($fontY,11, 1,5,$st[HP], $pickfont);
+ twrite($fontB, 1, 2,0,'MP:      /', $pickfont);
+ twrite($fontR, 3, 2,7,$st[MP], $pickfont);
+ twrite($fontY,11, 2,5,$st[MP], $pickfont);
 
  for($i=2;$i<9;$i++){
-   twrite($fontB, 1,8+$i,0,"$stat[$i]:", $pickfont);
-   twrite($fontY, 4,8+$i,6,$st[$stat[$i]], $pickfont);
+   twrite($fontB, 34,-1+$i,0,"$stat[$i]:", $pickfont);
+   twrite($fontY, 37,-1+$i,6,$st[$stat[$i]], $pickfont);
  }
 
- twrite($fontB, 1,20,0,'Level', $pickfont);
- twrite($fontY, 13,20,4,$st[lvl], $pickfont);
- twrite($fontB, 1,22,0,'EXP:', $pickfont);
- twrite($fontY, 8,22,9,$st[exp], $pickfont);
- twrite($fontB, 1,23,0,'Next:', $pickfont);
- twrite($fontY, 8,23,9,calcexpleft($st[exp]), $pickfont);
+ twrite($fontB, 1,6,0,'Level', $pickfont);
+ twrite($fontY, 13,6,4,$st[lvl], $pickfont);
+ twrite($fontB, 1,8,0,'EXP:', $pickfont);
+ twrite($fontY, 8,8,9,$st[exp], $pickfont);
+ twrite($fontB, 1,9,0,'Next:', $pickfont);
+ twrite($fontY, 8,9,9,calcexpleft($st[exp]), $pickfont);
 
- twrite($fontB,20,20,0,'Coins:', $pickfont);
- twrite($fontY,20,22,0,chr(0), $pickfont);
- twrite($fontG,20,23,0,chr(0), $pickfont);
- twrite($fontY,21,22,10,$st[GP], $pickfont);
- twrite($fontG,21,23,10,$user[gcoins], $pickfont);
+ twrite($fontB,20,6,0,'Coins:', $pickfont);
+ twrite($fontY,20,8,0,chr(0), $pickfont);
+ twrite($fontG,20,9,0,chr(0), $pickfont);
+ twrite($fontY,21,8,10,$st[GP], $pickfont);
+ twrite($fontG,21,9,10,$user[gcoins], $pickfont);
 
  $sc[1]=   1;
  $sc[2]=   5;
@@ -186,7 +182,32 @@
  $sc[7]=1000;
  $sc[8]=99999999;
 
- bars();
+ bars_sig();
 
  ImagePNG($img);
  ImageDestroy($img);
+ 
+ function bars_sig(){
+	global $st,$img,$c,$sc,$pct,$stat;
+
+	for($s=1;@(max($st[HP],$st[MP])/$sc[$s])>113;$s++){}
+	if(!$sc[$s]) $sc[$s]=1;
+	ImageFilledRectangle($img,137,9,136+$st[HP]/$sc[$s],15,$c[bxb0]);
+	ImageFilledRectangle($img,137,17,136+$st[MP]/$sc[$s],23,$c[bxb0]);
+	ImageFilledRectangle($img,136,8,135+$st[HP]/$sc[$s],14,$c[bar1][$s]);
+	ImageFilledRectangle($img,136,16,135+$st[MP]/$sc[$s],22,$c[bar1][$s]);
+
+	for($i=2;$i<9;$i++) $st2[$i]=$st[$stat[$i]];
+	for($s=1;@(max($st2)/$sc[$s])>161;$s++){}
+	if(!$sc[$s]) $sc[$s]=1;
+	for($i=2;$i<9;$i++){
+		ImageFilledRectangle($img,361,-7+$i*8,360+$st[$stat[$i]]/$sc[$s], -1+$i*8,$c[bxb0]);
+		ImageFilledRectangle($img,360,-8+$i*8,359+$st[$stat[$i]]/$sc[$s], -2+$i*8,$c[bar1][$s]);
+	}
+
+	$e1=128*$pct;
+	ImageFilledRectangle($img,8,58,7+128,60,$c[bxb0]);
+	ImageFilledRectangle($img,8,58,7+128,60,$c[barE2]);
+	if($e1)
+		ImageFilledRectangle($img,8,58,7+$e1,60,$c[barE1]);
+}

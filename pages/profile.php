@@ -338,7 +338,12 @@ if($canComment)
 		</form>";
 }
 
-$rpgstatus = resourceLink("gfx/rpgstatus.php")."?u=".$id;
+if($theme == "yule")
+	$imagecolor = 1;
+else
+	$imagecolor = 0;
+
+$rpgstatus = resourceLink("gfx/rpgstatus.php")."?u=".$id."&color=".$imagecolor;
 
 $equipitems = "<!-- test -->";
 

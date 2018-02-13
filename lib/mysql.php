@@ -96,17 +96,12 @@ function rawQuery($query)
 {
 	global $queries, $querytext, $loguser, $dblink, $debugMode, $logSqlErrors, $dbpref, $loguserid, $mysqlCellClass;
 
-//	if($debugMode)
-//		$queryStart = usectime();
-
 	$res = @$dblink->query($query);
 
-	if(!$res)
-	{
+	if(!$res) {
 		$theError = $dblink->error;
-		
-		if($logSqlErrors)
-		{
+
+		if($logSqlErrors) {
 			$thequery = sqlEscape($query);
 			$ip = sqlEscape($_SERVER["REMOTE_ADDR"]);
 			$time = time();
@@ -126,19 +121,14 @@ function rawQuery($query)
 			die(nl2br($bt).
 				"<br /><br />".htmlspecialchars($theError).
 				"<br /><br />Query was: <code>".htmlspecialchars($query)."</code>");
-/*				<br />This could have been caused by a database layout change in a recent git revision. Try running the installer again to fix it. <form action=\"install/doinstall.php\" method=\"POST\"><br />
-			<input type=\"hidden\" name=\"action\" value=\"Install\" />
-			<input type=\"hidden\" name=\"existingSettings\" value=\"true\" />
-			<input type=\"submit\" value=\"Click here to re-run the installation script\" /></form>");*/
-		}
-		trigger_error("MySQL Error: ".$theError, E_USER_ERROR);
+		} else
+			trigger_error("MySQL Error: ".$theError, E_USER_ERROR);
 		die("MySQL Error.");
 	}
 
 	$queries++;
 
-	if($debugMode)
-	{
+	if($debugMode) {
 		$mysqlCellClass = ($mysqlCellClass+1)%2;
 		$querytext .= "<tr class=\"cell$mysqlCellClass\"><td><pre style=\"white-space:pre-wrap;\">".htmlspecialchars(preg_replace('/^\s*/m', "", $query))."</pre></td><td>";
 		if(function_exists("backTrace"))
@@ -214,5 +204,3 @@ function loadFieldLists()
 	//Allow plugins to add their own!
 	$bucket = "fieldLists"; include(__DIR__."/pluginloader.php");
 }
-
-?>

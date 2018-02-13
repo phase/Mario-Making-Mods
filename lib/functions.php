@@ -364,11 +364,6 @@ function IP2C($ip) {
 				 ORDER BY ip_from DESC
 				 LIMIT 1", 
 				 sprintf("%u", $ipl)));
-
-	if($r && $r["ip_to"] >= ip2long_better($ip))
-		return " <img src=\"".resourceLink("img/flags/".strtolower($r['cc']).".png")."\" alt=\"".$r['cc']."\" title=\"".$r['cc']."\" />";
-	else
-		return "";
 }
 
 function getBirthdaysText($ret = true) {

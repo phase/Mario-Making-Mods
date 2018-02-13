@@ -117,35 +117,27 @@ function prettyRainbow($s)
 		}
 		
 		$ord = ord($c);
-		if ($ord & 0x80)		// UTF8 shiz
-		{
-			if ($ord & 0x40)
-			{
+		if ($ord & 0x80) {		// UTF8 stuff
+			if ($ord & 0x40) {
 				$c .= $s[$i++];
-				if ($ord & 0x20)
-				{
+				if ($ord & 0x20) {
 					$c .= $s[$i++];
-					if ($ord & 0x10)
-					{
+					if ($ord & 0x10) {
 						$c .= $s[$i++];
-						if ($ord & 0x08)
-						{
+						if ($ord & 0x08) {
 							$c .= $s[$i++];
-							if ($ord & 0x04)
-							{
+							if ($ord & 0x04) {
 								$c .= $s[$i++];
 							}
 						}
 					}
 				}
 			}
-		}
-		else 
-		{
+		} else  {
 			if ($c == '<') $c = '&lt;';
 			else if ($c == '>') $c = '&gt;';
 		}
-		
+
 		$out .= '<span style="color:hsl('.$r.',100%,80.4%);">'.$c.'</span>';
 		$r += 31;
 		$r %= 360;
@@ -156,16 +148,14 @@ function prettyRainbow($s)
 $poptart = mt_rand(0,359);
 $dorainbow = -1;
 
-function userLink($user, $showMinipic = false, $customID = false)
-{
+function userLink($user, $showMinipic = false, $customID = false) {
 	global $usergroups;
 	global $poptart, $dorainbow, $newToday;
 	global $luckybastards;
-	
-	if ($dorainbow == -1)
-	{
+
+	if ($dorainbow == -1) {
 		$dorainbow = false;
-		
+
 		if ($newToday >= 600)
 			$dorainbow = true;
 	}
@@ -181,49 +171,42 @@ function userLink($user, $showMinipic = false, $customID = false)
 	$minipic = "";
 	if($showMinipic || Settings::get("alwaysMinipic"))
 		$minipic = getMinipicTag($user);
-	
+
 	if(!Settings::get("showGender"))
 		$fsex = 2;
-	//else if ($fsex != 2)
-	//	$fsex = $fsex ? 0:1; // switch male/female for the lulz
-	
+
 	if ($fsex == 0) $scolor = 'color_male';
 	else if ($fsex == 1) $scolor = 'color_female';
 	else $scolor = 'color_unspec';
-	
+
 	$classing = ' style="color: '.htmlspecialchars($fgroup[$scolor]).';"';
 
 	$bucket = "userLink"; include(__DIR__."/pluginloader.php");
-	
-	if (!$isbanned && $luckybastards && in_array($user['id'], $luckybastards))
-	{
+
+	if (!$isbanned && $luckybastards && in_array($user['id'], $luckybastards)) {
 		$classing = ' style="text-shadow:0px 0px 4px;"';
 		$fname = prettyRainbow($fname);
-	}
-	else if ($dorainbow)
-	{
+	} else if ($dorainbow) {
 		if (!$isbanned)
 			$classing = ' style="color:hsl('.$poptart.',100%,80.4%);"';
 		$poptart += 31;
 		$poptart %= 360;
 	}
-	
+
 	$fname = $minipic.$fname;
-	
+
 	if ($customID)
 		$classing .= " id=\"$customID\"";
-	
+
 	$title = htmlspecialchars($user['name']) . ' ('.$user["id"].') ['.htmlspecialchars($fgroup['title']).']';
 	if ($user['id'] == 0) return "<strong$classing class=\"userlink fake\">$fname</strong>";
 	return actionLinkTag("<span$classing class=\"userlink\" title=\"$title\">$fname</span>", "profile", $user["id"], "", $user["name"]);
 }
 
-function userLinkById($id)
-{
+function userLinkById($id) {
 	global $userlinkCache;
 
-	if(!isset($userlinkCache[$id]))
-	{
+	if(!isset($userlinkCache[$id])) {
 		$rUser = Query("SELECT u.(_userfields) FROM {users} u WHERE u.id={0}", $id);
 		if(NumRows($rUser))
 			$userlinkCache[$id] = getDataPrefix(Fetch($rUser), "u_");
@@ -233,8 +216,7 @@ function userLinkById($id)
 	return UserLink($userlinkCache[$id]);
 }
 
-function makeThreadLink($thread)
-{
+function makeThreadLink($thread) {
 	$tags = ParseThreadTags($thread['title']);
 
 	$link = actionLinkTag($tags[0], 'thread', $thread['id'], '', HasPermission('forum.viewforum',$thread['forum'],true)?$tags[0]:'');
@@ -257,18 +239,16 @@ function makeThreadLinkNoTags($thread) {
 
 function makeFromUrl($url, $from)
 {
-	if($from == 0)
-	{
+	if($from == 0) {
 		$url = preg_replace('@(?:&amp;|&|\?)\w+=$@', '', $url);
 		return $url;
 	}
 	else return $url.$from;
 }
 
-function pageLinks($url, $epp, $from, $total)
-{
+function pageLinks($url, $epp, $from, $total) {
 	if ($total <= $epp) return '';
-	
+
 	$url = htmlspecialchars($url);
 
 	if($from < 0) $from = 0;
@@ -289,8 +269,7 @@ function pageLinks($url, $epp, $from, $total)
 	$last = ($from < $total - $epp) ? " <a class=\"pagelink lastpage\"  href=\"".makeFromUrl($url, $last)."\">&#x00BB;</a>" : "";
 
 	$pageLinks = array();
-	for($p = $page - 5; $p < $page + 5; $p++)
-	{
+	for($p = $page - 5; $p < $page + 5; $p++) {
 		if($p < 1 || $p > $numPages)
 			continue;
 		if($p == $page || ($from == 0 && $p == 1))
@@ -305,7 +284,7 @@ function pageLinks($url, $epp, $from, $total)
 function pageLinksInverted($url, $epp, $from, $total)
 {
 	if ($total <= $epp) return '';
-	
+
 	$url = htmlspecialchars($url);
 
 	if($from < 0) $from = 0;
@@ -397,4 +376,4 @@ function smarty_function_pageLink($params, $template)
 	$passParams = isset($params['params']) ? $params['params'] : [];
 	return pageLink($params['name'], $passParams);
 }
-?>
+

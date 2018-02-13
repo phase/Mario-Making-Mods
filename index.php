@@ -5,9 +5,6 @@ define('BLARG', 1);
 
 $sidebarshow = false;
 
-// change this to change your board's default page (in common.php now)
-//define('MAIN_PAGE', 'home');
-
 $ajaxPage = false;
 if(isset($_GET['ajax']))
 	$ajaxPage = true;
@@ -17,8 +14,7 @@ require(__DIR__.'/lib/common.php');
 $layout_crumbs = '';
 $layout_actionlinks = '';
 
-if (isset($_GET['forcelayout']))
-{
+if (isset($_GET['forcelayout'])) {
 	setcookie('forcelayout', (int)$_GET['forcelayout'], time()+365*24*3600, URL_ROOT, "", false, true);
 	die(header('Location: '.$_SERVER['HTTP_REFERER']));
 }
@@ -96,14 +92,10 @@ if (!$fakeerror) {
 			require_once(__DIR__.'/pages/404.php');
 		}
 	}
-	catch(KillException $e)
-	{
-		//Nothing, just ignore
-	}
+	catch(KillException $e){}
 }
 
-if($ajaxPage)
-{
+if($ajaxPage) {
 	ob_end_flush();
 	die();
 }
@@ -142,7 +134,7 @@ $layout_birthdays = getBirthdaysText();
 $layout_views = '<span id="viewCount">'.number_format($misc['views']).'</span> '.__('views');
 
 $layout_title = htmlspecialchars(Settings::get('boardname'));
-if($title != '')
+if(!empty($title))
 	$layout_title .= ' &raquo; '.$title;
 
 $chat = '';
@@ -360,10 +352,10 @@ if($_SERVER["HTTP_X_PJAX"]) {
 		'chat' => $chat));
 ?>
 </body><script>$(function() {
-    $(document).pjax('a', '#page-container', { 
-        fragment: '#page-container', 
-        timeout: 10 
-    });
+	$(document).pjax('a', '#page-container', { 
+		fragment: '#page-container', 
+		timeout: 10 
+	});
 });
 $(document).on('pjax:start', function() {NProgress.start();});
 $(document).on('pjax:end', function() {NProgress.done();});</script>
@@ -372,5 +364,5 @@ $(document).on('pjax:end', function() {NProgress.done();});</script>
 }
 $bucket = "finish"; include(__DIR__.'/lib/pluginloader.php');
 
-?>
+
 

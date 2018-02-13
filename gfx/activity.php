@@ -1,7 +1,8 @@
 <?php
-if (!defined('BLARG')) die();
+define("BLARG", "1");
 
 $ajaxPage = true;
+require __DIR__ . '/../lib/common.php';
 
 if(isset($_GET['id']))
 	$u = (int)$_GET['id'];
@@ -22,14 +23,12 @@ $dd2 = mktime(0, 0, 0, substr($vd, 0, 2), substr($vd, 3, 2) + 1, substr($vd, 6, 
 
 $nn = Query("select from_unixtime(date, '%Y%m%d') ymd, floor(date / 86400) d, count(*) c, max(num) m from {posts} where user = {0} group by ymd order by ymd", $u);
 
-while($n = Fetch($nn))
-{
+while($n = Fetch($nn)) {
 	$p[$n[$d]] = $n[c];
 	$t[$n[$d]] = $n[m];
 }
 
-for($i = 0; $dd + $i * 86400 < time(); $i++)
-{
+for($i = 0; $dd + $i * 86400 < time(); $i++){
 	$ps = Query("select count(*),max(num) from {posts} where user = {3} and date >= {0} + {1} * 86400 and date < {2} + {1} * 86400", $dd, $i, $dd2, $u);
 	$p[$i] = Result($ps, 0, 0);
 	$t[$i] = Result($ps, 0, 1);
@@ -69,5 +68,3 @@ for($i = 0; $i < $days; $i++)
 
 imagepng($img);
 imagedestroy($img);
-
-?>

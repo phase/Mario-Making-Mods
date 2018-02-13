@@ -268,17 +268,16 @@ print       "<br>
         print "<table cellspacing=\"0\" class=\"c1 outline margin\">
 ".            "  <tr class=\"header1\">
 ".            "    <th class=\"b h\" width=100>Commands</th>
-".            "    <th class=\"b cell2\" width=1 rowspan=10000>&nbsp;</th>
 ".            "    <th class=\"b h\">Item</th>
 ".            "$atrlist
 ".            "    <th class=\"b h\" width=6%><img src=img/coin.gif></th>
-".            "    <th class=\"b h\" width=6%><img src=img/coicell2.gif></th>
+".            "    <th class=\"b h\" width=6%><img src=img/coin2.gif></th>
 ";
 
         while($item=fetch($items)){
           $buy = "<a href=/shop?action=buy&id=$item[id]>Buy</a>";
           $sell = "<a href=/shop?action=sell&cat=$cat>Sell</a>";
-          $preview = "<a href='javascript:;' onclick=\"preview($loguserid,$item[id],$cat,'".addslashes($item[name])."')\">Preview</a>";
+          $preview = "<a href='javascript:;' onclick=\"preview($loguserid,$item[id],$cat,'".addslashes($item[name])."')\">Preview <noscript>JavaScript Required</noscript></a>";
 
               if($item[id] && $item[id]==$eq[e])						$comm = $sell;
           elseif($item[id] && $item[coins]<=$GP && $item[coins2]<=0)	$comm = "$buy | $preview";
