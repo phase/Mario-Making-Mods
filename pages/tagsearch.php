@@ -42,10 +42,6 @@ $rThreads = Query("	SELECT
 $pagelinks = PageLinks(actionLink("tagsearch", "", "tag=$tag&fid=$forum&from="), $tpp, $from, $total);
 
 if(NumRows($rThreads))
-{
 	makeThreadListing($rThreads, $pagelinks, false, !$forum);
-} 
 else
-	Alert(format(__("Tag {0} was not found in any thread."), htmlspecialchars($tag)), __("No threads found."));
-
-?>
+	Kill(format(__("Tag {0} was not found in any thread."), htmlspecialchars($tag)), __("No threads found."));

@@ -35,12 +35,12 @@
  	$eqitems = Query("SELECT * FROM items WHERE id='$user[eq1]' OR id='$user[eq2]' OR id='$user[eq3]' OR id='$user[eq4]' OR id='$user[eq5]' OR id='$user[eq6]' OR id='$it'");
 
  while($item = fetch($eqitems)){
-   $items[$item[id]] = $item;
+	$items[$item[id]] = $item;
  }
  $ct = $_GET['ct'];
  if($ct){
-   $GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
-   $user['eq'.$ct]=$it;
+	$GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
+	$user['eq'.$ct]=$it;
  }
 
  $st = getstats($user,$items);
@@ -71,14 +71,24 @@
 			$c['bar1'][ 5]	= ImageColorAllocate($img,  89, 255, 139);
 			$c['bar1'][ 6]	= ImageColorAllocate($img,  89, 213, 255);
 			$c['bar1'][ 7]	= ImageColorAllocate($img, 196,  33,  33);
-			$c['bar1'][ 8]	= ImageColorAllocate($img, 196,  66, 196);
-			$c['bar1'][ 9]	= ImageColorAllocate($img, 100,   0, 155);
-			$c['bar1'][10]	= ImageColorAllocate($img,  88,   0, 121);
-			$c['bar1'][11]	= ImageColorAllocate($img,   0, 174, 215);
-			$c['bar1'][12]	= ImageColorAllocate($img,   0,  99, 151);
-			$c['bar1'][13]	= ImageColorAllocate($img, 175, 175, 175);
-			$c['bar1'][14]	= ImageColorAllocate($img, 222, 222, 222);
-			$c['bar1'][15]	= ImageColorAllocate($img, 255, 255, 255);
+		} elseif($urlcolor == '2') {
+			 $c[bg]    =ImageColorAllocate($img, 40, 40, 90);
+			$c[bxb0]  =ImageColorAllocate($img,  0,  0,  0);
+			$c[bxb1]  =ImageColorAllocate($img,200,170,140);
+			$c[bxb2]  =ImageColorAllocate($img,155,130,105);
+			$c[bxb3]  =ImageColorAllocate($img,110, 90, 70);
+			for($i=0;$i<100;$i++)
+				$c[$i]  =ImageColorAllocate($img, 65+$i/2, 16, 25+$i/4);
+			$c[barE1]	 = ImageColorAllocate($img,120,150,180);
+			$c[barE2]	 = ImageColorAllocate($img, 30, 60, 90);
+			$c[bar1][1]=ImageColorAllocate($img,255,198,222);
+			$c[bar1][2]=ImageColorAllocate($img,255,115,181);
+			$c[bar1][3]=ImageColorAllocate($img,255,156, 57);
+			$c[bar1][4]=ImageColorAllocate($img,255,231,165);
+			$c[bar1][5]=ImageColorAllocate($img,173,231,255);
+			$c[bar1][6]=ImageColorAllocate($img, 57,189,255);
+			$c[bar1][7]=ImageColorAllocate($img, 75,222, 75);
+			ImageColorTransparent($img,0);
 		} else {
 			$c[bg]	= ImageColorAllocate($img, 40, 40, 90);
 			$c[bxb0]	= ImageColorAllocate($img,  0,  0,  0);
@@ -92,20 +102,13 @@
 			$c[barE1]	 = ImageColorAllocate($img,120,150,180);
 			$c[barE2]	 = ImageColorAllocate($img, 30, 60, 90);
 			$c[bar1][1] = ImageColorAllocate($img,215, 91,129);
-			$c[bar2][1] = ImageColorAllocate($img, 90, 22, 43);
 			$c[bar1][2] = ImageColorAllocate($img,255,136,154);
-			$c[bar2][2] = ImageColorAllocate($img,151,  0, 38);
 			$c[bar1][3] = ImageColorAllocate($img,255,139, 89);
-			$c[bar2][3] = ImageColorAllocate($img,125, 37,  0);
 			$c[bar1][4] = ImageColorAllocate($img,255,251, 89);
-			$c[bar2][4] = ImageColorAllocate($img, 83, 81,  0);
 			$c[bar1][5] = ImageColorAllocate($img, 89,255,139);
-			$c[bar2][5] = ImageColorAllocate($img,  0,100, 30);
 			$c[bar1][6] = ImageColorAllocate($img, 89,213,255);
-			$c[bar2][6] = ImageColorAllocate($img,  0, 66, 93);
 			$c[bar1][7] = ImageColorAllocate($img,196, 33, 33);
-			$c[bar2][7] = ImageColorAllocate($img, 70, 12, 12);
-		ImageColorTransparent($img,0);
+			ImageColorTransparent($img,0);
 		}
 	} else {
 		$c[bg]	= ImageColorAllocate($img, 40, 40, 90);
@@ -120,19 +123,12 @@
 		$c[barE1]	 = ImageColorAllocate($img,120,150,180);
 		$c[barE2]	 = ImageColorAllocate($img, 30, 60, 90);
 		$c[bar1][1] = ImageColorAllocate($img,215, 91,129);
-		$c[bar2][1] = ImageColorAllocate($img, 90, 22, 43);
 		$c[bar1][2] = ImageColorAllocate($img,255,136,154);
-		$c[bar2][2] = ImageColorAllocate($img,151,  0, 38);
 		$c[bar1][3] = ImageColorAllocate($img,255,139, 89);
-		$c[bar2][3] = ImageColorAllocate($img,125, 37,  0);
 		$c[bar1][4] = ImageColorAllocate($img,255,251, 89);
-		$c[bar2][4] = ImageColorAllocate($img, 83, 81,  0);
 		$c[bar1][5] = ImageColorAllocate($img, 89,255,139);
-		$c[bar2][5] = ImageColorAllocate($img,  0,100, 30);
 		$c[bar1][6] = ImageColorAllocate($img, 89,213,255);
-		$c[bar2][6] = ImageColorAllocate($img,  0, 66, 93);
 		$c[bar1][7] = ImageColorAllocate($img,196, 33, 33);
-		$c[bar2][7] = ImageColorAllocate($img, 70, 12, 12);
 		ImageColorTransparent($img,0);
 	}
 

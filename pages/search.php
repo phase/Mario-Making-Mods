@@ -144,13 +144,13 @@ if(isset($_GET['q']) || isset($_POST['q'])) {
 		if(NumRows($search)) {
 			while($result = Fetch($search)) {
 				$r = [];
-				
+
 				$r['link'] = makeThreadLink($result);
 				$r['description'] = '';
-				
+
 				$r['user'] = UserLink(getDataPrefix($result, "u_"));
 				$r['formattedDate'] = formatdate($result['lastpostdate']);
-				
+
 				$rdata[] = $r;
 			}
 		}

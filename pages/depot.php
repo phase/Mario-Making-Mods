@@ -13,6 +13,8 @@ $submissions = __('Specify the following in your submission.
 
 RenderTemplate('form_welcome', array('header' => $header, 'text' => $text));
 
+$getArgs = array();
+
 $command = '';
 $countcommand = '';
 if ($http->get('console')) {
@@ -32,11 +34,9 @@ if ($http->get('console')) {
 			$command = '';
 			$countcommand = '';
 	}
-} else {
+	$getArgs[] = 'console='.$console;
+} else 
 	$console = '';
-	$command = '';
-	$countcommand = '';
-}
 
 if ($http->get('style')) {
 	switch ($http->get('style')) {
@@ -70,6 +70,7 @@ if ($http->get('style')) {
 			$command .= '';
 			$countcommand .= '';
 	}
+	$getArgs[] = 'style='.$style;
 } else {
 	$style = '';
 	$command .= '';
@@ -113,24 +114,30 @@ if ($http->get('theme')) {
 			$command .= '';
 			$countcommand .= '';
 	}
+	$getArgs[] = 'theme='.$smmtheme;
 } else {
 	$smmtheme = '';
 	$command .= '';
 	$countcommand .= '';
 }
 
+if ($http->get('hackname')) {
+	$command .= " AND t.title like '%".htmlspecialchars($http->get('hackname'))."%' ";
+	$countcommand .= " AND title like '%".htmlspecialchars($http->get('hackname'))."%' ";
+	$getArgs[] = 'hackname='.$http->get('hackname');
+	$prevfield['hackname'] = $http->get('hackname');
+} else
+	$prevfield['hackname'] = '';
+
 $sidebarshow = true;
 $rFora = Query("select * from {forums} where id = {0} ", 3);
-if(NumRows($rFora))
-{
+if(NumRows($rFora)) {
 	if(!HasPermission('forum.viewforum', $forum['id']))
-		return;
+		Kill("You do not have the permission to view the depot.");
 	else
 		$forum = Fetch($rFora);
-} else {
-	Alert("Whoops. Seems like there were no results for the fields you selected. Why not try different fields?");
-	return;
-}
+} else
+	Kill("Whoops. Seems like there were no results for the fields you selected. Why not try different fields?");
 
 $showconsoles = true;
 $depoturl = 'depot';
@@ -149,8 +156,6 @@ else
 
 $tpp = 12;
 
-$depotpagelinks = 'console='.$console.'&style='.$style.'&theme='.$smmtheme.'&depotpage=';
-
 $rThreads = Query("	SELECT 
 						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
 						p.id pid, p.date,
@@ -163,19 +168,19 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE t.forum={0} AND p.deleted=0 ".$command."
-					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $depotpage, $tpp);
+					WHERE t.forum={0} AND p.deleted=0 $command
+					ORDER BY lastpostdate DESC LIMIT {1u}, {2u}", $fid, $depotpage, $tpp);
 
 $numonpage = NumRows($rThreads);
 
-$pagelinks = PageLinks(pageLink('depot', [], $depotpagelinks), $tpp, $depotpage, $numThemes);
+$getArgs[] = 'depotpage=';
+$pagelinks = PageLinks(pageLink('depot', [], implode('&', $getArgs)), $tpp, $depotpage, $numThemes);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 
 echo '<div style="max-width: 90%; display: flex; flex-flow: row wrap; justify-content: space-around;">';
 
-while($thread = Fetch($rThreads))
-{
+while($thread = Fetch($rThreads)) {
 	$pdata = array();
 
 	$starter = getDataPrefix($thread, 'su_');
@@ -184,8 +189,15 @@ while($thread = Fetch($rThreads))
 	$pdata['screenshots'] = $thread['screenshot'];
 
 	if ((strpos($pdata['screenshots'], 'https://www.youtube.com/') !== false) || (strpos($pdata['screenshots'], 'https://youtu.be/') !== false))
-		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.$pdata['screenshots'].'" frameborder="0" allowfullscreen></iframe>');
-	elseif(!empty($pdata['screenshots']))
+		$pdata['screenshot'] = str_replace("/watch?v=","/embed/", '<iframe width="280" height="157" src="'.htmlspecialchars($pdata['screenshots']).'" frameborder="0" allowfullscreen></iframe>');
+	elseif (substr($pdata['screenshots'], -4) == '.mp4')
+		$pdata['screenshot'] = '<video width="280" height="157" controls><source src="'.htmlspecialchars($pdata['screenshots']).'" type="video/mp4">Your browser does not support the video tag.</video>';
+	elseif (substr($pdata['screenshots'], -4) == '.mp3' || substr($pdata['screenshots'], -4) == '.wav') {
+		if(substr($pdata['screenshots'], -4) == '.mp3')
+			$pdata['screenshot'] = '<audio controls><source src="'.htmlspecialchars($pdata['screenshots']).'" type="audio/mpeg">Your browser does not support the audio tag.</audio>';
+		else if(substr($pdata['screenshots'], -4) == '.ogg')
+			$pdata['screenshot'] = '<audio controls><source src="'.htmlspecialchars($pdata['screenshots']).'" type="audio/wav">Your browser does not support the audio tag.</audio>';
+	} elseif(!empty($pdata['screenshots']))
 		$pdata['screenshot'] = parseBBCode('[imgs]'.$pdata['screenshots'].'[/imgs]');
 	elseif(preg_match('~iframe.+src=(?:&quot;|[\'"])(?:https?)\:\/\/www\.(?:youtube|youtube\-nocookie)\.com\/embed\/(.*?)(?:&quot;|[\'"])~iu', $pdata['text']) === 1){
 		$pdata['screenshots'] = '2';
@@ -197,13 +209,13 @@ while($thread = Fetch($rThreads))
 	$tags = ParseThreadTags($thread['title']);
 
 	$pdata['download'] = '';
-	if($thread['downloadtheme3ds'] !== '')
+	if(!empty($thread['downloadtheme3ds']))
 		$pdata['download'] .= '<a href="'.$thread['downloadtheme3ds'].'">Download 3DS Theme</a>';
-	if(($thread['downloadtheme3ds'] !== '') && ($thread['downloadthemewiiu'] !== ''))
+	if(!empty($thread['downloadtheme3ds']) && (!empty(['downloadthemewiiu']) || !empty(['downloadcostumewiiu'])))
 		$pdata['download'] .= ' | ';
-	if($thread['downloadthemewiiu'] !== '')
+	if(!empty($thread['downloadthemewiiu']))
 		$pdata['download'] .= '<a href="'.$thread['downloadthemewiiu'].'">Download WiiU Theme</a>';
-	if($thread['downloadcostumewiiu'] !== '')
+	else if($thread['downloadcostumewiiu'] !== '')
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 
 	$pdata['title'] = '<img src="'.$thread['icon'].'"><a href="'.pageLink("entry", array(
@@ -212,8 +224,8 @@ while($thread = Fetch($rThreads))
 			)).'">'.$tags[0].'</a><br>'.$tags[1];
 
 	$pdata['formattedDate'] = formatdate($thread['date']);
-	$pdata['userlink'] = UserLink($starter);
-	$pdata['text'] = CleanUpPost($thread['text'],$starter['name'], false, false);
+	$pdata['userlink']		= UserLink($starter);
+	$pdata['text']			= CleanUpPost($thread['text'],$starter['name'], false, false);
 
 	if (!$thread['replies'])
 		$comments = 'No comments yet';

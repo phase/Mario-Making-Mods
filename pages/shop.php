@@ -12,9 +12,9 @@ if(!NumRows($rURPG))
   if ($_POST[action] == "save" && HasPermission('admin.manage-shop-items')) {
 	checknumeric($_GET[id]);
 	$set = "";
-	$id = $_GET[id];
+	$id = $_GET['id'];
 	$stype = "";
-	if ($_GET[id] != -1) {
+	if ($_GET['id'] != -1) {
 		for($i=0;$i<9;$i++) {
 			$stype.=(preg_match('/^x/', $_POST[$stat[$i]])?'m':'a');
 			$set.="`s".$stat[$i]."`=".preg_replace('/[+x\.]/','',(strlen($_POST[$stat[$i]])?$_POST[$stat[$i]]:'0')).", ";
@@ -57,22 +57,22 @@ fclose($f);
 							FROM users u
 							LEFT JOIN usersrpg r ON u.id=r.id
 							WHERE u.id = '$loguserid'"));
-	$p = $user[posts];
-	$d = (time() - $user[regdate])/86400;
+	$p = $user['posts'];
+	$d = (time() - $user['regdate'])/86400;
 	$st = getstats($user);
-	$GP = $st[GP];
+	$GP = $st['GP'];
 	
 	Alert("Welcome to the Mario Making Mods item shop! Here is where you can buy items (such as weapons, Armor, and more) using your coins. In order to obtain coins, you'll need to post on the board.
 			In the future, these items will allow you to battle another person with your items.");
 
 	switch($action){
 		case 'delete': //Added (Sukasa)
-		checknumeric($_GET[id]);
-		if ($_GET[id]) { //Can't delete nothing
-			query("DELETE FROM items WHERE id='$_GET[id]'");
-			for ($i=1;$i<7;$i++)
-				query("UPDATE usersrpg SET `eq$i` = 0 WHERE `eq$i`='$_GET[id]'");
-		}
+			checknumeric($_GET[id]);
+			if ($_GET[id]) { //Can't delete nothing
+				query("DELETE FROM items WHERE id='$_GET[id]'");
+				for ($i=1;$i<7;$i++)
+					query("UPDATE usersrpg SET `eq$i` = 0 WHERE `eq$i`='$_GET[id]'");
+			}
 		case '':
 			$shops  =query('SELECT * FROM itemcateg ORDER BY corder');
 			$eq     =fetch(query("SELECT * FROM usersrpg WHERE id=$loguser[id]"));
@@ -218,11 +218,12 @@ print       "<br>
 			$eq = fetch(query("SELECT eq$cat AS e FROM usersrpg WHERE id=$loguserid"));
 			$eqitem = fetch(query("SELECT * FROM items WHERE id=$eq[e]"));
 
-			$edit = "";
+			$edit = '';
 			if (HasPermission('admin.manage-shop-items'))
 				$edit = " | <a href='/shop?action=edit&id=-1&cat=$cat'>Add new item</a>";
 
 			$title = 'Item shop';
+			MakeCrumbs(array(actionLink("shop") => __("Item Shop"), actionLink("shop", $cat) => __($cat)));
 			print 	"<script>
 						function preview(user,item,cat,name){
 							document.getElementById('prev').src='gfx/rpgstatus.php?u='+user+'&it='+item+'&ct='+cat+'&'+Math.random();
@@ -234,34 +235,31 @@ print       "<br>
 						.higher   {color:#abaffe}
 						.equal    {color:#ffea60}
 						.lower    {color:#ca8765}
-".            "</style>
-".            "
-".            "<table cellspacing=\"0\" class=\"c1 outline margin\">
-".            "  <td class=\"b cell1\" align=\"center\"><a href=/shop>Return to shop list</a> $edit
-".            "</table>
-".            "<br>
-".            "<table cellspacing=\"0\" class=\"c1\" id=status>
-".            "  <td class=\"nb\" width=256><img src=gfx/rpgstatus.php?u=$loguserid></td>
-".            "  <td class=\"nb\" align=\"center\" width=150>
-".            "    <font class=fonts>
-".            "      <div id=pr></div>
-".            "    </font>
-".            "  </td>
-".            "  <td class=\"nb\">
-".            "    <img src=img/_.png id=prev>
-".            "</table>
-".            "<br>
-";
+					</style>
+					<table cellspacing=\"0\" class=\"c1 outline margin\">
+						<td class=\"b cell1\" align=\"center\"><a href=/shop>Return to shop list</a> $edit
+					</table>
+					<br>
+					<table cellspacing=\"0\" class=\"c1\" id=status>
+						<td class=\"nb\" width=256><img src=gfx/rpgstatus.php?u=$loguserid></td>
+						<td class=\"nb\" align=\"center\" width=150>
+							<font class=fonts>
+								<div id=pr></div>
+							</font>
+						</td>
+						<td class=\"nb\">
+							<img src=img/_.png id=prev>
+					</table>
+					<br>";
         $atrlist='';
         for($i=0;$i<9;$i++)
-          $atrlist.="    <th class=\"b h\" width=6%>$stat[$i]</th>
-";
+          $atrlist .= "    <th class=\"b h\" width=6%>$stat[$i]</th>";
 
         $seehidden = 0;
         if (HasPermission('admin.manage-shop-items'))
           $seehidden = 1;
 
-        $items=query('SELECT * FROM items '
+        $items = query('SELECT * FROM items '
                           ."WHERE (cat=$cat OR cat=0) AND `hidden` <= $seehidden "
                           .'ORDER BY type,coins');
 
@@ -269,8 +267,8 @@ print       "<br>
 ".            "  <tr class=\"header1\">
 ".            "    <th class=\"b h\" width=100>Commands</th>
 ".            "    <th class=\"b h\">Item</th>
-".            "$atrlist
-".            "    <th class=\"b h\" width=6%><img src=img/coin.gif></th>
+".             $atrlist
+."                <th class=\"b h\" width=6%><img src=img/coin.gif></th>
 ".            "    <th class=\"b h\" width=6%><img src=img/coin2.gif></th>
 ";
 
@@ -297,14 +295,14 @@ print       "<br>
               if($st>0) $st="+$st";
               if(!$st) $st='&nbsp;';
             }
-            $itst=$item["s$stat[$i]"];
-            $eqst=$eqitem["s$stat[$i]"];
+            $itst = $item["s$stat[$i]"];
+            $eqst = $eqitem["s$stat[$i]"];
 
             if(!$color && substr($item[stype],$i,1)==substr($eqitem[stype],$i,1)){
                   if($itst> $eqst) $cl='higher';
               elseif($itst==$eqst) $cl='equal';
               elseif($itst< $eqst) $cl='lower';
-            }else
+            } else
               $cl='';
 
             $atrlist.= "

@@ -44,7 +44,7 @@ else
 $fid = $forum['id'];
 
 checknumeric($fid);
-checknumeric($tid)
+checknumeric($tid);
 
 $isHidden = !HasPermission('forum.viewforum', $fid, true);
 

@@ -16,14 +16,12 @@ if (HasPermission('admin.viewstaffpms')) $staffpms = ' OR userto={2}';
 
 $snoop = isset($_GET['snooping']) && HasPermission('admin.viewpms');
 
-if($snoop)
-{
+if($snoop) {
 	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where {pmsgs}.id = {0}", $pmid);
 	Query("INSERT INTO {spieslog} (userid,date,pmid) VALUES ({0},UNIX_TIMESTAMP(),{1})", $loguserid, $pmid);
 	
 	Alert(__("You are snooping."));
-}
-else
+} else
 	$rPM = Query("select * from {pmsgs} left join {pmsgs_text} on pid = {pmsgs}.id where (userto = {1} or userfrom = {1}{$staffpms}) and {pmsgs}.id = {0}", $pmid, $loguserid, -1);
 
 if(NumRows($rPM))

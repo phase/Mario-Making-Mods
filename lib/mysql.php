@@ -1,5 +1,5 @@
 <?php
-// AcmlmBoard XD support - MySQL database wrapper functions
+// MakerBoard - MySQL database wrapper functions
 if (!defined('BLARG')) die();
 
 include(__DIR__."/../config/database.php");
@@ -13,14 +13,12 @@ $dblink->set_charset('utf8');
 
 mysqli_query($dblink, 'SET SESSION sql_mode = "MYSQL40"');
 
-function SqlEscape($text)
-{
+function SqlEscape($text) {
 	global $dblink;
 	return $dblink->real_escape_string($text);
 }
 
-function Query_ExpandFieldLists($match)
-{
+function Query_ExpandFieldLists($match) {
 	$ret = array();
 	$prefix = $match[1];
 	$fields = preg_split('@\s*,\s*@', $match[2]);
@@ -31,13 +29,11 @@ function Query_ExpandFieldLists($match)
 	return implode(',', $ret);
 }
 
-function Query_AddUserInput($match)
-{
+function Query_AddUserInput($match) {
 	global $args;
 	$match = $match[1];
 	$format = 's';
-	if(preg_match("/^\d+\D$/", $match))
-	{
+	if(preg_match("/^\d+\D$/", $match)) {
 		$format = substr($match, strlen($match)-1, 1);
 		$match = substr($match, 0, strlen($match)-1);
 	}
@@ -45,7 +41,7 @@ function Query_AddUserInput($match)
 	$var = $args[$match+1];
 
 	if ($var === NULL) return 'NULL';
-			
+
 	if ($format == 'c')
 	{
 		if (empty($var)) return 'NULL';
@@ -54,8 +50,9 @@ function Query_AddUserInput($match)
 		return substr($final,0,-1);
 	}
 
-	if($format == "i") return (string)((int)$var);
-	if($format == "u") return (string)max((int)$var, 0);
+	if($format == "i" || $format == "l")	return (string)((int)$var);
+	if($format == "u")						return (string)max((int)$var, 0);
+
 	return '\''.SqlEscape($var).'\'';
 }
 
@@ -70,8 +67,7 @@ function Query_AddUserInput($match)
  * {table} syntax allows for flexible manipulation of table names (namely, adding a DB prefix)
  *
  */
-function query()
-{
+function query() {
 	global $dbpref, $args, $fieldLists;
 	$args = func_get_args();
 	if (is_array($args[0])) $args = $args[0];
@@ -92,8 +88,7 @@ function query()
 	return RawQuery($query);
 }
 
-function rawQuery($query)
-{
+function rawQuery($query) {
 	global $queries, $querytext, $loguser, $dblink, $debugMode, $logSqlErrors, $dbpref, $loguserid, $mysqlCellClass;
 
 	$res = @$dblink->query($query);

@@ -53,9 +53,11 @@ function cleanUpPost($postText, $poster = "", $noSmilies = false, $noBr = false)
 	/* Filter all NSFW sites */
 	
 	$s = str_ireplace('pornhub.com', 'that NSFWHub site', $s);
+	
+
 	/* Filter all ads site. If someone thinks that they can spam us with this link just to make a moron some money, then so be it.
 	Todo: Make it so that adfly links and others change so that way they go to the direct URL. */
-	
+
 	$s = str_ireplace('deloton.com', '', $s);
 	$s = str_ireplace('onclickads.net', '', $s);
 	$s = str_ireplace('autoplay', 'auto<i></i>play', $s);

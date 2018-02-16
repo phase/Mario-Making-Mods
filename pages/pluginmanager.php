@@ -8,8 +8,7 @@ CheckPermission('admin.editsettings');
 MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("pluginmanager") => __("Plugin Manager")));
 
 
-if($_REQUEST['action'] == "enable")
-{
+if($_REQUEST['action'] == "enable") {
 	if($_REQUEST['key'] != $loguser['token'])
 		Kill("No.");
 
@@ -18,9 +17,7 @@ if($_REQUEST['action'] == "enable")
 	Upgrade();
 
 	die(header("location: ".actionLink("pluginmanager")));
-}
-if($_REQUEST['action'] == "disable")
-{
+} else if($_REQUEST['action'] == "disable") {
 	if($_REQUEST['key'] != $loguser['token'])
 		Kill("No.");
 
@@ -36,19 +33,14 @@ $enabledplugins = array();
 $disabledplugins = array();
 $pluginDatas = array();
 
-if($pluginsDir !== FALSE)
-{
-	while(($plugin = readdir($pluginsDir)) !== FALSE)
-	{
+if($pluginsDir !== FALSE) {
+	while(($plugin = readdir($pluginsDir)) !== FALSE) {
 		if($plugin == "." || $plugin == "..") continue;
-		if(is_dir(BOARD_ROOT."plugins/".$plugin))
-		{
-			try
-			{
+		if(is_dir(BOARD_ROOT."plugins/".$plugin)) {
+			try {
 				$plugindata = getPluginData($plugin, false);
 			}
-			catch(BadPluginException $e)
-			{
+			catch(BadPluginException $e) {
 				continue;
 			}
 
@@ -77,37 +69,32 @@ foreach($disabledplugins as $plugin => $pluginname)
 RenderTemplate('pluginlist', array('enabledPlugins' => $ep, 'disabledPlugins' => $dp));
 
 
-function listPlugin($plugin, $plugindata)
-{
+function listPlugin($plugin, $plugindata) {
 	global $plugins, $loguser;
-	
+
 	$pdata = $plugindata;
-	
+
 	$hasperms = false;
 	if (!isset($plugins[$plugin]) && file_exists(BOARD_ROOT.'plugins/'.$plugin.'/permStrings.php'))
 		$hasperms = true;
-		
+
 	if ($hasperms)
 		$pdata['description'] .= '<br><strong>This plugin has permissions. After enabling it, make sure to configure them properly.</strong>';
 
-		
-	$text = __("Enable");
-	$act = "enable";
-	if(isset($plugins[$plugin]))
-	{
+	if(isset($plugins[$plugin])) {
 		$text = __("Disable");
 		$act = "disable";
+	} else {
+		$text = __("Enable");
+		$act = "enable";
 	}
 	$pdata['actions'] = '<ul class="pipemenu">'.actionLinkTagItem($text, "pluginmanager", $plugin, "action=".$act."&key=".$loguser['token']);
 
-	if(in_array("settingsfile", $plugindata['buckets']))
-	{
+	if(in_array("settingsfile", $plugindata['buckets'])) {
 		if(isset($plugins[$plugin]))
 			$pdata['actions'] .= actionLinkTagItem(__("Settings&hellip;"), "editsettings", $plugin);
 	}
 	$pdata['actions'] .= '</ul>';
-	
+
 	return $pdata;
 }
-
-?>

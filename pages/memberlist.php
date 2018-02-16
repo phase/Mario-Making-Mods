@@ -64,7 +64,7 @@ RenderTemplate('form_memberlist', array('fields' => $fields));
 echo '
 	</form>';
 	
-	
+
 $getArgs = array();
 	
 $tpp = $loguser['threadsperpage'];
@@ -122,8 +122,7 @@ switch($sort)
 
 $where = '1';
 
-if($pow !== null)
-{
+if($pow !== null) {
 	if (is_array($pow))
 		$where .= " AND primarygroup IN ({2c})";
 	else if ($usergroups[$pow]['type'] == 0)
@@ -134,8 +133,7 @@ if($pow !== null)
 
 $query = $_GET['name'];
 
-if($query != "")
-{
+if(!empty($query)) {
 	$where.= " and (name like {3} or displayname like {3})";
 	$getArgs[] = 'name='.urlencode($query);
 }

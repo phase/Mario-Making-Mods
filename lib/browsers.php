@@ -159,14 +159,11 @@ function GetVersion($ua, $versionStart) {
 	return $version;
 }
 
-if (isset($_COOKIE['forcelayout'])) {
-	if ($_COOKIE['forcelayout'] == 1)
-		$mobileLayout = true;
-	else if ($_COOKIE['forcelayout'] == -1)
-		$mobileLayout = false;
-} else if (Settings::get('defaultLayout') == "mobile")
+if ($_COOKIE['forcelayout'] == 1)
 	$mobileLayout = true;
-else
+else if (Settings::get('defaultLayout') == "mobile")
+	$mobileLayout = true;
+else if ($_COOKIE['forcelayout'] == -1)
 	$mobileLayout = false;
 
 if ($name == 'Android' && $version[0] == '2') $oldAndroid = true;

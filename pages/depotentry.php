@@ -142,7 +142,17 @@ if ($loguserid)
 
 LoadPostToolbar();
 
-MakeCrumbs(array(pageLink('depot') => 'Depot', actionLink("depotentry", $tid, '', $urlname) => $threadtags[0]), $links);
+if($fid == 3) {
+	$depoturl = 'depot';
+	MakeCrumbs(array(pageLink('depot') => 'Super Mario Maker Hacking Depot', actionLink("depotentry", $tid, '', $urlname) => $threadtags[0]), $links);
+} else if($fid == 7) {
+	$depoturl = 'depot/level';
+	MakeCrumbs(array(pageLink('leveldepot') => 'Super Mario Maker Level Depot', actionLink("depotentry", $tid, '', $urlname) => $threadtags[0]), $links);
+} else if($fid == 32) {
+	$depoturl = 'depot/remaker';
+	MakeCrumbs(array(pageLink('remakerdepot') => 'Super Mario ReMaker Depot', actionLink("depotentry", $tid, '', $urlname) => $threadtags[0]), $links);
+} else
+	die(header("Location: /".actionLink("thread", $tid, '', $urlname)));
 
 if($thread['poll'])
 {

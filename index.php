@@ -41,10 +41,8 @@ ob_start();
 $layout_crumbs = "";
 
 $fakeerror = false;
-if ($loguser['flags'] & 0x2)
-{
-	if (rand(0,100) <= 75)
-	{
+if ($loguser['flags'] & 0x2) {
+	if (rand(0,100) <= 75) {
 		Alert("Could not load requested page: failed to connect to the database. Try again later.", 'Error');
 		$fakeerror = true;
 	}
@@ -150,7 +148,7 @@ if (!file_exists(__DIR__.'/'.$layout_logopic))
 	$layout_logopic = 'img/logo.jpg';
 $layout_logopic = resourceLink($layout_logopic);
 
-if (!file_exists("themes/$theme")) { //Are we using some invalid theme?
+if (!file_exists('themes/'.$theme)) { //Are we using some invalid theme?
 	if ($loguserid) {
 		$defaultTheme = Settings::get("defaultTheme");
 		query("update {users} set theme='" . $defaultTheme . "' where id=".$loguserid);
@@ -179,11 +177,12 @@ if($sidebarshow == true) {
 								<tr class="cell0"><td><a href="/depot">Super Mario Maker Projects</a></td></tr>
 								<tr class="cell1"><td><a href="/depot/level">Super Mario Maker Levels</a></td></tr>
 								<tr class="cell0"><td><a href="/depot/remaker">Super Mario ReMaker</a></td></tr>
-					</table>';
-					if ($showconsoles == true) {
-					$sidebar .= '<table class="outline margin">
+					</table>
+					<table class="outline margin">
 						<tr class="header0"><th>Filter</th></tr>
-							<form action="/'.$depoturl.'">
+							<form action="/'.$depoturl.'">';
+							if ($showconsoles == true) {
+							$sidebar .= '
 								<tr class="header1"><th>Console</th></tr>
 								<tr class="cell0"><td><input type="radio" name="console" value="" checked> Both</td></tr>
 								<tr class="cell0"><td><input type="radio" name="console" value="wiiu"><img src="https://cdn.discordapp.com/attachments/318888570691518465/394700847705227276/wii-u-games-tool.png">WiiU</a></td></tr>
@@ -195,7 +194,7 @@ if($sidebarshow == true) {
 								<tr class="cell0"><td><input type="radio" name="style" value="smw"><img src="https://cdn.discordapp.com/emojis/364096482539864075.png" height="11" width="22"> SMW</td></tr>
 								<tr class="cell1"><td><input type="radio" name="style" value="nsmbu"><img src="https://cdn.discordapp.com/emojis/364096512654966784.png" height="11" width="22"> NSMBU</td></tr>
 								<tr class="cell0"><td><input type="radio" name="style" value="custom">Custom</td></tr>
-								<tr class="header1"><th>Themes</th></tr>
+								<tr class="header1"><th>Themes Replaces</th></tr>
 								<tr class="cell0"><td><input type="radio" name="theme" value="" checked> All</td></tr>
 								<tr class="cell0"><td><input type="radio" name="theme" value="grass"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396187499724144640/Screenshot_2017-08-06_at_12.56.45_PM.png"> Grassland</td></tr>
 								<tr class="cell1"><td><input type="radio" name="theme" value="under"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188673634467841/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underground</td></tr>
@@ -203,11 +202,14 @@ if($sidebarshow == true) {
 								<tr class="cell1"><td><input type="radio" name="theme" value="castle"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189460754071553/Screenshot_2017-08-06_at_12.56.45_PM.png"> Castle</td></tr>
 								<tr class="cell0"><td><input type="radio" name="theme" value="ghost"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189134894399508/Screenshot_2017-08-06_at_12.56.45_PM.png"> Ghost House</td></tr>
 								<tr class="cell0"><td><input type="radio" name="theme" value="airship"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188140353617920/Screenshot_2017-08-06_at_12.56.45_PM.png"> Airship</td></tr>
+								<tr class="cell0"><td><input type="radio" name="theme" value="custom">Custom</td></tr>';
+							}
+							$sidebar .= '	
+								<tr class="header1"><th>Name of Hack</th></tr>
+								<tr class="cell0"><td><input type="text" name="hackname" value="'.$prevfield['hackname'].'"></td></tr>
 								<tr class="header1"><th><input type="submit" value="Submit"></th></tr>
 							</form>
-					</table>';
-					}
-			$sidebar .= '
+					</table>
 				</td>
 			</tr>
 		</table>
@@ -225,7 +227,7 @@ if($_SERVER["HTTP_X_PJAX"]) {
 		'layout_actionlinks' => $layout_actionlinks));
 } else {
 ?>
-<!doctype html>
+<!doctype HTML>
 <html>
 <head>
 	<title><?php print $layout_title; ?></title>
@@ -288,11 +290,11 @@ if($_SERVER["HTTP_X_PJAX"]) {
 			}
 		})(document,window.navigator,'standalone');
 	</script>
-	<script src="<?php print resourceLink("js/jquery-ui.js");?>"></script>
-	<script src="<?php print resourceLink("js/tricks.js");?>"></script>
-	<script src="<?php print resourceLink("js/jscolor.js");?>" async></script>
+	<script src="<?php echo resourceLink("js/jquery-ui.js");?>"></script>
+	<script src="<?php echo resourceLink("js/tricks.js");?>"></script>
+	<script src="<?php echo resourceLink("js/jscolor.js");?>" async></script>
 	<script src="<?php echo resourceLink("js/jquery.timeago.js");?>" async></script>
-	<script>boardroot = <?php print json_encode(URL_ROOT); ?>;</script>
+	<script>boardroot = <?php echo json_encode(URL_ROOT); ?>;</script>
 	<script src="https://use.fontawesome.com/8963bac2cd.js" async></script>
 	<script>
   if ('serviceWorker' in navigator) {
