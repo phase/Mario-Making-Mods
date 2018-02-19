@@ -19,13 +19,17 @@ function RenderTemplate($template, $options=null) {
 	if ($mobileLayout) {
 		$tplname = $tplroot.'mobile/'.$template.'.tpl';
 		if (!file_exists($tplname)){
-			if (!empty(Settings::get('defaultLayout')))
+			if (isset($loguser['layout']))
+				$tplname = $tplroot.$loguser['layout'].$template.'.tpl';
+			elseif (!empty(Settings::get('defaultLayout')))
 				$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
 			else
 				$tplname = $tplroot.'bb/'.$template.'.tpl';
 		}
 	} else {
-		if (!empty(Settings::get('defaultLayout')))
+		if (isset($loguser['layout']))
+			$tplname = $tplroot.$loguser['layout'].$template.'.tpl';
+		elseif (!empty(Settings::get('defaultLayout')))
 			$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
 		else
 			$tplname = $tplroot.'bb/'.$template.'.tpl';

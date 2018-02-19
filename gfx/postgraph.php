@@ -1,5 +1,7 @@
 <?php
-if (!defined('BLARG')) die();
+ define("BLARG", "1");
+
+ require __DIR__ . '/../lib/common.php';
 
 $ajaxPage = TRUE;
 
@@ -13,8 +15,6 @@ else {
 }
 
 checknumeric($id);
-
-error_reporting(E_ALL);
 
 $forums = Query("select id, title from {forums} order by id");
 $names = array();

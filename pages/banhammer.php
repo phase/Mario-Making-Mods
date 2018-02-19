@@ -13,30 +13,25 @@ if ($usergroups[$user['u_primarygroup']]['rank'] >= $loguserGroup['rank'])
 
 checknumeric($id);
 
-if ($_POST['ban'])
-{
+if ($_POST['ban']) {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');
 	
-	if ($_POST['permanent'] )
-	{
+	if ($_POST['permanent']) {
 		$time = 0;
 		$expire = 0;
-	}
-	else 
-	{
+		$bantitle = __('Banned permanently');
+	} else  {
 		$time = $_POST['time'] * $_POST['timemult'];
 		$expire = time() + $time;
+		$bantitle = __('Banned until ').formatdate($expire);
 	}
-	
-	if ($expire) $bantitle = __('Banned until ').formatdate($expire);
-	else $bantitle = __('Banned permanently');
-	
+
 	if (trim($_POST['reason']))
 		$bantitle .= __(': ').$_POST['reason'];
-	
+
 	Query("update {users} set tempbanpl = {0}, tempbantime = {1}, primarygroup = {4}, title = {3} where id = {2}", 
 		$user['u_primarygroup'], $expire, $id, $bantitle, Settings::get('bannedGroup'));
-	
+
 	Report($loguser['name'].' banned '.$user['u_name'].($expire ? ' for '.TimeUnits($time) : ' permanently').
 		($_POST['reason'] ? ': '.$_POST['reason']:'.'), true);
 
@@ -46,10 +41,10 @@ if ($_POST['ban'])
 } else if ($_POST['unban']) {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');
 	if ($user['u_primarygroup'] != Settings::get('bannedGroup')) Kill(__('This user is not banned.'));
-	
+
 	Query("update {users} set primarygroup = tempbanpl, tempbantime = {0}, title = {1} where id = {2}", 
 		0, '', $id);
-	
+
 	Report($loguser['name'].' unbanned '.$user['u_name'].'.', true);
 
 	die(header("Location: ".pageLink("profile", array(
@@ -58,16 +53,15 @@ if ($_POST['ban'])
 }
 
 
-if (isset($_GET['unban']))
-{
+if (isset($_GET['unban'])) {
 	$title = __('Unban user');
-	
+
 	MakeCrumbs(array(pageLink("profile", array(
 				'id' => $id,
 				'name' => $user['u_name']
 			)) => htmlspecialchars($user['u_displayname']?$user['u_displayname']:$user['u_name']), 
 		actionLink('banhammer', $id, 'unban=1') => __('Unban user')));
-		
+
 	$userlink = userLink(getDataPrefix($user, 'u_'));
 	$fields = array(
 		'target' => $userlink,
@@ -75,9 +69,7 @@ if (isset($_GET['unban']))
 		'btnUnbanUser' => '<input type="submit" name="unban" value="Unban user">',
 	);
 	$template = 'form_unbanuser';
-}
-else
-{
+} else {
 	$title = __('Ban user');
 	
 	MakeCrumbs(array(pageLink("profile", array(
@@ -116,5 +108,3 @@ RenderTemplate($template, array('fields' => $fields));
 echo '
 		<input type="hidden" name="token" value="'.$loguser['token'].'">
 	</form>';
-
-?>

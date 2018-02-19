@@ -52,6 +52,12 @@ if (!defined('BLARG')) die();
 			"name" => "Default board theme",
 			'category' => 'Presentation'
 		),
+		"defaultLayout" => [
+			"type" => "layout",
+			"default" => "bb",
+			"name" => "Board layout",
+			'category' => 'Presentation'
+		],
 		"showGender" => array (
 			"type" => "boolean",
 			"default" => "1",

@@ -197,16 +197,12 @@ function makeThemeList($fieldname, $value)
 	return makeSelect($fieldname, $value, $themes);
 }
 
-function makeLayoutList($fieldname, $value)
-{
-	$layouts = array();
-	$dir = @opendir("layouts");
-	while ($file = readdir($dir))
-	{
-		if (endsWith($file, ".php"))
-		{
-			$layout = substr($file, 0, strlen($file)-4);
-			$layouts[$layout] = @file_get_contents("./layouts/".$layout.".info.txt");
+function makeLayoutList($fieldname, $value) {
+	$layouts = [];
+	$dir = @opendir("layout");
+	while ($layout = readdir($dir)) {
+		if(!endsWith($layout, ".php") && $layout != "." && $layout != "..") {
+			$layouts[$layout] = @file_get_contents("./layout/".$layout."/info.txt");
 		}
 	}
 	closedir($dir);

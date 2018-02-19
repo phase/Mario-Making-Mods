@@ -1,6 +1,6 @@
 <?php
 
-include BOARD_ROOT.'/lib/rpg/rpg.php';
+include BOARD_ROOT.'/gfx/lib/rpg.php';
 
   $rdmsg="";
 

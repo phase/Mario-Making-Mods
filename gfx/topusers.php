@@ -2,7 +2,7 @@
  define("BLARG", "1");
 
  require __DIR__ . '/../lib/common.php';
- require __DIR__ . '/../lib/rpg/rpg.php';
+ require __DIR__ . '/lib/rpg.php';
 
 	$urlfont = $_GET['font'];
 	if($urlfont){

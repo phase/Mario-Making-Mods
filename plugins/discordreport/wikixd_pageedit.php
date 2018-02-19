@@ -14,5 +14,3 @@ if ($page['new'] == 2)
 	ircReport("New wiki page: ".url2title($page['id'])." created by {$thename} -- {$link}");
 else
 	ircReport("Wiki page ".url2title($page['id'])." edited by {$thename} (rev. {$rev}) -- {$link}");
-	
-?>

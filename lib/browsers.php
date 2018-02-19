@@ -163,6 +163,8 @@ if ($_COOKIE['forcelayout'] == 1)
 	$mobileLayout = true;
 else if (Settings::get('defaultLayout') == "mobile")
 	$mobileLayout = true;
+else if ($loguser['layout'] == "mobile")
+	$mobileLayout = true;
 else if ($_COOKIE['forcelayout'] == -1)
 	$mobileLayout = false;
 

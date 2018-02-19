@@ -38,6 +38,7 @@ $days = floor((time() - $dd) / 86400);
 $m = max($p);
 
 header('Content-type:image/png');
+
 $img = imagecreatetruecolor($days, $m);
 imagesavealpha($img, true);
 
