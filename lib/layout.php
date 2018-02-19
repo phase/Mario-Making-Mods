@@ -6,7 +6,7 @@ if (!defined('BLARG')) die();
 // ----------------------------------------------------------------------------
 
 function RenderTemplate($template, $options=null) {
-	global $tpl, $mobileLayout, $plugintemplates, $plugins;
+	global $tpl, $mobileLayout, $plugintemplates, $plugins, $loguser;
 
 	if (array_key_exists($template, $plugintemplates)) {
 		$plugin = $plugintemplates[$template];
@@ -16,21 +16,27 @@ function RenderTemplate($template, $options=null) {
 	} else
 		$tplroot = BOARD_ROOT.'/layout/';
 
-	if ($mobileLayout) {
+	if ($mobileLayout || $loguser['layout'] == 'mobile') {
 		$tplname = $tplroot.'mobile/'.$template.'.tpl';
 		if (!file_exists($tplname)){
-			if (isset($loguser['layout']))
-				$tplname = $tplroot.$loguser['layout'].$template.'.tpl';
-			elseif (!empty(Settings::get('defaultLayout')))
-				$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
+			if (isset($loguser['layout'])) {
+				$tplname = $tplroot.$loguser['layout'].'/'.$template.'.tpl';
+				if (!file_exists($tplname)) {
+					if (!empty(Settings::get('defaultLayout')))
+						$tplname = $tplroot.Settings::get('defaultLayout').'/'.$template.'.tpl';
+					else
+						$tplname = $tplroot.'bb/'.$template.'.tpl';
+				}
+			} elseif (!empty(Settings::get('defaultLayout')))
+				$tplname = $tplroot.Settings::get('defaultLayout').'/'.$template.'.tpl';
 			else
 				$tplname = $tplroot.'bb/'.$template.'.tpl';
 		}
 	} else {
 		if (isset($loguser['layout']))
-			$tplname = $tplroot.$loguser['layout'].$template.'.tpl';
+			$tplname = $tplroot.$loguser['layout'].'/'.$template.'.tpl';
 		elseif (!empty(Settings::get('defaultLayout')))
-			$tplname = $tplroot.Settings::get('defaultLayout').$template.'.tpl';
+			$tplname = $tplroot.Settings::get('defaultLayout').'/'.$template.'.tpl';
 		else
 			$tplname = $tplroot.'bb/'.$template.'.tpl';
 

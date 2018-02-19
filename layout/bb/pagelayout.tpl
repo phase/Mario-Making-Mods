@@ -138,8 +138,7 @@
 		<table class="layout-table" style="line-height: 1.4em;">
 			<tr>
 			<td style="text-align: left;">
-				{$layout_credits}
-				<!-- {$perfdata} -->
+				<img src="/img/poweredbyblarg.png" style="float: left; margin-right: 3px;">{$layout_credits}
 			</td>
 			<td style="text-align: right;">
 				{$mobileswitch}

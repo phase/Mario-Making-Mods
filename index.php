@@ -216,7 +216,7 @@ $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
 
 $startime = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
 $layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
+'Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
 Page rendered in '.$startime.' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
 
 if($_SERVER["HTTP_X_PJAX"]) {
@@ -306,12 +306,8 @@ if($_SERVER["HTTP_X_PJAX"]) {
         console.log("No it didn't. This happened: ", err)
       });
   }
-  if (window.webkitNotifications) {
-    console.log('Your web browser does support notifications!');
-	if (window.webkitNotifications.checkPermission() == 0) {} else {window.webkitNotifications.requestPermission(function(){});}
-} else {
-    console.log('Your web browser does not support notifications!');
-}
+console.log('Your current theme: <?php echo $theme; ?>');
+console.log('Your current layout: <?php echo $loguser['layout']; ?>');
 </script>
 
 	<?php $bucket = "pageHeader"; include(__DIR__."/lib/pluginloader.php"); ?>
