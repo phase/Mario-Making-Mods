@@ -23,11 +23,12 @@ if ($http->get('hackname')) {
 
 $rFora = Query("select * from {forums} where id = {0}", 32);
 if(NumRows($rFora)) {
-	$forum = Fetch($rFora);
 	if(!HasPermission('forum.viewforum', $forum['id']))
-		return;
+		Kill("You do not have the permission to view the depot.");
+	else
+		$forum = Fetch($rFora);
 } else
-	return;
+	Kill("Whoops. Seems like there were no results for the fields you selected. Why not try different fields?");
 
 $depoturl = 'depot/remaker';
 
@@ -47,10 +48,8 @@ else
 
 $tpp = 12;
 
-$getArgs[] = 'from='.$from;
-
 $rThreads = Query("	SELECT 
-						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,
+						t.id, t.icon, t.title, t.depothide, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -61,16 +60,25 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE t.forum={0} AND p.deleted=0 $command 
+					WHERE t.forum={0} AND p.deleted=0 AND t.depothide=0 $command 
 					ORDER BY p.date DESC LIMIT {1u}, {2u}", $fid, $from, $tpp);
 
 $numonpage = NumRows($rThreads);
 
-$numThemes = FetchResult("select count(*) from threads where forum = 32 ".$countcommand);
+$numThemes = FetchResult("select count(*) from threads where forum = 32 AND depothide=0 ".$countcommand);
 
+$getArgs[] = 'from=';
 $pagelinks = PageLinks(pageLink('remakerdepot', [], implode('&', $getArgs)), $tpp, $from, $numThemes);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
+
+$links = array();
+if($loguserid) {
+	if (HasPermission('forum.postthreads', $fid))
+		$links[] = actionLinkTag(__("Post new submission"), "newthread", $fid, '', $urlname);
+}
+
+MakeCrumbs(array(pageLink('remakerdepot') => 'Super Mario ReMaker Depot'), $links);
 
 echo '<div style="max-width: 90%; display: flex; flex-flow: row wrap; justify-content: space-around;">';
 

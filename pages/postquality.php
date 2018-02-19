@@ -38,15 +38,13 @@ echo '
 		</tr>';
 					
 $c = 1;
-while ($user = Fetch($stuff))
-{
+while ($user = Fetch($stuff)) {
 	$udata = getDataPrefix($user, 'u_');
 	$ulink = userLink($udata);
 	
 	$total = $user['totalposts'];
 	$del = $user['deletedposts'];
 	$ratio = ($del * 100) / $total;
-	//if ($ratio <= 1) break;
 	
 	if ($ratio > 25)
 		$color = '#f00';
@@ -74,5 +72,3 @@ while ($user = Fetch($stuff))
 
 echo '
 	</table>';
-
-?>

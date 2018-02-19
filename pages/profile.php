@@ -109,14 +109,11 @@ $posts = FetchResult("select count(*) from {posts} where user={0}", $id);
 $threads = FetchResult("select count(*) from {threads} where user={0}", $id);
 $averagePosts = sprintf("%1.02f", $user['posts'] / $daysKnown);
 $averageThreads = sprintf("%1.02f", $threads / $daysKnown);
-$deletedposts = FetchResult("SELECT COUNT(*) FROM {posts} p WHERE p.user={0} AND p.deleted!=0 AND p.deletedby!={0}", $id);
-//$score = 0 + (15 * $user['postplusones']) + (5 * $posts) + (10 * $threads) - (20 * $deletedposts);
 
 $minipic = getMinipicTag($user);
 
 
-if($user['rankset'])
-{
+if($user['rankset']) {
 	$currentRank = GetRank($user["rankset"], $user["posts"]);
 	$toNextRank = GetToNextRank($user["rankset"], $user["posts"]);
 	if($toNextRank)
@@ -125,8 +122,7 @@ if($user['rankset'])
 if($user['title'])
 	$title = preg_replace('@<br.*?>\s*(\S)@i', ' &bull; $1', strip_tags(CleanUpPost($user['title'], "", true), "<b><strong><i><em><span><s><del><img><a><br><br/><small>"));
 
-if($user['homepageurl'])
-{
+if($user['homepageurl']) {
 	$nofollow = "";
 	if(Settings::get("nofollow"))
 		$nofollow = "rel=\"nofollow\"";
@@ -139,7 +135,7 @@ if($user['homepageurl'])
 }
 
 $emailField = __("Private");
-if($user['email'] == "")
+if(empty($user['email']))
 	$emailField = __("None given");
 else if ($user['showemail'])
 	$emailField = "<span id=\"emailField\">".__("Public")." <button style=\"font-size: 0.7em;\" onclick=\"$(this.parentNode).load('".URL_ROOT."ajaxcallbacks.php?a=em&amp;id=".$id."');\">".__("Show")."</button></span>";
@@ -154,7 +150,6 @@ $temp[__("Name")] = $minipic . htmlspecialchars($user['displayname'] ? $user['di
 if($title)
 	$temp[__("Title")] = $title;
 $temp[__("User ID")] = $id;
-//$temp[__("Score")] = $score;
 	
 $glist = '<strong class="userlink" style="color: '.htmlspecialchars($ugroup['color_unspec']).';">'.htmlspecialchars($ugroup['name']).'</strong>';
 foreach ($usgroups as $sgroup)
@@ -207,7 +202,7 @@ if($lastPost)
 } else
 	$temp[__("Last post")] = __("Never");
 
-$temp[__("Last view")] = format("{0} ({1} ago)", formatdate($user['lastactivity']), TimeUnits(time() - $user['lastactivity']));
+$temp[__("Last view")] = format("{0} ({1} ago)", formatdate($user['lastactivity']), TimeUnits(time() - $user['lastactivity'])).'<br> at: <a>'.$user['lasturl'].'</a>';
 
 if(HasPermission('admin.viewips'))
 {
@@ -237,9 +232,9 @@ if(file_exists($infofile))
 else
 {
 	$themename = htmlspecialchars($user['theme']);
-	$themeauthor = "";
+	$themeauthor = '';
 }
-$temp[__("Theme")] = $themename;
+$temp[__("Theme")] = $themename.' &middot; '.$themeauthor;
 $temp[__("Items per page")] = Plural($user['postsperpage'], __("post")) . ", " . Plural($user['threadsperpage'], __("thread"));
 $profileParts[__("Presentation")] = $temp;
 

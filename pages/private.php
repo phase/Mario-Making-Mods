@@ -20,26 +20,19 @@ if(isset($_GET['user']) && HasPermission('admin.viewpms') && $_GET['user'] !== $
 
 checknumeric($user);
 
-if(isset($_POST['action']))
-{
+if(isset($_POST['action'])) {
 	if ($_POST['token'] !== $loguser['token']) Kill('No.');
 	
-	if($_POST['action'] == 'multidel' && $_POST['delete'] && !$snoop)
-	{
-		foreach($_POST['delete'] as $pid => $on)
-		{
+	if($_POST['action'] == 'multidel' && $_POST['delete'] && !$snoop) {
+		foreach($_POST['delete'] as $pid => $on) {
 			$rPM = Query("select userto,userfrom,deleted,drafting from {pmsgs} where id = {0} and (userto = {1} or userfrom = {1})", $pid, $loguserid);
-			if(NumRows($rPM))
-			{
+			if(NumRows($rPM)) {
 				$pm = Fetch($rPM);
 				
-				if ($pm['drafting'])
-				{
+				if ($pm['drafting']) {
 					Query("DELETE FROM {pmsgs} WHERE id={0} AND drafting=1", $pid);
 					Query("DELETE FROM {pmsgs_text} WHERE pid={0}", $pid);
-				}
-				else
-				{
+				} else {
 					if ($pm['userto'] == $loguserid) $pm['deleted'] |= 2;
 					if ($pm['userfrom'] == $loguserid) $pm['deleted'] |= 1;
 
@@ -60,19 +53,16 @@ $staffpms = '';
 
 $showWhat = 0;
 
-if(isset($_GET['show']))
-{
+if(isset($_GET['show'])) {
 	$showWhat = (int)$_GET['show'];
-	
+
 	$show = "&show=".$showWhat;
 	if($showWhat == 1)
 		$deleted = 1;
 	else if($showWhat == 2)
 		$drafting = 1;
 	$onclause = 'p.userto';
-}
-else
-{
+} else {
 	$whereFrom = "p.userto = {0}";
 	if (HasPermission('admin.viewstaffpms') && $user==$loguserid) $staffpms = ' OR userto={4}';
 	$onclause = 'p.userfrom';
@@ -122,15 +112,10 @@ while($pm = Fetch($rPM))
 	$pmdata = array();
 	
 	if ($showWhat == 1 && $pm['userto'] == -1)
-	{
 		$pmdata['userlink'] = 'Staff';
-	}
 	else if ($pm['drafting'])
-	{
 		$pmdata['userlink'] = htmlspecialchars($pm['draft_to']);
-	}
-	else
-	{
+	else {
 		$user = getDataPrefix($pm, 'u_');
 		$pmdata['userlink'] = UserLink($user);
 	}
@@ -139,14 +124,14 @@ while($pm = Fetch($rPM))
 		$pmdata['newIcon'] = "<div class=\"statusIcon new\"></div>";
 	else
 		$pmdata['newIcon'] = '';
-		
+
 	if ($pm['drafting'])
 		$pmdata['link'] = actionLinkTag(htmlspecialchars($pm['title']), 'sendprivate', '', 'pid='.$pm['id'].$snoop);
 	else
 		$pmdata['link'] = actionLinkTag(htmlspecialchars($pm['title']), 'showprivate', $pm['id'], substr($snoop,1));
 
 	$pmdata['deleteCheck'] = $snoop ? '' : "<input type=\"checkbox\" name=\"delete[{$pm['id']}]\">";
-	
+
 	$pmdata['formattedDate'] = formatdate($pm['date']);
 
 	$pms[] = $pmdata;
@@ -154,7 +139,7 @@ while($pm = Fetch($rPM))
 
 echo "
 	<form method=\"post\" action=\"\" id=\"pmform\">";
-	
+
 RenderTemplate('pmlist', array(
 	'pms' => $pms,
 	'inbox' => !$showWhat,
@@ -169,5 +154,3 @@ echo "
 ";
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
-
-?>

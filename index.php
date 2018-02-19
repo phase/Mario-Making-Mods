@@ -1,6 +1,5 @@
 <?php
 
-$startime = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
 define('BLARG', 1);
 
 $sidebarshow = false;
@@ -162,10 +161,6 @@ $themefile = "themes/$theme/style.css";
 if(!file_exists(__DIR__.'/'.$themefile))
 	$themefile = "themes/$theme/style.php";
 
-$layout_credits = 
-'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
-Page rendered in '.$startime.' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
-
 $sidebar = '';
 if($sidebarshow == true) {
 		$sidebar = '<td id="main-sidebar">
@@ -218,6 +213,11 @@ if($sidebarshow == true) {
 
 
 $layout_contents = "<div id=\"page_contents\">$layout_contents</div>";
+
+$startime = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
+$layout_credits = 
+'<img src="'.resourceLink('img/poweredbyblarg.png').'" style="float: left; margin-right: 3px;"> Mario Making Mods &middot; by [user=1], StapleButter [url=/credits]& others[/url]
+Page rendered in '.$startime.' seconds (with '.$queries.' SQL queries and '.echo_memory_usage().' of RAM).';
 
 if($_SERVER["HTTP_X_PJAX"]) {
 		RenderTemplate('pjax', array(

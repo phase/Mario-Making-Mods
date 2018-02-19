@@ -3,36 +3,36 @@ if (!defined('BLARG')) die();
 
 CheckPermission('admin.editusers');
 
-if ($_POST['submit']) {
-	if($http->post('option') == 'add') {
-		if ($http->post('userid') && $http->post('groupid')) {
+if(isset($_POST['submit'])) {
+	if($_POST['option'] == 'add') {
+		if ($_POST['userid'] && $_POST['groupid']) {
 			Query("INSERT INTO {secondarygroups} (userid,groupid) VALUES ({0},{1})",
-				$http->post('userid'), $http->post('groupid'));
-			Report("[b]".$loguser['name']."[/] successfully added a secondary group (ID: ".$http->post('groupid').") to user ID #".$http->post('userid').".", false);
+				$_POST['userid'], $_POST['groupid']);
+			Report("[b]".$loguser['name']."[/] successfully added a secondary group (ID: ".$_POST['groupid'].") to user ID #".$_POST['userid'].".", false);
 			Alert(__("Secondary group successfully added."), __("Notice"));
-		} else if (!$http->post('userid') && $http->post('groupid')) {
-			Report("[b]".$loguser['name']."[/] tried to add a secondary group (ID: ".$http->post('groupid').") to someone.", false);
+		} else if (!$_POST['userid'] && $_POST['groupid']) {
+			Report("[b]".$loguser['name']."[/] tried to add a secondary group (ID: ".$_POST['groupid'].") to someone.", false);
 			Alert(__("Please enter a User ID and try again."), __("Notice"));
-		} else if ($http->post('userid') && !$http->post('groupid')) {
-			Report("[b]".$loguser['name']."[/] tried to add a secondary group from user ID #".$http->post('userid').".", false);
+		} else if ($_POST['userid'] && !$_POST['groupid']) {
+			Report("[b]".$loguser['name']."[/] tried to add a secondary group from user ID #".$_POST['userid'].".", false);
 			Alert(__("Please enter a Group ID and try again."), __("Notice"));
-		} else if (!$http->post('userid') && !$http->post('groupid')) {
+		} else if (!$_POST['userid'] && !$_POST['groupid']) {
 			Report("[b]".$loguser['name']."[/] tried to add a secondary group.", false);
 			Alert(__("Please enter a Group ID and a User ID and try again."), __("Notice"));
 		}
-	} elseif($http->post('option') == 'remove') {
-		if ($http->post('userid') && $http->post('groupid')) {
+	} elseif($_POST['option'] == 'remove') {
+		if ($_POST['userid'] && $_POST['groupid']) {
 			Query("DELETE FROM {secondarygroups} (userid,groupid) VALUES ({0},{1})",
-				$http->post('userid'), $http->post('groupid'));
-			Report("[b]".$loguser['name']."[/] successfully removed a secondary group (ID: ".$http->post('groupid').") from user ID #".$http->post('userid')."", false);
+				$_POST['userid'], $_POST['groupid']);
+			Report("[b]".$loguser['name']."[/] successfully removed a secondary group (ID: ".$_POST['groupid'].") from user ID #".$_POST['userid']."", false);
 			Alert(__("Secondary group successfully removed."), __("Notice"));
-		} else if (!$http->post('userid') && $http->post('groupid')) {
-			Report("[b]".$loguser['name']."[/] tried to remove a secondary group (ID: ".$http->post('groupid').") from someone.", false);
+		} else if (!$_POST['userid'] && $_POST['groupid']) {
+			Report("[b]".$loguser['name']."[/] tried to remove a secondary group (ID: ".$_POST['groupid'].") from someone.", false);
 			Alert(__("Please enter a User ID and try again."), __("Notice"));
-		} else if ($http->post('userid') && !$http->post('groupid')) {
-			Report("[b]".$loguser['name']."[/] tried to remove a secondary group from user ID #".$http->post('userid').".", false);
+		} else if ($_POST['userid'] && !$_POST['groupid']) {
+			Report("[b]".$loguser['name']."[/] tried to remove a secondary group from user ID #".$_POST['userid'].".", false);
 			Alert(__("Please enter a Group ID and try again."), __("Notice"));
-		} else if (!$http->post('userid') && !$http->post('groupid')) {
+		} else if (!$_POST['userid'] && !$_POST['groupid']) {
 			Report("[b]".$loguser['name']."[/] tried to remove a secondary group.", false);
 			Alert(__("Please enter a Group ID and a User ID and try again."), __("Notice"));
 		}
@@ -43,14 +43,13 @@ if ($_POST['submit']) {
 $rSecGroups = Query("select userid, {secondarygroups}.groupid, {users}.name username from {secondarygroups} JOIN {users} WHERE userid = id order by userid desc");
 
 $secList = "";
-while($sec = Fetch($rSecGroups))
-{
+while($sec = Fetch($rSecGroups)) {
 	$cellClass = ($cellClass+1) % 2;
 	$secList .= "
 	<tr class=\"cell$cellClass\">
-		<td>".$sec['username']."(".htmlspecialchars($sec['userid']).")</td>
-		<td>".htmlspecialchars($sec['groupid'])."</td>
-	</tr>";
+		<td>".$sec['username'].'('.htmlspecialchars($sec['userid']).')</td>
+		<td>'.htmlspecialchars($sec['groupid']).'</td>
+	</tr>';
 }
 
 print "
@@ -63,7 +62,7 @@ print "
 </table>
 
 <table class=\"outline\"><tr class=\"header1\"><th colspan=\"2\" class=\"center\">Secondary Groups Manager</th></tr>
-<form action=\"/secgroups\" method=\"POST\" onsubmit=\"submit.disabled = true; return true;\">
+<form action=\"\" method=\"POST\" onsubmit=\"submit.disabled = true; return true;\">
 <tr class=\"cell2\"><td>User ID</td><td><input type=\"text\" name=\"userid\"></td></tr>
 <tr class=\"cell1\"><td>Group ID</td><td><input type=\"text\" name=\"groupid\"></td></tr>
 <tr class=\"cell2\"><td>Add/Remove</td><td><select name=\"option\">

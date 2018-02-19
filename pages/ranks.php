@@ -69,7 +69,7 @@ for($i = 0; $i < count($ranks); $i++)
 		if($user['posts'] >= $rank['num'] && $user['posts'] < $nextRank['num'])
 		{
 			$total++;
-			if ($user['lastposttime'] > time() - 2592000)
+			if ($user['lastposttime'] > time() - 2592000 && !$_GET['inactive'])
 				$members[] = UserLink($user);
 			else
 				$inactive++;
@@ -77,7 +77,7 @@ for($i = 0; $i < count($ranks); $i++)
 	}
 	if ($inactive)
 		$members[] = $inactive.' inactive';
-	
+
 	$showRank = HasPermission('admin.viewallranks') || $loguser['posts'] >= $rank['num'] || count($members) > 0;
 	if($showRank)
 		$rdata['rank'] = getRankHtml($rankset, $rank);
@@ -98,5 +98,3 @@ for($i = 0; $i < count($ranks); $i++)
 }
 
 RenderTemplate('ranks', array('ranksets' => $ranksets, 'ranks' => $ranklist, 'description' => $description));
-
-?>

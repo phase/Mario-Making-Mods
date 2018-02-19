@@ -1,7 +1,5 @@
 <?php
 
-MakeCrumbs(array(pageLink('depot') => 'Depot'), $links);
-
 $header = __('Welcome to our depot');
 $text = __('Welcome to the Mario Making Mods Depot. Here, you can find the latest and best hacks from our forums!');
 $submissions = __('Specify the following in your submission.
@@ -142,7 +140,7 @@ if(NumRows($rFora)) {
 $showconsoles = true;
 $depoturl = 'depot';
 
-$numThemes = FetchResult("select count(*) from threads where forum = 3 ".$countcommand);
+$numThemes = FetchResult("select count(*) from threads where forum = 3 AND depothide=0 ".$countcommand);
 
 RenderTemplate('form_lvluserpanel', array('submission' => $submissions));
 $fid = $forum['id'];
@@ -157,7 +155,7 @@ else
 $tpp = 12;
 
 $rThreads = Query("	SELECT 
-						t.id, t.icon, t.title, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
+						t.id, t.icon, t.title, t.closed, t.depothide, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadthemewiiu, t.downloadcostumewiiu, t.downloadtheme3ds,
 						p.id pid, p.date,
 						pt.text,
 						su.(_userfields),
@@ -168,7 +166,7 @@ $rThreads = Query("	SELECT
 						LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision
 						LEFT JOIN {users} su ON su.id=t.user
 						LEFT JOIN {users} lu ON lu.id=t.lastposter
-					WHERE t.forum={0} AND p.deleted=0 $command
+					WHERE t.forum={0} AND p.deleted=0 AND t.depothide=0 $command
 					ORDER BY lastpostdate DESC LIMIT {1u}, {2u}", $fid, $depotpage, $tpp);
 
 $numonpage = NumRows($rThreads);
@@ -177,6 +175,14 @@ $getArgs[] = 'depotpage=';
 $pagelinks = PageLinks(pageLink('depot', [], implode('&', $getArgs)), $tpp, $depotpage, $numThemes);
 
 RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
+
+$links = array();
+if($loguserid) {
+	if (HasPermission('forum.postthreads', $fid))
+		$links[] = actionLinkTag(__("Post new submission"), "newthread", $fid, '', $urlname);
+}
+
+MakeCrumbs(array(pageLink('depot') => 'Super Mario Maker Hacking Depot'), $links);
 
 echo '<div style="max-width: 90%; display: flex; flex-flow: row wrap; justify-content: space-around;">';
 
@@ -211,11 +217,11 @@ while($thread = Fetch($rThreads)) {
 	$pdata['download'] = '';
 	if(!empty($thread['downloadtheme3ds']))
 		$pdata['download'] .= '<a href="'.$thread['downloadtheme3ds'].'">Download 3DS Theme</a>';
-	if(!empty($thread['downloadtheme3ds']) && (!empty(['downloadthemewiiu']) || !empty(['downloadcostumewiiu'])))
+	if(!empty($thread['downloadtheme3ds']) && (!empty($thread['downloadthemewiiu']) || !empty($thread['downloadcostumewiiu'])))
 		$pdata['download'] .= ' | ';
 	if(!empty($thread['downloadthemewiiu']))
 		$pdata['download'] .= '<a href="'.$thread['downloadthemewiiu'].'">Download WiiU Theme</a>';
-	else if($thread['downloadcostumewiiu'] !== '')
+	else if(!empty($thread['downloadcostumewiiu']))
 		$pdata['download'] .= '<a href="'.$thread['downloadcostumewiiu'].'">Download WiiU Costume</a>';
 
 	$pdata['title'] = '<img src="'.$thread['icon'].'"><a href="'.pageLink("entry", array(
