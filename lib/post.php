@@ -160,6 +160,7 @@ define('POST_NORMAL', 0);			// standard post box
 define('POST_PM', 1);				// PM post box
 define('POST_DELETED_SNOOP', 2);	// post box with close/undelete (for mods 'view deleted post' feature)
 define('POST_SAMPLE', 3);			// sample post box (profile sample post, newreply post preview, etc)
+define('POST_DEPOT', 4);			// sample post box (profile sample post, newreply post preview, etc)
 
 // $post: post data (typically returned by SQL queries or forms)
 // $type: one of the POST_XXX constants
@@ -184,7 +185,7 @@ function makePost($post, $type, $params=array()) {
 	if (HasPermission('admin.viewips')) htmlspecialchars($post['ip']);
 	else $post['ip'] = ''; // TODO IP formatting?
 
-	if($post['deleted'] && $type == POST_NORMAL) {
+	if($post['deleted'] && ($type == POST_NORMAL || $type == POST_DEPOT)) {
 		$post['deluserlink'] = UserLink(getDataPrefix($post, 'du_'));
 		$post['delreason'] = htmlspecialchars($post['reason']);
 
@@ -215,7 +216,7 @@ function makePost($post, $type, $params=array()) {
 					$links['undelete'] = actionLinkTag(__("Undelete"), "editpost", $post['id'], "delete=2&key=".$loguser['token']);
 				
 				$links['close'] = "<a href=\"#\" onclick=\"replacePost(".$post['id'].",false); return false;\">".__("Close")."</a>";
-			} else if ($type == POST_NORMAL) {
+			} else if ($type == POST_NORMAL || $type == POST_DEPOT) {
 				if ($notclosed) {
 					if ($loguserid && HasPermission('forum.postreplies', $forum) && !$params['noreplylinks'])
 						$links['quote'] = actionLinkTag(__("Quote"), "newreply", $thread, "quote=".$post['id']);
@@ -328,13 +329,16 @@ function makePost($post, $type, $params=array()) {
 	$post['haslayout'] = false;
 	$post['fulllayout'] = false;
 
-	if(!$isBlocked) {
+	if($type == POST_DEPOT) {
+		$poster['postheader'] = '';
+		$poster['signature'] = '';
+	} else if(!$isBlocked) {
 		$poster['postheader'] = $pltype ? trim($poster['postheader']) : '';
 		$poster['signature'] = trim($poster['signature']);
 		
 		$post['haslayout'] = $poster['postheader']?1:0;
 		$post['fulllayout'] = $poster['fulllayout'] && $post['haslayout'] && ($pltype==2);
-		
+
 		if (!$post['haslayout'] && $poster['signature'])
 			$poster['signature'] = '<div class="signature">'.$poster['signature'].'</div>';
 	} else {

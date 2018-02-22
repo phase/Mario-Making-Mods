@@ -49,7 +49,7 @@
 											<a href="{$url|escape}">{$text}</a> | 
 										{/foreach}
 									{/foreach}
-									<a href="https://discord.gg/btQdJNw">Discord</a>
+									<a href="https://discord.gg/VBExDqv">Discord</a>
 					</td>
 					<td class="smallFonts" style="text-align: center; width: 10%;">
 						{$layout_time}
@@ -58,12 +58,28 @@
 				<tr class="cell2">
 					<td colspan="3" class="smallFonts" style="text-align: center">
 					{if $loguserid}
-						{$loguserlink}  
+						{$loguserlink}:
+					{$numnotifs=count($notifications)}
+					<div id="notifMenuContainer" class="dropdownContainer {if $numnotifs}hasNotifs{else}noNotif{/if}" style="margin-right: 2px;">
+						<div id="notifMenuButton">
+							Notifications
+							<span id="notifCount">{$numnotifs}</span>
+							<i class="icon-caret-down"></i>
+						</div>
+						<ul id="notifList" class="dropdownMenu">
+						{if $numnotifs}
+							{foreach $notifications as $notif}
+								<li>{$notif.text}<br><small>{$notif.formattedDate}</small>
+							{/foreach}
+						{/if}
+						</ul>
+					</div>					
 							{foreach $layout_userpanel as $url=>$text}
 								| <a href="{$url|escape}">{$text}</a>
 							{/foreach}
+							| <a href="#" onclick="$('#logout').submit(); return false;">Log out</a>
 					{else}
-						<a href="{actionLink page='register'}">Register</a>
+						<a href="{actionLink page='register'}">Register</a> | 
 						<a href="{actionLink page='login'}">Log in</a>
 					{/if}
 					</td>

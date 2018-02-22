@@ -117,26 +117,26 @@ if ($loguserid)
 	if ((HasPermission('forum.renameownthreads', $fid) && $thread['user']==$loguserid) || 
 		(HasPermission('mod.renamethreads', $fid) || HasPermission('mod.movethreads', $fid))
 		&& $notclosed)
-		$links[] = actionLinkTag(__("Edit"), "editthread", $tid);
+		$links[] = actionLinkTag(__("Edit"), "editdepotentry", $tid);
 	
 	if (HasPermission('mod.closethreads', $fid))
 	{
 		if($thread['closed'])
-			$links[] = actionLinkTag(__("Open"), "editthread", $tid, "action=open&key=".$loguser['token']);
+			$links[] = actionLinkTag(__("Open"), "editdepotentry", $tid, "action=open&key=".$loguser['token']);
 		else
-			$links[] = actionLinkTag(__("Close"), "editthread", $tid, "action=close&key=".$loguser['token']);
+			$links[] = actionLinkTag(__("Close"), "editdepotentry", $tid, "action=close&key=".$loguser['token']);
 	}
 
 	if (HasPermission('mod.trashthreads', $fid) && Settings::get('trashForum'))
 	{
 		if($forum['id'] != Settings::get('trashForum'))
-			$links[] = actionLinkTag(__("Trash"), "editthread", $tid, "action=trash&key=".$loguser['token']);
+			$links[] = actionLinkTag(__("Trash"), "editdepotentry", $tid, "action=trash&key=".$loguser['token']);
 	}
 	
 	if (HasPermission('mod.deletethreads', $fid) && Settings::get('secretTrashForum'))
 	{
 		if ($forum['id'] != Settings::get('secretTrashForum'))
-			$links[] = actionLinkTagConfirm(__("Delete"), __("Are you sure you want to just up and delete this whole thread?"), "editthread", $tid, "action=delete&key=".$loguser['token']);
+			$links[] = actionLinkTagConfirm(__("Delete"), __("Are you sure you want to just up and delete this whole thread?"), "depotentry", $tid, "action=delete&key=".$loguser['token']);
 	}
 }
 
@@ -182,10 +182,9 @@ if($thread['poll'])
 	$pdata['question'] = htmlspecialchars($poll['question']);
 	$pdata['options'] = array();
 
-	while($option = Fetch($rOptions))
-	{
+	while($option = Fetch($rOptions)) {
 		$odata = array();
-		
+
 		$odata['color'] = htmlspecialchars($option['color']);
 		if($odata['color'] == '')
 			$odata['color'] = $defaultColors[($option['id'] + 9) % 15];
@@ -193,7 +192,7 @@ if($thread['poll'])
 		$chosen = $option['myvote']? '&#x2714;':'';
 
 		if($loguserid && (!$thread['closed'] || HasPermission('mod.closethreads', $fid)) && HasPermission('forum.votepolls', $fid))
-			$label = $chosen." ".actionLinkTag(htmlspecialchars($option['choice']), "thread", $thread['id'], "vote=".$option['id']."&token=".$loguser['token'], $urlname);
+			$label = $chosen." ".actionLinkTag(htmlspecialchars($option['choice']), "depotentry", $thread['id'], "vote=".$option['id']."&token=".$loguser['token'], $urlname);
 		else
 			$label = $chosen." ".htmlspecialchars($option['choice']);
 		$odata['label'] = $label;
@@ -220,12 +219,34 @@ if($thread['poll'])
 Query("insert into {threadsread} (id,thread,date) values ({0}, {1}, {2}) on duplicate key update date={2}", $loguserid, $tid, time());
 
 $total = $thread['replies'] + 1; //+1 for the OP
-$ppp = $loguser['postsperpage'];
-if(!$ppp) $ppp = 20;
+$ppp = $loguser['threadsperpage'];
+if(!$ppp) $ppp = 50;
 if(isset($_GET['from']))
 	$from = $_GET['from'];
 else
 	$from = 0;
+
+$rFirstPost = Query("
+			SELECT
+				p.*,
+				pt.text, pt.revision, pt.user AS revuser, pt.date AS revdate,
+				u.(_userfields), u.(rankset,title,picture,posts,postheader,signature,signsep,lastposttime,lastactivity,regdate,globalblock,fulllayout),
+				ru.(_userfields),
+				du.(_userfields)
+			FROM
+				{posts} p
+				LEFT JOIN {posts_text} pt ON pt.pid = p.id AND pt.revision = p.currentrevision
+				LEFT JOIN {users} u ON u.id = p.user
+				LEFT JOIN {users} ru ON ru.id=pt.user
+				LEFT JOIN {users} du ON du.id=p.deletedby
+			WHERE thread={1}
+			ORDER BY date ASC LIMIT 1", $loguserid, $tid, $from, $ppp);
+
+	while($FirstPost1 = Fetch($rFirstPost)) {
+		$FirstPost1['closed'] = $thread['closed'];
+		$FirstPost1['firstpostid'] = $thread['firstpostid'];
+		MakePost($FirstPost1, POST_NORMAL, array('tid'=>$tid, 'fid'=>$fid));
+	}
 
 $rPosts = Query("
 			SELECT
@@ -240,23 +261,29 @@ $rPosts = Query("
 				LEFT JOIN {users} u ON u.id = p.user
 				LEFT JOIN {users} ru ON ru.id=pt.user
 				LEFT JOIN {users} du ON du.id=p.deletedby
-			WHERE thread={1}
-			ORDER BY date ASC LIMIT {2u}, {3u}", $loguserid, $tid, $from, $ppp);
+			WHERE thread={1} AND p.id <> {4u} 
+			ORDER BY date ASC LIMIT {2u}, {3u}", $loguserid, $tid, $from, $ppp, $thread['firstpostid']);
 $numonpage = NumRows($rPosts);
 
 $pagelinks = PageLinks(actionLink("depotentry", $tid, "from=", $urlname), $ppp, $from, $total);
 
-RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
-
 if(NumRows($rPosts)) {
+	echo '<table class="outline margin">
+	<tr class="header1"><th>Comments</th></tr>
+	<tr class="cell2"><td>';
+	RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
+	echo '</td></tr>';
 	while($post = Fetch($rPosts)) {
+		echo '<tr class="cell1"><td>';
 		$post['closed'] = $thread['closed'];
 		$post['firstpostid'] = $thread['firstpostid'];
-		MakePost($post, POST_NORMAL, array('tid'=>$tid, 'fid'=>$fid));
+		MakePost($post, POST_DEPOT, array('tid'=>$tid, 'fid'=>$fid));
+		echo '</td></tr>';
 	}
+	echo '<tr class="cell2"><td>';
+	RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
+	echo '</td></tr></table>';
 }
-
-RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));
 
 if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'])
 {
@@ -279,10 +306,8 @@ if($loguserid && HasPermission('forum.postreplies', $fid) && !$thread['closed'])
 		else
 			$mod_stick = "<label><input type=\"checkbox\" name=\"unstick\">&nbsp;".__("Unstick", 1)."</label>\n";
 	}
-	
+
 	$questionfield = '';
-	if($tid == 73)
-		$questionfield = "<label><input type=\"checkbox\" name=\"question\">&nbsp;".__("Question", 1)."</label>\n";
 	
 	$moodOptions = "<option selected=\"selected\" value=\"0\">".__("[Default avatar]")."</option>\n";
 	$rMoods = Query("select mid, name from {moodavatars} where uid={0} order by mid asc", $loguserid);

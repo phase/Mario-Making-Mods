@@ -1,3 +1,18 @@
+{if $post.type == $smarty.const.POST_DEPOT}
+  <div style='display:inline-block;'>{$post.userlink} Posted on {$post.formattedDate}</div>
+  <div style='display:inline-block;float:right;'><a href="{actionLink page='post' id=$post.id}">Link</a>
+					{if $post.links.quote} |  {$post.links.quote}  {/if}
+					{if $post.links.edit} |  {$post.links.edit}  {/if}
+					{if $post.links.delete} |  {$post.links.delete}  {/if}
+					{if $post.links.wipe} |  {$post.links.wipe}  {/if}
+					{if $post.links.report} |  {$post.links.report}  {/if}
+					{foreach $post.links.extra as $link}
+						 | {$link}  
+					{/foreach}
+					{if $post.id} |  #{$post.id}  {/if}
+					{if $post.ip} |  {$post.ip}  {/if}</div>
+<div style="height: 4px;"></div><div style="padding-left: 12px;">{$post.contents}</div>
+{else}
 	<table class="{if $post.fulllayout}custompost table{$post.u_id}{else}post{/if} margin" id="post{$post.id}">
 		<tr class="{if $post.fulllayout} topbar{$post.u_id}_3{/if}">
 			<td class="side userlink{if $post.fulllayout} topbar{$post.u_id}_1{/if}">
@@ -62,3 +77,4 @@
 			</td>
 		</tr>
 	</table>
+{/if}

@@ -226,15 +226,26 @@ while($thread = Fetch($rThreads))
 	$tags = ParseThreadTags($thread['title']);
 	
 	$pdata['download'] = '';
-	if(!empty($thread['downloadlevel3ds']))
-		$pdata['download'] .= '<a href="'.$thread['downloadlevel3ds'].'">Download 3DS Level</a>';
-	if(!empty($thread['downloadlevel3ds']) && !empty($thread['downloadlevelwiiu']))
-		$pdata['download'] .= ' | ';
-	if(!empty($thread['downloadlevelwiiu'])) {
-		if (strpos($thread['downloadlevelwiiu'], '://') !== false)
-			$pdata['download'] .= '<a href="'.$thread['downloadlevelwiiu'].'">Download WiiU Level</a>';
-		else
-			$pdata['download'] .= '<a href="https://supermariomakerbookmark.nintendo.net/courses/'.$thread['downloadlevelwiiu'].'">Super Mario Maker Bookmark URL</a>';
+	
+	//SMMDB & BookMark detection
+	if(		!empty($thread['downloadlevel3ds'])
+		 && !empty($thread['downloadlevelwiiu'])
+		 && substr($thread['downloadlevel3ds'], 0, 22 ) === "https://smmdb.ddns.net"
+		 && strpos($thread['downloadlevelwiiu'], '://') == false)
+			$pdata['download'] .=  '<a href="'.$thread['downloadlevel3ds'].'">Download 3DS Level (SMMDB)</a><br>
+									<a href="'.str_ireplace('3ds', 'zip', $thread['downloadlevel3ds']).'">Download WiiU Level (SMMDB)</a><br>
+									<a href="https://supermariomakerbookmark.nintendo.net/courses/'.$thread['downloadlevelwiiu'].'">Super Mario Maker Bookmark URL</a>';
+	else {
+		if(!empty($thread['downloadlevel3ds']))
+			$pdata['download'] .= '<a href="'.$thread['downloadlevel3ds'].'">Download 3DS Level</a>';
+		if(!empty($thread['downloadlevel3ds']) && !empty($thread['downloadlevelwiiu']))
+			$pdata['download'] .= ' | ';
+		if(!empty($thread['downloadlevelwiiu'])) {
+			if (strpos($thread['downloadlevelwiiu'], '://') !== false)
+				$pdata['download'] .= '<a href="'.$thread['downloadlevelwiiu'].'">Download WiiU Level</a>';
+			else
+				$pdata['download'] .= '<a href="https://supermariomakerbookmark.nintendo.net/courses/'.$thread['downloadlevelwiiu'].'">Super Mario Maker Bookmark URL</a>';
+		}
 	}
 
 	$pdata['titles'] = actionLinkTag(__($tags[0]), "depotentry", $thread['id']);

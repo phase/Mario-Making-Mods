@@ -54,13 +54,13 @@ $isHidden = !HasPermission('forum.viewforum', $forum['id'], true);
 $tags = ParseThreadTags($thread['title']);
 $urlname = $isHidden?'':$tags[0];
 
-if($fid == 3) {
+if($forum['id'] == 3) {
 	$depoturl = 'depot';
 	MakeCrumbs(array(pageLink('depot') => 'Super Mario Maker Hacking Depot', actionLink("depotentry", $tid, '', $urlname) => $tags[0], '' => __("Edit Depot Entry")));
-} else if($fid == 7) {
+} else if($forum['id'] == 7) {
 	$depoturl = 'depot/level';
 	MakeCrumbs(array(pageLink('leveldepot') => 'Super Mario Maker Level Depot', actionLink("depotentry", $tid, '', $urlname) => $tags[0], '' => __("Edit Depot Entry")));
-} else if($fid == 32) {
+} else if($forum['id'] == 32) {
 	$depoturl = 'depot/remaker';
 	MakeCrumbs(array(pageLink('remakerdepot') => 'Super Mario ReMaker Depot', actionLink("depotentry", $tid, '', $urlname) => $tags[0], '' => __("Edit Depot Entry")));
 } else

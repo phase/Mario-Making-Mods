@@ -41,9 +41,12 @@ if(!$canMod)
 
 $rFora = Query("select * from {forums} where id={0}", $thread['forum']);
 if(NumRows($rFora)) {
-	if (HasPermission('forum.viewforum', $forum['id']))
-		$forum = Fetch($rFora);
-	else
+	if (HasPermission('forum.viewforum', $forum['id'])) {
+		if($forum['id'] == 3 || $forum['id'] == 7 || $forum['id'] == 32)
+			die(header("Location: ".$_SERVER['HTTP_REFERER'] ?: '/'.actionLink('editdepotentry', $tid, '', $urlname)));
+		else
+			$forum = Fetch($rFora);
+	} else
 		Kill(__('You may not access this forum.'));
 } else
 	Kill(__("Unknown forum ID."));
@@ -154,7 +157,7 @@ elseif($_POST['actionedit'])
 	$isSticky = $canStick ? $_POST['isSticky'] : $thread['sticky'];
 
 	$trimmedTitle = $canRename ? trim(str_replace('&nbsp;', ' ', $_POST['title'])) : 'lolnotempty';
-	if($trimmedTitle != "") {
+	if(!empty($trimmedTitle)) {
 		if ($canRename) {
 			$thread['title'] = $_POST['title'];
 			$thread['description'] = $_POST['description'];
@@ -167,30 +170,12 @@ elseif($_POST['actionedit'])
 				else
 					$iconurl = $_POST['iconurl'];
 			}
-
-			$thread['screenshot'] = $_POST['screenshot'];
-			$thread['downloadtheme3ds'] = $_POST['downloadtheme3ds'];
-			$thread['downloadthemewiiu'] = $_POST['downloadthemewiiu'];
-			$thread['downloadthemepc'] = $_POST['downloadthemepc'];
-			$thread['downloadlevel3ds'] = $_POST['downloadlevel3ds'];
-			$thread['downloadlevelwiiu'] = $_POST['downloadlevelwiiu'];
-			$thread['downloadlevelpc'] = $_POST['downloadlevelpc'];
-			$thread['downloadcostumepc'] = $_POST['downloadcostumepc'];
-			$thread['downloadcostumewiiu'] = $_POST['downloadcostumewiiu'];
-			$thread['style'] = $_POST['style'];
-			$thread['theme'] = $_POST['theme'];
 		} else
 			$iconurl = $thread['icon'];
 
-		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4}, 
-			screenshot={5}, downloadcostumepc={6}, downloadcostumewiiu={7},
-			downloadlevel3ds={8}, downloadlevelpc={9}, downloadlevelwiiu={10},
-			downloadtheme3ds={11}, downloadthemepc={12}, downloadthemewiiu={13}, style={14}, theme={15} 
-			where id={16} limit 1", 
-			$thread['title'], $iconurl, $isClosed, $isSticky, $thread['description'], 
-			$thread['screenshot'], $thread['downloadcostumepc'], $thread['downloadcostumewiiu'],
-			$thread['downloadlevel3ds'], $thread['downloadlevelpc'], $thread['downloadlevelwiiu'],
-			$thread['downloadtheme3ds'], $thread['downloadthemepc'], $thread['downloadthemewiiu'], $thread['style'], $thread['theme'], $tid);
+		$rThreads = Query("update {threads} set title={0}, icon={1}, closed={2}, sticky={3}, description={4} 
+			where id={5} limit 1", 
+			$thread['title'], $iconurl, $isClosed, $isSticky, $tid);
 
 		$ref = $_POST['ref'] ?: '/'.actionLink('thread', $tid, '', $urlname);
 		Report("[b]".$loguser['name']."[/] edited thread [b]".$thread['title']."[/] -> $ref", $isHidden);
@@ -235,9 +220,7 @@ if ($canRename)
 	$check[1] = "";
 	if($iconid == 0) $check[0] = "checked=\"checked\" ";
 	if($iconid == 255)
-	{
 		$check[1] = "checked=\"checked\" ";
-	}
 
 	$iconSettings = "
 					<label>
@@ -250,44 +233,19 @@ if ($canRename)
 	$level = false;
 	$costume = false;
 	$console = false;
-	if($forum['id'] == 7) {
-		$level = true;
-		$console = true;
-	}else if ($forum['id'] == 3) {
-		$costume = true;
-		$console = true;
-	}else if($forum['id'] == 32){
-		$level = true;
-		$costume = true;
-	}
 					
 	$fields['title'] = "<input type=\"text\" id=\"tit\" name=\"title\" size=80 maxlength=\"60\" value=\"".htmlspecialchars($thread['title'])."\">";
 	$fields['description'] = "<input type=\"text\" id=\"des\" name=\"description\" size=80 maxlength=\"50\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['description'])."\">";
-	$fields['screenshot'] = "<input type=\"text\" id=\"sec\" name=\"screenshot\" size=80 maxlength=\"200\" style=\"width: 90%;\" value=\"".htmlspecialchars($thread['screenshot'])."\">";
-	$fields['downloadtheme3ds'] = "<input type=\"text\" id=\"downloadtheme3ds\" name=\"downloadtheme3ds\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadtheme3ds'])."\">";
-	$fields['downloadthemewiiu'] = "<input type=\"text\" id=\"downloadthemewiiu\" name=\"downloadthemewiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemewiiu'])."\">";
-	$fields['downloadthemepc'] = "<input type=\"text\" id=\"downloadthemepc\" name=\"downloadthemepc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadthemepc'])."\">";
-	$fields['downloadlevel3ds'] = "<input type=\"text\" id=\"downloadlevel3ds\" name=\"downloadlevel3ds\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevel3ds'])."\">";
-	$fields['downloadlevelwiiu'] = "<input type=\"text\" id=\"downloadlevelwiiu\" name=\"downloadlevelwiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelwiiu'])."\">";
-	$fields['downloadlevelpc'] = "<input type=\"text\" id=\"downloadlevelpc\" name=\"downloadlevelpc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadlevelpc'])."\">";
-	$fields['downloadcostumewiiu'] = "<input type=\"text\" id=\"downloadcostumewiiu\" name=\"downloadcostumewiiu\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumewiiu'])."\">";
-	$fields['downloadcostumepc'] = "<input type=\"text\" id=\"downloadcostumepc\" name=\"downloadcostumepc\" style=\"width: 90%;\" maxlength=\"200\" value=\"".htmlspecialchars($thread['downloadcostumepc'])."\">";
-	$fields['style'] = '<input type="radio" name="style" value=""> All<br>
-						<input type="radio" name="style" value="smb1"> SMB1<br>
-						<input type="radio" name="style" value="smb3"> SMB3<br>
-						<input type="radio" name="style" value="smw"> SMW<br>
-						<input type="radio" name="style" value="nsmbu"> NSMBU<br>
-						<input type="radio" name="style" value="custom" checked> Custom<br>
-						<input type="radio" name="style" value=""> None';
-	$fields['theme'] = '<input type="radio" name="theme" value="" checked> None 
-						<input type="radio" name="theme" value="grass"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396187499724144640/Screenshot_2017-08-06_at_12.56.45_PM.png"> Grassland 
-						<input type="radio" name="theme" value="under"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188673634467841/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underground 
-						<input type="radio" name="theme" value="water"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188394004283392/Screenshot_2017-08-06_at_12.56.45_PM.png"> Underwater 
-						<input type="radio" name="theme" value="castle"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189460754071553/Screenshot_2017-08-06_at_12.56.45_PM.png"> Castle 
-						<input type="radio" name="theme" value="ghost"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396189134894399508/Screenshot_2017-08-06_at_12.56.45_PM.png"> Ghost House 
-						<input type="radio" name="theme" value="airship"><img src="https://cdn.discordapp.com/attachments/346883750854131715/396188140353617920/Screenshot_2017-08-06_at_12.56.45_PM.png"> Airship 
-						<input type="radio" name="theme" value="custom"> Custom
-';
+	$fields['downloadtheme3ds'] = '';
+	$fields['downloadthemewiiu'] = '';
+	$fields['downloadthemepc'] = '';
+	$fields['downloadlevel3ds'] = '';
+	$fields['downloadlevelwiiu'] = '';
+	$fields['downloadlevelpc'] = '';
+	$fields['downloadcostumewiiu'] = '';
+	$fields['downloadcostumepc'] = '';
+	$fields['style'] = '';
+	$fields['theme'] = '';
 	$fields['icon'] = $iconSettings;
 }
 
@@ -295,7 +253,7 @@ if ($canClose) $fields['closed'] = "<label><input type=\"checkbox\" name=\"isClo
 if ($canStick) $fields['sticky'] = "<label><input type=\"text\" name=\"isSticky\" size=3 value=\"".htmlspecialchars($thread['sticky'])."\"> ".__('Sticky')."</label>";
 if ($canMove) $fields['forum'] = makeForumList('moveTo', $thread['forum']);
 
-$fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\"".__("Save New Thread Settings")."\">";
+$fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\"".__("Save Thread Settings")."\">";
 
 echo "
 	<script src=\"".resourceLink("js/threadtagging.js")."\"></script>

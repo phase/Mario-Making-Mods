@@ -136,7 +136,7 @@ if(!empty($title))
 
 $chat = '';
 if (!HasPermission('admin.nolink'))
-	$chat = '<span class="navButton"><a href="https://discord.gg/btQdJNw">Discord</a></span>';
+	$chat = '<span class="navButton"><a href="https://discord.gg/VBExDqv">Discord</a></span>';
 
 
 //=======================

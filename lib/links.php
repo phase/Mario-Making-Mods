@@ -327,7 +327,7 @@ function absoluteActionLink($action, $id=0, $args="")
 
 function getRequestedURL()
 {
-    return $_SERVER['REQUEST_URI'];
+    return htmlspecialchars($_SERVER['REQUEST_URI']);
 }
 
 

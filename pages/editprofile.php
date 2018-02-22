@@ -181,19 +181,19 @@ if ($editUserMode)
 if ($editUserMode || HasPermission('user.editpostlayout'))
 {
 	$pltext = $pltype ? __('Post layout') : __('Signature');
-	AddPage('layout', $pltext);
+	AddPage('postlayout', $pltext);
 	
-	AddCategory('layout', 'postlayout', $pltext);
+	AddCategory('postlayout', 'postlayout', $pltext);
 	
 	if ($pltype) 
-		AddField('layout', 'postlayout', 'postheader', __('Post header'), 'textarea', array('rows'=>16));
-	AddField('layout', 'postlayout', 'signature', __('Signature'), 'textarea', array('rows'=>16));
+		AddField('postlayout', 'postlayout', 'postheader', __('Post header'), 'textarea', array('rows'=>16));
+	AddField('postlayout', 'postlayout', 'signature', __('Signature'), 'textarea', array('rows'=>16));
 	
-	AddField('layout', 'postlayout', 'signsep', __('Show signature separator'), 'checkbox', array('negative'=>true));
+	AddField('postlayout', 'postlayout', 'signsep', __('Show signature separator'), 'checkbox', array('negative'=>true));
 	
 	// TODO make a per-user permission for this one?
 	if ($pltype == 2) 
-		AddField('layout', 'postlayout', 'fulllayout', __('Apply layout to whole post box'), 'checkbox');
+		AddField('postlayout', 'postlayout', 'fulllayout', __('Apply layout to whole post box'), 'checkbox');
 }
 
 
@@ -217,13 +217,11 @@ $_POST['actionsave'] = (isset($_POST['actionsave']) ? $_POST['actionsave'] : '')
 
 $failed = false;
 
-if($_POST['actionsave'])
-{
+if($_POST['actionsave']) {
 	// catch spamvertisers early
-	if ((time() - $user['regdate']) < 300 && preg_match('@^\w+\d+$@', $user['name']))
-	{
+	if ((time() - $user['regdate']) < 300 && preg_match('@^\w+\d+$@', $user['name'])) {
 		$lolbio = strtolower($_POST['bio']);
-		
+
 		if ((substr($lolbio,0,7) == 'http://'
 				|| substr($lolbio,0,12) == '[url]http://'
 				|| substr($lolbio,0,12) == '[url=http://')
@@ -240,7 +238,7 @@ if($_POST['actionsave'])
 	
 	$passwordEntered = false;
 
-	if($_POST['currpassword'] != "") {
+	if(!empty($_POST['currpassword'])) {
 		$sha = doHash($_POST['currpassword'].SALT.$loguser['pss']);
 		if($loguser['password'] == $sha)
 			$passwordEntered = true;
@@ -266,7 +264,7 @@ if($_POST['actionsave'])
 				$ret = $item['callback']($field, $item);
 				if($ret === true)
 					continue;
-				else if($ret != "") {
+				else if(!empty($ret)) {
 					Alert($ret, __('Error'));
 					$failed = true;
 					$selectedTab = $id;
@@ -316,13 +314,11 @@ if($_POST['actionsave'])
 						$sets[] = $field." = '".SqlEscape($_POST[$field])."'";
 					break;
 				case "birthday":
-					if($_POST[$field.'M'] && $_POST[$field.'D'] && $_POST[$field.'Y'])
-					{
+					if($_POST[$field.'M'] && $_POST[$field.'D'] && $_POST[$field.'Y']) {
 						$val = @mktime(0, 0, 0, (int)$_POST[$field.'M'], (int)$_POST[$field.'D'], (int)$_POST[$field.'Y']);
 						if($val > time())
 							$val = 0;
-					}
-					else
+					} else
 						$val = 0;
 					$sets[] = $field." = '".$val."'";
 					break;
@@ -341,12 +337,9 @@ if($_POST['actionsave'])
 							continue;
 						$usepic = '';
 						$res = HandlePicture($field, ($item['type']=='displaypic') ? 0:1, $usepic);
-						if($res === true)
-						{
+						if($res === true) {
 							$sets[] = $field." = '".SqlEscape($usepic)."'";
-						}
-						else
-						{
+						} else {
 							Alert($res);
 							$failed = true;
 							$item['fail'] = true;
@@ -355,14 +348,12 @@ if($_POST['actionsave'])
 					
 					// delete the old image if needed
 					if ($res === true) {
-						if (substr($user[$field],0,6) == '$root/')
-						{
+						if (substr($user[$field],0,6) == '$root/') {
 							// verify that the file they want us to delete is an internal avatar and not something else
 							$path = str_replace('$root/', DATA_DIR, $user[$field]);
 							if (!file_exists($path.'.internal')) continue;
 							$hash = file_get_contents($path.'.internal');
-							if ($hash === hash_hmac_file('sha256', $path, $userid.SALT))
-							{
+							if ($hash === hash_hmac_file('sha256', $path, $userid.SALT)) {
 								@unlink($path);
 								@unlink($path.'.internal');
 							}
@@ -372,8 +363,7 @@ if($_POST['actionsave'])
 
 				case "bitmask":
 					$val = 0;
-					if ($_POST[$field])
-					{
+					if ($_POST[$field]) {
 						foreach ($_POST[$field] as $bit)
 							if ($bit && array_key_exists($bit, $item['options']))
 								$val |= $bit;
@@ -391,9 +381,6 @@ if($_POST['actionsave'])
 		$sets[] = "theme = '".SqlEscape($_POST['theme'])."'";
 
 	$sets[] = "pluginsettings = '".SqlEscape(serialize($pluginSettings))."'";
-	if ($editUserMode && (int)$_POST['primarygroup'] != $user['primarygroup']) {
-		Report($user['name']."'s primary group was changed from ".$groups[$user['primarygroup']]." to ".$groups[(int)$_POST['primarygroup']]);
-	}
 
 	$query .= join($sets, ", ")." WHERE id = ".$userid;
 	if(!$failed) {
@@ -425,9 +412,7 @@ foreach ($epFields as $catid => $cfields) {
 			elseif ($item['type'] == 'timezone')
 				$item['value'] = ((int)$_POST[$field.'H'] * 3600) + ((int)$_POST[$field.'M'] * 60) * ((int)$_POST[$field.'H'] < 0 ? -1 : 1);
 			elseif ($item['type'] == 'birthday')
-			{
 				$item['value'] = @mktime(0, 0, 0, (int)$_POST[$field.'M'], (int)$_POST[$field.'D'], (int)$_POST[$field.'Y']);
-			}
 			else
 				$item['value'] = $_POST[$field];
 		}
@@ -536,15 +521,12 @@ function HandlePassword($field, $item)
 {
 	global $sets, $user, $loguser, $loguserid;
 	if($_POST[$field] != "" && $_POST['repeat'.$field] != "" && $_POST['repeat'.$field] !== $_POST[$field])
-	{
 		return __("To change your password, you must type it twice without error.");
-	}
 
-	if($_POST[$field] != "" && $_POST['repeat'.$field] == "")
+	if(!empty($_POST[$field]) && empty($_POST['repeat'.$field]))
 		$_POST[$field] = "";
 
-	if($_POST[$field])
-	{
+	if($_POST[$field]) {
 		$newsalt = Shake();
 		$sha = doHash($_POST[$field].SALT.$newsalt);
 		$_POST[$field] = $sha;
@@ -560,16 +542,14 @@ function HandlePassword($field, $item)
 function HandleDisplayname($field, $item)
 {
 	global $user;
-	if(IsReallyEmpty($_POST[$field]) || $_POST[$field] == $user['name']) {
-		// unset the display name if it's really empty or the same as the login name.
+	if(IsReallyEmpty($_POST[$field]) || $_POST[$field] == $user['name'])
 		$_POST[$field] = "";
-	} else {
+	else {
 		$dispCheck = FetchResult("select count(*) from {users} where id != {0} and (name = {1} or displayname = {1})", $user['id'], $_POST[$field]);
-		if($dispCheck) {
+		if($dispCheck)
 			return format(__("The display name you entered, \"{0}\", is already taken."), SqlEscape($_POST[$field]));
-		} else if($_POST[$field] !== ($_POST[$field] = preg_replace('/(?! )[\pC\pZ]/u', '', $_POST[$field]))) {
+		else if($_POST[$field] !== ($_POST[$field] = preg_replace('/(?! )[\pC\pZ]/u', '', $_POST[$field])))
 			return __("The display name you entered cannot contain control characters.");
-		}
 	}
 }
 
@@ -581,15 +561,9 @@ function HandleUsername($field, $item)
 
 	$dispCheck = FetchResult("select count(*) from {users} where id != {0} and (name = {1} or displayname = {1})", $user['id'], $_POST[$field]);
 	if($dispCheck)
-	{
-
 		return format(__("The login name you entered, \"{0}\", is already taken."), SqlEscape($_POST[$field]));
-	}
 	else if($_POST[$field] !== ($_POST[$field] = preg_replace('/(?! )[\pC\pZ]/u', '', $_POST[$field])))
-	{
-
 		return __("The login name you entered cannot contain control characters.");
-	}
 }
 
 
@@ -603,10 +577,7 @@ $themeList = "";
 $themes = array();
 
 // Open a known directory, and proceed to read its contents
-if (is_dir($dir))
-{
-    if ($dh = opendir($dir))
-    {
+if (is_dir($dir) && $dh = opendir($dir)) {
         while (($file = readdir($dh)) !== false)
         {
             if(filetype($dir . $file) != "dir") continue;
@@ -620,19 +591,16 @@ if (is_dir($dir))
 
 		        $themes[$file]['name'] = trim($themeinfo[0]);
 		        $themes[$file]['author'] = trim($themeinfo[1]);
-				$themes[$file]['category'] = trim($themeinfo[2]);
 		    }
 		    else
 		    {
 		        $themes[$file]['name'] = $file;
 		        $themes[$file]['author'] = '';
-				$themes[$file]['category'] = 'Other';
 		    }
 			
 			$themes[$file]['num'] = 0;
-        }
-        closedir($dh);
-    }
+	}
+	closedir($dh);
 }
 
 $countdata = Query("SELECT theme, COUNT(id) num FROM {users} GROUP BY theme");
@@ -657,15 +625,15 @@ foreach($themes as $themeKey => $themeData) {
 	if(is_file("themes/".$themeKey."/preview.css")) {
 		$csspreview = true;
 		$preview = "themes/".$themeKey."/preview.css";
-	} elseif(!is_file($preview)) {
+	} elseif(!is_file($preview))
 		$preview = '';
-	}
 	$preview = resourceLink($preview);
 
 	if($themeAuthor)
 		$byline = nl2br($themeAuthor);
 	else
 		$byline = "";
+
 	if($themeKey == $user['theme'])
 		$selected = " checked=\"checked\"";
 	else
@@ -737,8 +705,7 @@ foreach ($epFields as $catid => $cfields) {
 		if(isset($item['fail'])) 
 			$item['caption'] = "<span style=\"color:#f44;\">{$item['caption']}</span>";
 
-		switch($item['type'])
-		{
+		switch($item['type']) {
 			case "label":
 				$output .= $item['value']."\n";
 				break;
@@ -805,13 +772,13 @@ foreach ($epFields as $catid => $cfields) {
 				foreach($item['options'] as $key => $val)
 					$output .= format("<label><input type=\"radio\" name=\"{1}\" value=\"{0}\"{2}>{3}</label>", $key, $field, $checks[$key], $val).' ';
 				break;
-				
+
 			case "displaypic":
 			case "minipic":
 				$output .= "<input type=\"file\" id=\"".$field."\" name=\"".$field."\">\n";
 				$output .= "<label><input type=\"checkbox\" name=\"remove".$field."\"> ".__("Remove")."</label>\n";
 				break;
-				
+
 			case "number":
 				$output .= "<input type=\"text\" id=\"".$field."\" name=\"".$field."\" value=\"".$item['value']."\" size=\"6\" maxlength=\"4\">";
 				break;
