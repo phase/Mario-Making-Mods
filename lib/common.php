@@ -108,9 +108,11 @@ loadFieldLists();
 include(__DIR__."/loguser.php");
 include(__DIR__."/permissions.php");
 
-if (!empty(Settings::get('maintenance')) && !$loguser['root'] && (!isset($_GET['page']) || $_GET['page'] != 'login'))
-{
-	die('The board is in maintenance mode, please try again later. Our apologies for the inconvenience.');
+if (!empty(Settings::get('maintenance')) && !$loguser['root'] && (!isset($_GET['page']) || $_GET['page'] != 'login')) {	
+	if(Settings::get('maintenance') == '1')
+		die('The board is in maintenance mode, please try again later. Our apologies for the inconvenience.');
+	else
+		die(Settings::get('maintenance'));
 }
 
 include(__DIR__."/notifications.php");
@@ -122,6 +124,7 @@ include(__DIR__."/bbcode_callbacks.php");
 include(__DIR__."/bbcode_main.php");
 include(__DIR__."/post.php");
 include(__DIR__."/onlineusers.php");
+include(__DIR__."/../gfx/lib/rpg.php");
 
 $theme = $loguser['theme'];
 include(__DIR__."/layout.php");

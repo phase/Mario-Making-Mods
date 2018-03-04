@@ -4,11 +4,13 @@ define("BLARG", "1");
 $ajaxPage = true;
 require __DIR__ . '/../lib/common.php';
 
-if(isset($_GET['id']))
+if($_GET['id'])
 	$u = (int)$_GET['id'];
+else if($_GET['u'])
+	$u = (int)$_GET['u'];
 else {
 	if(!$loguserid)
-		die('No user specified! Please specify a user.');
+		die('No user specified! Please either specify a user, or log onto the board.');
 	else
 		$u = $loguserid;
 }

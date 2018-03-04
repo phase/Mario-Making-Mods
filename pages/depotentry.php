@@ -23,13 +23,13 @@ else
 
 $fid = $thread['forum'];
 $rFora = Query("select * from {forums} where id={0}", $fid);
-if(NumRows($rFora))
-	$forum = Fetch($rFora);
-else
+if(NumRows($rFora)) {
+	if (!HasPermission('forum.viewforum', $fid))
+		Kill(__('You may not access this forum.'));
+	else
+		$forum = Fetch($rFora);
+} else
 	Kill(__("Unknown forum ID."));
-	
-if (!HasPermission('forum.viewforum', $fid))
-	Kill(__('You may not access this forum.'));
 
 
 $threadtags = ParseThreadTags($thread['title']);
@@ -38,7 +38,7 @@ $urlname = HasPermission('forum.viewforum', $fid, true) ? $title : '';
 
 if(isset($_GET['vote'])) {
 	CheckPermission('forum.votepolls', $fid);
-	
+
 	if(!$loguserid)
 		Kill(__("You can't vote without logging in."));
 	if($thread['closed'])
@@ -52,16 +52,13 @@ if(isset($_GET['vote'])) {
 
 	$doublevote = FetchResult("select doublevote from {poll} where id={0}", $thread['poll']);
 	$existing = FetchResult("select count(*) from {pollvotes} where poll={0} and choiceid={1} and user={2}", $thread['poll'], $vote, $loguserid);
-	if($doublevote)
-	{
+	if($doublevote) {
 		//Multivote.
 		if ($existing)
 			Query("delete from {pollvotes} where poll={0} and choiceid={1} and user={2}", $thread['poll'], $vote, $loguserid);
 		else
 			Query("insert into {pollvotes} (poll, choiceid, user) values ({0}, {1}, {2})", $thread['poll'], $vote, $loguserid);
-	}
-	else
-	{
+	} else {
 		//Single vote only?
 		//Remove any old votes by this user on this poll, then add a new one.
 		Query("delete from {pollvotes} where poll={0} and user={1}", $thread['poll'], $loguserid);
@@ -274,11 +271,9 @@ if(NumRows($rPosts)) {
 	RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'top'));
 	echo '</td></tr>';
 	while($post = Fetch($rPosts)) {
-		echo '<tr class="cell1"><td>';
 		$post['closed'] = $thread['closed'];
 		$post['firstpostid'] = $thread['firstpostid'];
 		MakePost($post, POST_DEPOT, array('tid'=>$tid, 'fid'=>$fid));
-		echo '</td></tr>';
 	}
 	echo '<tr class="cell2"><td>';
 	RenderTemplate('pagelinks', array('pagelinks' => $pagelinks, 'position' => 'bottom'));

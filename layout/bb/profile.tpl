@@ -49,13 +49,8 @@
 						</td>
 					</tr>
 				</table>
-				<br />
-				<table class="outline margin" style="width: 275px;">
-					<tr class="header1">
-						<th colspan=2>Equipped Items</th>
-					</tr>
-							{$equipitems}
-				</table>
+				{$equipitems}
+				{$badgers}
 			</td>
 		</tr>
 	</table>

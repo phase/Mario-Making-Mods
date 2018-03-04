@@ -1,6 +1,7 @@
 {if $post.type == $smarty.const.POST_DEPOT}
+<tr class="cell1"><td>
   <div style='display:inline-block;'>{$post.userlink} Posted on {$post.formattedDate}</div>
-  <div style='display:inline-block;float:right;'><a href="{actionLink page='post' id=$post.id}">Link</a>
+  <div style='display:inline-block;float:right;'><a href="{actionLink page='depost' id=$post.id}">Link</a>
 					{if $post.links.quote} |  {$post.links.quote}  {/if}
 					{if $post.links.edit} |  {$post.links.edit}  {/if}
 					{if $post.links.delete} |  {$post.links.delete}  {/if}
@@ -12,6 +13,7 @@
 					{if $post.id} |  #{$post.id}  {/if}
 					{if $post.ip} |  {$post.ip}  {/if}</div>
 <div style="height: 4px;"></div><div style="padding-left: 12px;">{$post.contents}</div>
+</td></tr>
 {else}
 	<table class="{if $post.fulllayout}custompost table{$post.u_id}{else}post{/if} margin" id="post{$post.id}">
 		<tr class="{if $post.fulllayout} topbar{$post.u_id}_3{/if}">
@@ -60,6 +62,11 @@
 					{if $post.sidebar.syndrome}{$post.sidebar.syndrome}<br>{/if}
 					{if $post.sidebar.avatar}{$post.sidebar.avatar}<br>{/if}
 					<br>
+					Level: {$post.sidebar.level}<br />
+					{$post.sidebar.bar}<br>
+					EXP: {$post.sidebar.exp}<br />
+					Next: {$post.sidebar.next}<br />
+					<br />
 					Posts: {$post.sidebar.posts}<br>
 					Since: {$post.sidebar.since}<br>
 					{foreach $post.sidebar.extra as $item}

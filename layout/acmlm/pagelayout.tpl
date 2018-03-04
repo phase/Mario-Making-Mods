@@ -1,6 +1,6 @@
 {capture "breadcrumbs"}
 {if $layout_crumbs || $layout_actionlinks}
-	<table class="outline breadcrumbs"><tr class="header1">
+	<table class="breadcrumbs"><tr>
 		<th>
 			{if $layout_actionlinks && count($layout_actionlinks)}
 			<div style="float: right;">
@@ -105,17 +105,15 @@
 	</div>
 
 	</div>
-	<table class="cell2" id="footer" cellspacing="0">
-		<td class="smallFonts" style="text-align: center; width: 50%;">
-			<img src="/img/poweredbyblarg.png" style="margin-right: 3px;"><br>{$layout_credits}
-		</td>
-	</table>
-	<br />
-	<table class="cell2" id="footer" cellspacing="0">
-		<td class="smallFonts" style="text-align: center; width: 10%;">
-			{$mobileswitch}
-		</td>
-	</table>
+		<table class="cell2 outline margin" id="footer" cellspacing="0">
+			<tr>
+			<td style="text-align: left;">
+				<img src="/img/poweredbyblarg.png" style="float: left; margin-right: 3px;">{$layout_credits}
+			</td>
+			<td style="text-align: right;">
+				{$mobileswitch}
+			</td>
+		</table>
 	</div>
 </div>
 </div>

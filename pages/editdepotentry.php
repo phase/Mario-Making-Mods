@@ -310,7 +310,7 @@ $fields['btnEditThread'] = "<input type=\"submit\" name=\"actionedit\" value=\""
 
 echo "
 	<script src=\"".resourceLink("js/threadtagging.js")."\"></script>
-	<form action=\"".htmlentities(actionLink("editthread"))."\" method=\"post\">";
+	<form action=\"".htmlentities(actionLink("editdepotentry"))."\" method=\"post\">";
 	
 RenderTemplate('form_editthread', array(
 	'fields' => $fields,

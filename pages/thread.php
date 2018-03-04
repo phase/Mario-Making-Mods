@@ -21,13 +21,13 @@ else
 
 $fid = $thread['forum'];
 $rFora = Query("select * from {forums} where id={0}", $fid);
-if(NumRows($rFora))
-	$forum = Fetch($rFora);
-else
+if(NumRows($rFora)) {
+	if (!HasPermission('forum.viewforum', $fid))
+		Kill(__('You may not access this forum.'));
+	else
+		$forum = Fetch($rFora);
+} else
 	Kill(__("Unknown forum ID."));
-	
-if (!HasPermission('forum.viewforum', $fid))
-	Kill(__('You may not access this forum.'));
 
 checknumeric($fid);
 checknumeric($tid);
@@ -35,6 +35,13 @@ checknumeric($tid);
 $threadtags = ParseThreadTags($thread['title']);
 $title = $threadtags[0];
 $urlname = HasPermission('forum.viewforum', $fid, true) ? $title : '';
+
+if($loguser['layout'] == 'acmlm') { ?>
+<style>
+.margin { margin-bottom: 0px !important; }
+table.post, table.custompost { margin-bottom: 0px !important; }
+</style>
+<?php }
 
 if(isset($_GET['vote']))
 {

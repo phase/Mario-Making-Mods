@@ -2,13 +2,10 @@
  define("BLARG", "1");
 
  require __DIR__ . '/../lib/common.php';
- require __DIR__ . '/lib/rpg.php';
 
 	$urlfont = $_GET['font'];
 	if($urlfont){
-		if($urlfont == '1')
-			$pickfont = '1';
-		else if($urlfont == '2')
+		if($urlfont == '2')
 			$pickfont = '2';
 		else
 			$pickfont = '';
@@ -25,7 +22,7 @@
 
  $val='posts';
  if($t=='lv')  $val = 'pow('.sqlexpval().',2/7)*100';
- if($t=='ppd') $val = 'posts/('.ctime().'-regdate)*8640000';
+ if($t=='ppd') $val = 'posts/('.time().'-regdate)*8640000';
 
  if($s<0){
    $u=-$s;
@@ -42,24 +39,24 @@ $users = Query("SELECT id, name, displayname, $val val "
 
  Header('Content-type:image/png');
  $img = ImageCreate(512,($n+2)*8);
- $c[bg]    =ImageColorAllocate($img, 40, 40, 90);
- $c[bxb0]  =ImageColorAllocate($img,  0,  0,  0);
- $c[bxb1]  =ImageColorAllocate($img,200,170,140);
- $c[bxb2]  =ImageColorAllocate($img,155,130,105);
- $c[bxb3]  =ImageColorAllocate($img,110, 90, 70);
+ $c['bg']    =ImageColorAllocate($img, 40, 40, 90);
+ $c['bxb0']  =ImageColorAllocate($img,  0,  0,  0);
+ $c['bxb1']  =ImageColorAllocate($img,200,170,140);
+ $c['bxb2']  =ImageColorAllocate($img,155,130,105);
+ $c['bxb3']  =ImageColorAllocate($img,110, 90, 70);
  for($i=0;$i<100;$i++)
    $c[$i]  =ImageColorAllocate($img, 10, 16, 60+$i/2);
- $c[bar][1]=ImageColorAllocate($img,255,189,222);
- $c[bar][2]=ImageColorAllocate($img,231,  0, 90);
- $c[bar][3]=ImageColorAllocate($img,255,115,181);
- $c[bar][4]=ImageColorAllocate($img,255,115, 99);
- $c[bar][5]=ImageColorAllocate($img,255,156, 57);
- $c[bar][6]=ImageColorAllocate($img,255,231,165);
- $c[bar][7]=ImageColorAllocate($img,173,231,255);
- $c[hlit]  =ImageColorAllocate($img, 47, 63,191);
+ $c['bar'][1]=ImageColorAllocate($img,255,189,222);
+ $c['bar'][2]=ImageColorAllocate($img,231,  0, 90);
+ $c['bar'][3]=ImageColorAllocate($img,255,115,181);
+ $c['bar'][4]=ImageColorAllocate($img,255,115, 99);
+ $c['bar'][5]=ImageColorAllocate($img,255,156, 57);
+ $c['bar'][6]=ImageColorAllocate($img,255,231,165);
+ $c['bar'][7]=ImageColorAllocate($img,173,231,255);
+ $c['hlit']  =ImageColorAllocate($img, 47, 63,191);
  ImageColorTransparent($img,0);
 
- box(0,0,64,$n+2);
+ box(0,0,64,$n+2, 0);
 
  $fontY=fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
  $fontR=fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);

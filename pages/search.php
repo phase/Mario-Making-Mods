@@ -178,7 +178,7 @@ if(isset($_GET['q']) || isset($_POST['q'])) {
 			LIMIT {2u},{3u}", $results, $viewableforums, $from, $tpp);
 
 		if(NumRows($search)) {
-			$results = "";
+			$results = '';
 			while($result = Fetch($search)) {
 				$r = [];
 
@@ -241,7 +241,7 @@ function MakeSnippet($text, $terms, $title = false) {
 			$line = htmlspecialchars($pre.$found.$post);
 		}
 		$line = trim($line);
-		if($line == "")
+		if(empty($line))
 			continue;
 		$pat2 = "/(".$terms.")/i";
 		$line = preg_replace($pat2, "<strong>\\1</strong>", $line);

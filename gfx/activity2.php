@@ -1,92 +1,108 @@
 <?php
-define("BLARG", "1");
+ define("BLARG", "1");
 
-require __DIR__ . '/../lib/common.php';
-require __DIR__ . '/lib/fontlib.php';
-require __DIR__ . '/lib/ringbuf.php';
+ require __DIR__ . '/../lib/common.php';
+ 
+ 	$user['regdate']	= fetchResult("SELECT MIN(`regdate`) FROM users WHERE regdate > 0") or die();
+	$max				= ceil((fetchResult("SELECT MAX(`posts`) FROM users") + 1) / 50) * 50;
 
-$im=imagecreatetruecolor(1100,340);
+	$vd = date('m-d-y', $user['regdate']);
+	$dd = mktime(0,0,0,substr($vd,0,2),substr($vd,3,2),substr($vd,6,2));
 
-imagealphablending($im,FALSE);
-imagesavealpha($im,TRUE);
+	$days = floor((time()-$dd)/86400);
+	$scalex	= 1;
+	$scaley	= 20;
+	$m = $max / $scaley;
 
-$cblank=imagecolorallocatealpha($im,0,0,0,127);
-$cwhite=imagecolorallocatealpha($im,205,205,255,80);
-$ch1=imagecolorallocatealpha($im,0,0,0,100);
-$ch2=imagecolorallocatealpha($im,255,255,255,120);
-$c1=imagecolorallocatealpha($im,50,50,255,76);
-$c2=imagecolorallocatealpha($im,100,100,255,0);
-$c3=imagecolorallocatealpha($im,100,100,255,96);
+	$img = ImageCreateTrueColor($days * $scalex,$m);
+	$c['bg']  = ImageColorAllocate($img,  0,  0,  0);
+	$c['bg1'] = ImageColorAllocate($img,  0,  0, 60);
+	$c['bg2'] = ImageColorAllocate($img,  0,  0, 80);
+	$c['bg3'] = ImageColorAllocate($img, 40, 40,100);
+	$c['mk1'] = ImageColorAllocate($img, 60, 60,130);
+	$c['mk2'] = ImageColorAllocate($img, 80, 80,150);
+	$c['bar'] = ImageColorAllocate($img,250,190, 40);
+	$c['pt']  = ImageColorAllocate($img,250,250,250);
 
-$activity2font = __DIR__ . '/lib/verdana.ttf';
+	for($i=0;$i<$days;$i++){
+		$num=date('m',$dd+$i*86400)%2+1;
+		if(date('m-d',$dd+$i*86400)=='01-01') $num=3;
+		ImageFilledRectangle($img,$i * $scalex,$m,($i + 1) * $scalex - 2,0,$c["bg$num"]);
+	}
 
-imagefilledrectangle($im,0,0,1100,340,$cblank);
+	for($i=0;$i<=($m / 50);$i++){
+		ImageLine($img,0,$m-$i*100+50,($days + 1) * $scalex - 1, $m-$i*100+50, $c['mk1']);
+		ImageLine($img,0,$m-$i*100,   ($days + 1) * $scalex - 1, $m-$i*100,    $c['mk2']);
+		imagestring($img, 3, 3, $m-$i*100+1,  ($i * 100)      * $scaley, $c['bg']);
+		imagestring($img, 3, 3, $m-$i*100+51, ($i * 100 - 50) * $scaley, $c['bg']);
+		imagestring($img, 3, 2, $m-$i*100,    ($i * 100)      * $scaley, $c['mk2']);
+		imagestring($img, 3, 2, $m-$i*100+50, ($i * 100 - 50) * $scaley, $c['mk1']);
+	}
 
-/* background */
-imagealphablending($im,TRUE);
-for($i=0;$i<320;$i+=20) {
-	imagefilledrectangle($im,0,$i,1100,$i+9,$ch1);
-	imagettftext($im,7,0, 1034, $i+14, $cwhite, $activity2font, (310-$i)/5);
-	imagefilledrectangle($im,1024,$i+10,1028,$i+10,$cwhite);
+	$users	= array();
+	$userq	= query("SELECT id, name FROM `users` ORDER BY `posts` DESC LIMIT 0, 10");
+	while ($u = fetch($userq))
+		$users[$u['id']]	= array('name' => $u['name'], 'color' => imagecolorallocate($img, rand(100,255), rand(100,255), rand(100,255)));
+
+	$z = count($users);
+	$namespace = 12;
+
+	imagerectangle(      $img, 61, 11, 174, 15 + $z * $namespace, $c['bg']);
+	imagefilledrectangle($img, 60, 10, 173, 14 + $z * $namespace, $c['bg2']);
+	imagerectangle(      $img, 60, 10, 173, 14 + $z * $namespace, $c['mk2']);
+
+	$z	= 0;
+
+	$data = getdata(array_keys($users));
+	foreach($users as $uid => $userx) {
+		drawdata($data[$uid], $userx['color']);
+		imageline($img, 66, $z * $namespace + 19, 76, $z * $namespace + 19, $c['bg']);
+		imageline($img, 65, $z * $namespace + 18, 75, $z * $namespace + 18, $userx['color']);
+		imagestring($img, 2, 80 + 1, $z * $namespace + 12, $userx['name'], $c['bg']);
+		imagestring($img, 2, 80,     $z * $namespace + 11, $userx['name'], $userx['color']);
+		$z++;
+	}
+
+	Header('Content-type:image/png');
+	ImagePNG($img);
+	ImageDestroy($img);
+
+function drawdata($p, $color) {
+	global $days, $scalex, $m, $img;
+	$oldy = $m;
+	for ($i=0;$i<$days;$i++){
+		$y		= $m-$p[$i];
+		$x		= $i * $scalex;
+		if (!$p[$i]) {
+			$y	 = $oldy;
+		}
+		imageline($img, $x, $oldy, $x + $scalex - 1, $y, $color);
+		$oldy	= $y;
+	}
 }
-for($i=0;$i<1100;$i+=128) imagefilledrectangle($im,$i,0,$i+64,320,$ch1);
-imagealphablending($im,FALSE);
-imagefilledrectangle($im,0,320,1100,340,$ch2);
 
-$u = checknumeric($_GET['u']);
+function getdata($users) {
+	global $sql, $dd, $scaley, $days;
 
+	$q = query(
+		"SELECT user, FROM_UNIXTIME(date, '%Y-%m-%d') day, count(*) c ".
+		"FROM posts WHERE user IN (".implode(',',$users).") GROUP BY user, day ORDER BY user, day",
+		'day');
 
-$n = fetchResult("SELECT name FROM users WHERE id=$u");
-imagettftext($im,7,0,7,30,$cwhite, $activity2font, "Activity stats for $n\n  bold: 8-day average\n  thin: daily postcount");
+	$tmp = array();
+	$y = array();
 
-$stats=query('SELECT FROM_UNIXTIME(p.date,"%y-%m-%d") date, (FLOOR(p.date/(24*60*60))) q, COUNT(*) c FROM posts p WHERE p.user='.$u.' GROUP BY FLOOR(p.date/(24*60*60)) UNION SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),"%y-%m-%d") date, (FLOOR(UNIX_TIMESTAMP()/(24*60*60))+1) q, 0 c');
-$x=0;
-$y=0; $yold=0;
-$abuf=new ringbuf;
-$abuf->size=8;
-imagealphablending($im,TRUE);
-$day=fetch($stats);
-$yold=$day[c];
-$q=$day[q]-1;
-do{
-  $x++;
-  $y=$day[c];
-  while($q+1 != $day[q]) {
-    ++$q; ++$x; $abuf->push(0);
-    imageline($im,$x,320- $abuf->get()*5,$x,320,$c1);
-    imageline($im,$x-1,320-$yold*5 -1,$x-0,320-$abuf->get()*5 -1,$c3);
-    imageline($im,$x-1,320-$yold*5 +1,$x-0,320-$abuf->get()*5 +1,$c3);
-    imageline($im,$x-1,320-$yold*5,   $x-0,320-$abuf->get()*5   ,$c2);
-    if(!(($x-2)%64)) {
-      imagettftext($im,7,0, $x, 10, $cwhite, $activity2font, $day[date]);
-    }
-    $yold=$abuf->get();
-  }
-  $q=$day[q];
-  $abuf->push($y);
+	while ($r = fetch($q, MYSQL_ASSOC))
+		$tmp[$r['user']][$r['day']] = $r;
 
-  imageline($im,$x,320- $abuf->get()*5,$x,320- $y*5,$c1);
-  
-  imageline($im,$x-1,320-$yold*5 -1,$x-0,320-$abuf->get()*5 -1,$c3);
-  imageline($im,$x-1,320-$yold*5 +1,$x-0,320-$abuf->get()*5 +1,$c3);
-  imageline($im,$x-1,320-$yold*5,   $x-0,320-$abuf->get()*5   ,$c2);
+	for($i=0; $i < $days; ++$i) {
+		$dk = date('Y-m-d',$dd+$i*86400);
+		foreach ($tmp as $uid => $qdata) {
+			if (!array_key_exists($dk, $qdata)) continue;
 
-  if(!(($x-1)%64)) {
-  	imagettftext($im,7,0, $x, 10, $cwhite, $activity2font, $day[date]);
-  }
-
-  $users=$day[users];
-  $posts=$day[posts];
-  $threads=$day[threads];
-  $views=$day[views];
-  $yold=$abuf->get();
-}while($day=fetch($stats));
-
-imagealphablending($im,FALSE);
-imagesavealpha($im,TRUE);
-
-header('Content-type: image/png');
-
-imagepng($im);
-
-?>
+			$y[$uid] += $qdata[$dk]['c'];
+			$resp[$uid][$i] = $y[$uid] / $scaley;
+		}
+	}
+	return $resp;
+}

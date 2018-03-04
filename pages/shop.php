@@ -1,7 +1,5 @@
 <?php
 
-include BOARD_ROOT.'/gfx/lib/rpg.php';
-
   $rdmsg="";
 
 $rURPG = Query("select * from {usersrpg} where id = {0}",$loguserid);
@@ -261,7 +259,7 @@ print       "<br>
 
         $items = query('SELECT * FROM items '
                           ."WHERE (cat=$cat OR cat=0) AND `hidden` <= $seehidden "
-                          .'ORDER BY type,coins');
+                          .'ORDER BY coins, name');
 
         print "<table cellspacing=\"0\" class=\"c1 outline margin\">
 ".            "  <tr class=\"header1\">
@@ -282,8 +280,8 @@ print       "<br>
           elseif(!$item[id] && !$eq[e])									$comm = '-';
           else															$comm = $preview;
 
-          if($item[id]==$eqitem[id]) $color = ' class=equal';
-          elseif($item[coins]>$GP)   $color = ' class=disabled';
+          if($item[id]==$eqitem[id] && $item[id] !== 0) $color = ' class=equal';
+          elseif($item[coins]>$GP || $item[id] == 0)   $color = ' class=disabled';
           else                       $color = '';
           $atrlist = '';
           for($i=0;$i<9;$i++){

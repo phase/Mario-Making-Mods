@@ -242,7 +242,7 @@ function makePost($post, $type, $params=array()) {
 					if (HasPermission('forum.reportposts', $forum))
 						$links['report'] = actionLinkTag(__('Report'), 'reportpost', $post['id']);
 				}
-				
+
 				// plugins should add to $extraLinks
 				$bucket = "post-topbar"; include(__DIR__."/pluginloader.php");
 			}
@@ -315,13 +315,19 @@ function makePost($post, $type, $params=array()) {
 	$sidebar['lastview'] = $lastview;
 	$sidebar['posterID'] = $poster['id'];
 
+	$sidebar['level'] = getstats2($poster['id'])['lvl'];
+	$sidebar['exp'] = getstats2($poster['id'])["exp"];
+	$sidebar['next'] = calcexpleft(getstats2($poster['id'])["exp"]);
+	
+	$sidebar['bar'] = drawrpglevelbar(getstats2($poster['id'])["exp"]);
+
 	if($poster['lastactivity'] > time() - 300)
 		$sidebar['isonline'] = __("User is <strong>online</strong>");
 
 	$sidebarExtra = array();
 	$bucket = "sidebar"; include(__DIR__."/pluginloader.php");
 	$sidebar['extra'] = $sidebarExtra;
-	
+
 	$post['sidebar'] = $sidebar;
 
 	// OTHER STUFF
@@ -329,7 +335,7 @@ function makePost($post, $type, $params=array()) {
 	$post['haslayout'] = false;
 	$post['fulllayout'] = false;
 
-	if($type == POST_DEPOT) {
+	if($type == POST_DEPOT || $isBlocked) {
 		$poster['postheader'] = '';
 		$poster['signature'] = '';
 	} else if(!$isBlocked) {
@@ -341,9 +347,6 @@ function makePost($post, $type, $params=array()) {
 
 		if (!$post['haslayout'] && $poster['signature'])
 			$poster['signature'] = '<div class="signature">'.$poster['signature'].'</div>';
-	} else {
-		$poster['postheader'] = '';
-		$poster['signature'] = '';
 	}
 
 	$post['contents'] = makePostText($post, $poster);

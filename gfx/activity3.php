@@ -10,7 +10,6 @@
  $alen				= ($_GET['len'] ? $_GET['len'] : 30);
 
  $alen				= min(max(7, $alen), 90);
-// $max				= 5500;
 
  $vd=date('m-d-y', $user['regdate']);
  $dd=mktime(0,0,0,substr($vd,0,2),substr($vd,3,2),substr($vd,6,2));

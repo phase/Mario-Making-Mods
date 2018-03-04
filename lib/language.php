@@ -34,7 +34,7 @@ function __($english, $flags = 0)
 			$final = $languagePack[$eDec];
 		elseif(array_key_exists($english, $languagePack))
 			$final = $languagePack[$english];
-		if($final == "")
+		if(empty($final))
 			$final = $english;
 	}
 	else

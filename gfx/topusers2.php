@@ -2,7 +2,6 @@
  define("BLARG", "1");
 
  require __DIR__ . '/../lib/common.php';
- require __DIR__ . '/lib/rpg.php';
 
 	if ($_GET['order'])
 		$orderby = "`cnt`";
@@ -11,9 +10,7 @@
 
 	$urlfont = $_GET['font'];
 	if($urlfont){
-		if($urlfont == '1')
-			$pickfont = '1';
-		else if($urlfont == '2')
+		if($urlfont == '2')
 			$pickfont = '2';
 		else
 			$pickfont = '';
@@ -33,38 +30,38 @@
 
 
  $img=ImageCreateTrueColor(512,192);
- $c[bg]    =ImageColorAllocate($img, 40, 40, 90);
- $c[bxb0]  =ImageColorAllocate($img,  0,  0,  0);
- $c[bxb1]  =ImageColorAllocate($img,200,170,140);
- $c[bxb2]  =ImageColorAllocate($img,155,130,105);
- $c[bxb3]  =ImageColorAllocate($img,110, 90, 70);
+ $c['bg']    =ImageColorAllocate($img, 40, 40, 90);
+ $c['bxb0']  =ImageColorAllocate($img,  0,  0,  0);
+ $c['bxb1']  =ImageColorAllocate($img,200,170,140);
+ $c['bxb2']  =ImageColorAllocate($img,155,130,105);
+ $c['bxb3']  =ImageColorAllocate($img,110, 90, 70);
  for($i=0;$i<100;$i++)
    $c[$i]  =ImageColorAllocate($img, 65+$i/2, 16, 25+$i/4);
- $c[bar][1]=ImageColorAllocate($img,255,198,222);
- $c[bar][2]=ImageColorAllocate($img,255,115,181);
- $c[bar][3]=ImageColorAllocate($img,255,156, 57);
- $c[bar][4]=ImageColorAllocate($img,255,231,165);
- $c[bar][5]=ImageColorAllocate($img,173,231,255);
- $c[bar][6]=ImageColorAllocate($img, 57,189,255);
- $c[bar][7]=ImageColorAllocate($img, 75,222, 75);
+ $c['bar'][1]=ImageColorAllocate($img,255,198,222);
+ $c['bar'][2]=ImageColorAllocate($img,255,115,181);
+ $c['bar'][3]=ImageColorAllocate($img,255,156, 57);
+ $c['bar'][4]=ImageColorAllocate($img,255,231,165);
+ $c['bar'][5]=ImageColorAllocate($img,173,231,255);
+ $c['bar'][6]=ImageColorAllocate($img, 57,189,255);
+ $c['bar'][7]=ImageColorAllocate($img, 75,222, 75);
 
    $c[gridline]  =ImageColorAllocateAlpha($img, 200,110,100, 100);
    $c[alternate]  =ImageColorAllocateAlpha($img,   0,  0,  0, 110);
 
 
- box(0,1,64,23); //44*8=352
+ box(0,1,64,23, 0); //44*8=352
 
  $fontB=fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
  $fontR=fontc(255,235,200, 255,210,160,  0, 0, 0, $pickfont);
  $fontW=fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 
- box(1,0,11,3); //44*8=352
+ box(1,0,11,3, 0); //44*8=352
  twrite($fontW,  2,  1, 0,"User", $pickfont);
 
- box(13,0,28,3); //44*8=352
+ box(13,0,28,3,0); //44*8=352
  twrite($fontW, 14,  1, 0,"Total", $pickfont);
 
- box(42,0,21,3); //44*8=352
+ box(42,0,21,3, 0); //44*8=352
  twrite($fontW, 43,  1, 0,"Today", $pickfont);
 
  // more dramatic, better for lower post ranges

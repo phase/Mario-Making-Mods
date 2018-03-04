@@ -306,8 +306,6 @@ if($_SERVER["HTTP_X_PJAX"]) {
         console.log("No it didn't. This happened: ", err)
       });
   }
-console.log('Your current theme: <?php echo $theme; ?>');
-console.log('Your current layout: <?php echo $loguser['layout']; ?>');
 </script>
 
 	<?php $bucket = "pageHeader"; include(__DIR__."/lib/pluginloader.php"); ?>

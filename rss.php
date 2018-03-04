@@ -6,14 +6,19 @@ function fixyoutube($m) {
 	$url = $m[1];
 	if (substr($url,0,4) != 'http')
 		$url = 'http://www.youtube.com/watch?v='.$url;
-	
+
 	return '<a href=\"'.htmlspecialchars($url).'\">(video)</a>';
 }
 
 require(__DIR__.'/lib/common.php');
 
-$fid = Settings::get('newsForum');
+if(!$_GET['forum'])
+	$fid = Settings::get('newsForum');
+else
+	$fid = checknumeric($_GET['forum']);
+
 $rFora = Query("select * from {forums} where id = {0}", $fid);
+
 if(NumRows($rFora)){
 	if(HasPermission('forum.viewforum', $fid))
 		$forum = Fetch($rFora);
@@ -25,8 +30,13 @@ if(NumRows($rFora)){
 
 header('Content-type: application/rss+xml');
 
-$title = Settings::get('rssTitle');
-$desc = Settings::get('rssDesc');
+if(!$_GET['forum']) {
+	$title = Settings::get('rssTitle');
+	$desc = Settings::get('rssDesc');
+} else {
+	$title = $forum['title'];
+	$desc = $forum['description'];
+}
 
 $url = "http".($ishttps?'s':'')."://{$_SERVER['SERVER_NAME']}{$serverport}";
 $fullurl = getServerURLNoSlash($ishttps);

@@ -34,10 +34,12 @@ $canComment = (HasPermission('user.postusercomments') && $user['primarygroup'] !
 
 if($loguserid && $_REQUEST['token'] == $loguser['token']) {
 	if($_GET['block']) {
-		if($_GET['block'] !== 0)
-			$rBlock = Query("insert into {blockedlayouts} (user, blockee) values ({0}, {1})", $id, $loguserid);
+		$rBlock = Query("select * from {blockedlayouts} where user={0} and blockee={1}", $id, $loguserid);
+		$isBlocked = NumRows($rBlock);
+		if($isBlocked)
+			$rBlockAction = Query("delete from {blockedlayouts} where user={0} and blockee={1} limit 1", $id, $loguserid);
 		else
-			$rBlock = Query("delete from {blockedlayouts} where user={0} and blockee={1} limit 1", $id, $loguserid);
+			$rBlockAction = Query("insert into {blockedlayouts} (user, blockee) values ({0}, {1})", $id, $loguserid);
 		die(header("Location: ".pageLink("profile", array(
 				'id' => $id,
 				'name' => slugify($user['name'])
@@ -99,7 +101,7 @@ if($loguserid)
 		$blockLayoutLink = pageLinkTag($blocktext, "profile", array(
 				'id' => $id,
 				'name' => slugify($user['name'])
-			), "block=1&token={$loguser['token']}");
+			), "block=0&token={$loguser['token']}");
 }
 
 $daysKnown = (time()-$user['regdate'])/86400;
@@ -252,20 +254,6 @@ if(count($temp))
 if ($user['bio'] && $mobileLayout)
 	$profileParts[__('Bio')] = CleanUpPost($user['bio']);
 
-$badgersR = Query("select * from {badges} where owner={0} order by color", $id);
-if(NumRows($badgersR))
-{
-	$badgers = "";
-	$colors = array("bronze", "silver", "gold", "platinum");
-	while($badger = Fetch($badgersR)){
-		if ($badger['color'] == '1' || $badger['color'] == '2' || $badger['color'] == '3' || $badger['color'] == '4')
-			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
-		else
-			$badgers .= Format("<img src=\"{0}\" alt=\"{1}\"> ", $badger['color'], $badger['name']);
-	}
-	$profileParts[__("General information")][__('Badges')] = $badgers;
-}
-
 
 $bucket = "profileTable"; include(BOARD_ROOT."lib/pluginloader.php");
 
@@ -340,11 +328,13 @@ else
 
 $rpgstatus = resourceLink("gfx/rpgstatus.php")."?u=".$id."&color=".$imagecolor;
 
-$equipitems = "<!-- test -->";
+$eqitemsR = query("SELECT * FROM usersrpg WHERE id='$id'");
+if(NumRows($eqitemsR)) {
+	$equipitems = '<table class="outline margin"><tr class="header1"><th colspan=2>Equipped Items</th></tr>';
 
     $shops   = query('SELECT * FROM itemcateg ORDER BY corder');
-	$eq      = fetch(query("SELECT * FROM usersrpg WHERE id='$id'"));
-    $eqitems = query("SELECT * FROM items WHERE id='$eq[eq1]' OR id='$eq[eq2]' OR id='$eq[eq3]' OR id='$eq[eq4]' OR id='$eq[eq5]' OR id='$eq[eq6]'");
+	$eq      = fetch($eqitemsR);
+    $eqitems = query("SELECT * FROM items WHERE id='$eq[eq1]' OR id='$eq[eq2]' OR id='$eq[eq3]' OR id='$eq[eq4]' OR id='$eq[eq5]' OR id='$eq[eq6]' OR id='$eq[eq7]' OR id='$eq[eq8]'");
 
    while($item = fetch($eqitems)){
    $items[$item[id]] = $item;
@@ -353,6 +343,24 @@ $equipitems = "<!-- test -->";
    while($shop = fetch($shops)) {
      $equipitems .= "<tr class=\"cell2\"><td width=\"cell1\">".$shop['name']."</td><td><a href=\"".actionLink("shop")."?action=desc&id=".$eq['eq'.$shop['id']]."\">".$items[$eq['eq'.$shop['id']]]['name']."</a></td></tr>";
     }
+	$equipitems .= '</table>';
+}
+
+$badgersR = Query("select * from {badges} where owner={0} order by color", $id);
+if(NumRows($badgersR))
+{
+	$badgers = '<table class="outline margin"><tr class="header1"><th>User Badges</th></tr>';
+	$colors = array("bronze", "silver", "gold", "platinum");
+	while($badger = Fetch($badgersR)){
+		$badgers .= '<tr class="cell1"><td>';
+		if ($badger['color'] == '1' || $badger['color'] == '2' || $badger['color'] == '3' || $badger['color'] == '4')
+			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
+		else
+			$badgers .= Format("<img src=\"{0}\" alt=\"{1}\"> ", $badger['color'], $badger['name']);
+		$badgers .= '</td></tr>';
+	}
+	$badgers .= '</table>';
+}
 
 RenderTemplate('profile', array(
 	'username' => htmlspecialchars($uname), 
@@ -362,6 +370,7 @@ RenderTemplate('profile', array(
 	'comments' => $comments,
 	'pagelinks' => $pagelinks,
 	'rpgstatus' => $rpgstatus,
+	'badgers' => $badgers,
 	'equipitems' => $equipitems));	
 
 

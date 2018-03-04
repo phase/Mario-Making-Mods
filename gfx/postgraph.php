@@ -5,15 +5,16 @@
 
 $ajaxPage = TRUE;
 
-if(isset($_GET['id']))
+if($_GET['id'])
 	$id = (int)$_GET['id'];
+else if($_GET['u'])
+	$id = (int)$_GET['u'];
 else {
 	if(!$loguserid)
-		die('Please specify a user');
+		die('No user specified! Please either specify a user, or log onto the board.');
 	else
 		$id = $loguserid;
 }
-
 checknumeric($id);
 
 $forums = Query("select id, title from {forums} order by id");

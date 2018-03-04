@@ -33,12 +33,12 @@ $permDescs = array
 		'forum.postreplies' => __('Reply to threads'),
 		'forum.doublepsot' => __('Double Post'),
 		'forum.deleteownposts' => __('Delete own posts'),
-		'forum.unlistedthreads' => __('View Unlisted Threads'),
-		'forum.hiddenthreads' => __('View Hidden Threads'),
 		'forum.reportposts' => __('Report posts'),
 		'forum.editownposts' => __('Edit own posts'),
 		'forum.renameownthreads' => __('Rename own threads'),
 		'forum.votepolls' => __('Vote to polls'),
+		'forum.unlistedthreads' => __('View Unlisted Threads'),
+		'forum.hiddenthreads' => __('View Hidden Threads'),
 	),
 	'mod' => array
 	(
