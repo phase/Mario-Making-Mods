@@ -87,7 +87,7 @@ if (isset($_POST['previewaction']))
 	if (HasPermission('wiki.deletepages')) setflag($page['flags'], WIKI_PFLAG_DELETED, $_POST['deleted']);
 	
 	echo '
-			<h1>Preview: '.$nicetitle.'</h1>'.wikiFilter($page['text'], $page['flags'] & WIKI_PFLAG_NOCONTBOX).'
+			<h1>Preview: '.$nicetitle.'</h1>'.wikiFilter($Parsedown->text($page['text']), $page['flags'] & WIKI_PFLAG_NOCONTBOX).'
 		</td>
 	</tr>
 </table>

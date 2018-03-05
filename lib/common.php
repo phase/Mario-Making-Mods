@@ -136,5 +136,8 @@ $tpl = new Smarty;
 $tpl->assign('config', array('date' => $loguser['dateformat'], 'time' => $loguser['timeformat']));
 $tpl->assign('loguserid', $loguserid);
 
+include(__DIR__.'/Parsedown.php');
+$Parsedown = new Parsedown();
+
 $bucket = "init"; include(__DIR__."/pluginloader.php");
 

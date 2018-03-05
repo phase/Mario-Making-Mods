@@ -46,7 +46,8 @@ if(isset($_GET['from']))
 else
 	$from = 0;
 
-$tpp = 12;
+$tpp = $loguser['depotperpage'];
+if(!$tpp) $tpp = 12;
 
 $rThreads = Query("	SELECT 
 						t.id, t.icon, t.title, t.depothide, t.closed, t.replies, t.lastpostid, t.screenshot, t.description, t.downloadlevelpc, t.downloadcostumepc, t.downloadthemepc,

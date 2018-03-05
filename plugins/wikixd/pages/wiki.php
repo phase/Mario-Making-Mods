@@ -52,7 +52,7 @@ if ($page['flags'] & WIKI_PFLAG_DELETED) {
 
 RenderTemplate('wiki', array(
 	'wikititle' => $wikititle,
-	'wikicontents' => $wikicontents,
+	'wikicontents' => $Parsedown->text($wikicontents)
 ));
 
 ?>

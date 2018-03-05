@@ -379,6 +379,11 @@ ul.dropdownMenu li > a
 	border: 1px solid #999;
 }
 
+p {
+   margin: 0px;
+   padding: 0px;
+}
+
 /* hide the dropdown arrow and notif menu if there are no notifications */
 #notifMenuContainer.noNotif #notifMenuButton i, 
 #notifMenuContainer.noNotif ul.dropdownMenu

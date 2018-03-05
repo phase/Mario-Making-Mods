@@ -1,10 +1,13 @@
 <?php
 if (!defined('BLARG')) die();
+
 CheckPermission('admin.editusers');
+
 $title = __("Badge Manager");
+
 if($_POST['action'] == __("Add")) {
 	if($_POST['color'] == -1 || empty($_POST['userid']) || empty($_POST['name']))
-		alert(__("Please review your settings before adding a user badge."));
+		Alert(__("Please review your settings before adding a user badge."));
 	else {
 		query("insert into {badges} values ({0}, {1}, {2})",
 		(int)$_POST['userid'], $_POST['name'], (int)$_POST['color']);
@@ -22,30 +25,30 @@ if($_POST['action'] == __("Add")) {
 	$userID = "value=\"".((int)$_GET['userid'])."\"";
 }
 // Fetch badges
-$qBadge = Fetch(Query("SELECT owner, {badges}.name, {badges}.color, {users}.name username, {users}.sex sex, {users}.primarygroup primarygroup FROM {badges} JOIN {users} where owner = id"));
+$rBadge = query("SELECT owner, {badges}.name, {badges}.color, {users}.name username, {users}.sex sex, {users}.primarygroup primarygroup FROM {badges} JOIN {users} where owner = id");
 $badgeList = "";
-while($badges = $qBadge) {
+while($badges = Fetch($rBadge)) {
 	$cellClass = ($cellClass+1) % 2;
 	$colors = array(__("Bronze"),__("Silver"),__("Gold"),__("Platinum"));
-	$badgeList .= "
-	<tr class=\"cell$cellClass\">
+	$badgeList .= format(
+"
+	<tr class=\"cell{0}\">
 		<td>
-			<a href=".actionLink("profile", $badges['owner']).">".$badges['username']."</a>
+			<a href=".actionLink("profile", "{2}").">{1}</a>
 		</td>
 		<td>
-			".$badges['name']."
+			{3}
 		</td>
 		<td>
-			".$colors[$badges['color']]."
+			{4}
 		</td>
 		<td>
-			<a href=\"".actionLink("userbadges", "", "userid=".$badges['owner']."&name=".$badges['name']."&action=delete")."\">&#x2718;</a>
+			<a href=\"".actionLink("userbadges", "", "userid={2}&name={3}&action=delete")."\">&#x2718;</a>
 		</td>
 	</tr>
-";
+", $cellClass, $badges['username'], $badges['owner'], $badges['name'], $colors[$badges['color']]);
 }
-
-print "
+write("
 <table class=\"outline margin width50\">
 	<tr class=\"header1\">
 		<th>".__("Badge Owner")."</th>
@@ -53,7 +56,7 @@ print "
 		<th>".__("Badge Type")."</th>
 		<th>&nbsp;</th>
 	</tr>
-	$badgeList
+	{0}
 </table>
 <form action=\"".actionLink("userbadges")."\" method=\"post\">
 	<table class=\"outline margin width50\">
@@ -67,7 +70,7 @@ print "
 				".__("User ID")."
 			</td>
 			<td class=\"cell0\">
-				<input type=\"text\" name=\"userid\" style=\"width: 15%;\" maxlength=\"4\" $userID/>
+				<input type=\"text\" name=\"userid\" style=\"width: 15%;\" {1}/>
 			</td>
 		</tr>
 		<tr>
@@ -75,7 +78,7 @@ print "
 				".__("Name")."
 			</td>
 			<td class=\"cell1\">
-				<input type=\"text\" name=\"name\" style=\"width: 98%;\" />
+				<input type=\"text\" name=\"name\" style=\"width: 98%;\"  />
 			</td>
 		</tr>
 		<tr>
@@ -99,4 +102,5 @@ print "
 			</td>
 		</tr>
 	</table>
-</form>";
+</form>
+", $badgeList, $userID);
