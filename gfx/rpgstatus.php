@@ -324,7 +324,71 @@ else {
 				$fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
 				$fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
 				break;
+			
+			case 'gradientgrey':
+				$c['bg']=  ImageColorAllocatealpha($img, 40, 40, 90, 127);
+				$c['bxb0']=ImageColorAllocate($img,  0,  0,  0);
+				$c['bxb1']=ImageColorAllocate($img, 0, 0, 0);
+				$c['bxb2']=ImageColorAllocate($img, 255, 255, 255);
+				$c['bxb3']=ImageColorAllocate($img, 255, 255, 255);
+				for($i=0;$i<100;$i++)
+					$c[$i]=ImageColorAllocate($img,  355+$i/2, 355+$i/2, 355+$i/2);
+				$c['barE1']=ImageColorAllocate($img,120,150,180);
+				$c['barE2']=ImageColorAllocate($img, 30, 60, 90);
+				$c['bar'][1]=ImageColorAllocate($img,215, 91,129);
+				$c['bar'][2]=ImageColorAllocate($img, 90, 22, 43);
+				$c['bar'][3]=ImageColorAllocate($img,255,136,154);
+				$c['bar'][4]=ImageColorAllocate($img,151,  0, 38);
+				$c['bar'][5]=ImageColorAllocate($img,255,139, 89);
+				$c['bar'][6]=ImageColorAllocate($img,125, 37,  0);
+				$c['bar'][7]=ImageColorAllocate($img,255,251, 89);
+				$c['bar'][8]=ImageColorAllocate($img, 83, 81,  0);
+				$c['bar'][9]=ImageColorAllocate($img, 89,255,139);
+				$c['bar'][10]=ImageColorAllocate($img,  0,100, 30);
+				$c['bar'][11]=ImageColorAllocate($img, 89,213,255);
+				$c['bar'][12]=ImageColorAllocate($img,  0, 66, 93);
+				$c['bar'][13]=ImageColorAllocate($img,196, 33, 33);
+				$c['bar'][14]=ImageColorAllocate($img, 70, 12, 12);
 
+				$fontY = fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
+				$fontR = fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
+				$fontG = fontc(190,255,190,  60,220, 60,  0, 0, 0, $pickfont);
+				$fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
+				$fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
+				break;
+				
+			case 'gradientlightgrey':
+				$c['bg']=  ImageColorAllocatealpha($img, 40, 40, 90, 127);
+				$c['bxb0']=ImageColorAllocate($img,  0,  0,  0);
+				$c['bxb1']=ImageColorAllocate($img, 0, 0, 0);
+				$c['bxb2']=ImageColorAllocate($img, 255, 255, 255);
+				$c['bxb3']=ImageColorAllocate($img, 255, 255, 255);
+				for($i=0;$i<100;$i++)
+					$c[$i]=ImageColorAllocate($img,  128+$i/2, 128+$i/2, 128+$i/2);
+				$c['barE1']=ImageColorAllocate($img,120,150,180);
+				$c['barE2']=ImageColorAllocate($img, 30, 60, 90);
+				$c['bar'][1]=ImageColorAllocate($img,215, 91,129);
+				$c['bar'][2]=ImageColorAllocate($img, 90, 22, 43);
+				$c['bar'][3]=ImageColorAllocate($img,255,136,154);
+				$c['bar'][4]=ImageColorAllocate($img,151,  0, 38);
+				$c['bar'][5]=ImageColorAllocate($img,255,139, 89);
+				$c['bar'][6]=ImageColorAllocate($img,125, 37,  0);
+				$c['bar'][7]=ImageColorAllocate($img,255,251, 89);
+				$c['bar'][8]=ImageColorAllocate($img, 83, 81,  0);
+				$c['bar'][9]=ImageColorAllocate($img, 89,255,139);
+				$c['bar'][10]=ImageColorAllocate($img,  0,100, 30);
+				$c['bar'][11]=ImageColorAllocate($img, 89,213,255);
+				$c['bar'][12]=ImageColorAllocate($img,  0, 66, 93);
+				$c['bar'][13]=ImageColorAllocate($img,196, 33, 33);
+				$c['bar'][14]=ImageColorAllocate($img, 70, 12, 12);
+
+				$fontY = fontc(255,250,240, 255,240, 80,  0, 0, 0, $pickfont);
+				$fontR = fontc(255,230,220, 240,160,150,  0, 0, 0, $pickfont);
+				$fontG = fontc(190,255,190,  60,220, 60,  0, 0, 0, $pickfont);
+				$fontB = fontc(160,240,255, 120,190,240,  0, 0, 0, $pickfont);
+				$fontW = fontc(255,255,255, 210,210,210,  0, 0, 0, $pickfont);
+				break;
+			
 			default:
 				$c['bg']	= ImageColorAllocate($img, 40, 40, 90);
 				$c['bxb0']	= ImageColorAllocate($img,  0,  0,  0);

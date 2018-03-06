@@ -1,4 +1,7 @@
 <?php
+ define("BLARG", "1");
+
+ require __DIR__ . '/../lib/common.php';
 
 if($_GET['id'])
 	$u = (int)$_GET['id'];
@@ -25,15 +28,15 @@ else {
  checknumeric($it);
 
 
- 	 	 	$eqitems = Query("SELECT * FROM items WHERE    id='$user[eq1]'
-													OR id='$user[eq2]'
-													OR id='$user[eq3]'
-													OR id='$user[eq4]'
-													OR id='$user[eq5]'
-													OR id='$user[eq6]'
-													OR id='$it'
-													OR id='$user[eq7]'
-													OR id='$user[eq8]'");
+		 	$eqitems = Query("SELECT * FROM items WHERE    id='$user[eq1]'
+														OR id='$user[eq2]'
+														OR id='$user[eq3]'
+														OR id='$user[eq4]'
+														OR id='$user[eq5]'
+														OR id='$user[eq6]'
+														OR id='$it'
+														OR id='$user[eq7]'
+														OR id='$user[eq8]'");
 
  while($item = fetch($eqitems)){
    $items[$item['id']] = $item;
@@ -49,8 +52,18 @@ else {
  if($st[lvl]>0)
    $pct=1-calcexpleft($st['exp'])/lvlexp($st['lvl']);
 
-print '<table class="outline margin"><tr class="header1"><th>RPG stats for '.htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']).'</th></tr><tr class="cell0"><td>HP: '.$st[HP].
-'<tr class="cell2"><td>	 MP: '.$st['MP'].
-'<tr class="cell0"><td>	 Level: '.$st['lvl'].
-'<tr class="cell2"><td>	 EXP: '.$st['exp'].
-'<tr class="cell0"><td>	 Next: '.calcexpleft($st['exp']).'</tr>';
+header('Content-type: text/json');
+
+$data = [
+    'uid' => $u,
+    'name' => htmlspecialchars($user['displayname'] ? $user['displayname'] : $user['name']),
+    'hp' => $st['HP'],
+    'mp' => $st['MP'],
+    'level' => $st['lvl'],
+    'exp' => $st['exp'],
+    'next' => calcexpleft($st['exp']),
+];
+
+$jsondata = json_encode($data);
+
+echo $jsondata;

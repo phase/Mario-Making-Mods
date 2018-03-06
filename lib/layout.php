@@ -391,7 +391,7 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 		$tdata = array('id' => $thread['id']);
 		$starter = getDataPrefix($thread, 'su_');
 		$last = getDataPrefix($thread, 'lu_');
-		
+
 		$ispublic = HasPermission('forum.viewforum', $thread['forum'], true);
 		$tags = ParseThreadTags($thread['title']);
 		$tdata['description'] = $thread['description'];
@@ -418,18 +418,15 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 					'post', '', 'tid='.$thread['id'].'&time='.(int)$thread['readdate']);
 			}
 		}
-		else if(!$thread['closed'] && !$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")))
-			$NewIcon = 'old';
 
 		if($NewIcon)
 			$tdata['new'] = '<div class="statusIcon '.$NewIcon.'"></div>';
 		else
 			$tdata['new'] = '';
-			
+
 		$tdata['sticky'] = $thread['sticky'];
 
-		if($thread['icon'])
-		{
+		if($thread['icon']) {
 			//This is a hack, but given how icons are stored in the DB, I can do nothing about it without breaking DB compatibility.
 			if(startsWith($thread['icon'], "img/"))
 				$thread['icon'] = resourceLink($thread['icon']);
@@ -478,7 +475,7 @@ function makeThreadListing($threads, $pagelinks, $dostickies = true, $showforum 
 		$tdata['lastpostdate'] = formatdate($thread['lastpostdate']);
 		$tdata['lastpostuser'] = UserLink($last);
 		$tdata['lastpostlink'] = actionLink("post", $thread['lastpostid']);
-		
+
 		$threadlist[$tdata['id']] = $tdata;
 
 		checknumeric($tdata['views']);

@@ -100,7 +100,7 @@ function getstats2($u) {
 								$user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it, $user['eq7'], $user['eq8']);
 
 	while($item=fetch($eqitems))
-		$items[$item[id]] = $item;
+		$items[$item['id']] = $item;
 	$ct=$_GET['ct'];
 	if($ct) {
 		$GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
@@ -108,9 +108,9 @@ function getstats2($u) {
 	}
 
 	$st = getstats($user,$items);
-	$st[GP] += $GPdif;
-	if($st[lvl] > 0)
-		$pct = 1 - calcexpleft($st[exp])/lvlexp($st[lvl]);
+	$st['GP'] += $GPdif;
+	if($st['lvl'] > 0)
+		$pct = 1 - calcexpleft($st['exp'])/lvlexp($st['lvl']);
 
 	return $st;
 }
@@ -118,7 +118,7 @@ function getstats2($u) {
 function drawrpglevelbar($totallvlexp, $altsize=0)
 {
   //Based off the AB 1.x code.
-  global $config, $rpgimageset;
+  global $theme, $rpgimageset;
   
   if($totallvlexp <= 0) return "&nbsp;";
   if($altsize != 0) $totalwidth = $altsize;
