@@ -25,7 +25,7 @@ if ($payload === false || !isset($payload->commits))
     die('Hacking attempt...');
 
 if ($_POST['payload']) {
-	if($payload->repository->name == "Forum-software") {
+	if($payload->repository->name == "Mario-Making-Mods") {
 		$tid = 367;
 		$fid = 2;
 	} elseif($payload->repository->name == "PointlessMaker") {
@@ -61,7 +61,5 @@ if ($_POST['payload']) {
 
 	$rThreads = Query("update {threads} set lastposter={0}, lastpostdate={1}, replies=replies+1, lastpostid={2} where id={3} limit 1",
 		197, time(), $pid, $tid);
-	
-	echo 'Succes!';
 } else
 	die('Hacking attempt...');

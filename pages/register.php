@@ -145,16 +145,24 @@ function MakeOptions($fieldName, $checkedIndex, $choicesList)
 }
 
 function IsProxy() {
-    if ($_SERVER['HTTP_X_FORWARDED_FOR'] && $_SERVER['HTTP_X_FORWARDED_FOR'] != $_SERVER['REMOTE_ADDR'])
-        return true;
+	if ($_SERVER['HTTP_X_FORWARDED_FOR'] && $_SERVER['HTTP_X_FORWARDED_FOR'] != $_SERVER['REMOTE_ADDR'])
+		return true;
 
-    $page = file_get_contents('http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.$_POST['email'].'&json&notorexit');
-    $a = json_decode($page);
+	$SFSLink = 'http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].(!empty($_POST['email']) ? .'&email='.$_POST['email']. : '').'&json';
 
-    if($a->ip->torexit == 1)
-        return true;
+	$SFSpage = file_get_contents($SFSLink.'&notorexit');
+	if($SFSpage) {
+		$a = json_decode($SFSpage);
+		if($a->ip->torexit == 1) return true;
+	}
 
-    return false;
+	$SFSpage = file_get_contents($SFSLink);
+	if($SFSpage) {
+		$a = json_decode($SFSpage);
+		if($a->ip->appears == 1) return true;
+	}
+
+	return false;
 }
 
-?>
+
