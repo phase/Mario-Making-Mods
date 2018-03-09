@@ -1,2 +1,0 @@
-plusone: ['GET', '/plusone/[i:id]', 'plusone']
-listplusones: ['GET', '/listplusones/[i:id]', 'listplusones']
