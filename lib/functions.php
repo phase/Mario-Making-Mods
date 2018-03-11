@@ -23,7 +23,7 @@ function startsWithIns($a, $b){
 //	Not really much different to kill()
 function Alert($s, $t="")
 {
-	if($t=="")
+	if(empty($t))
 		$t = __("Notice");
 
 	RenderTemplate('messagebox', 
@@ -33,7 +33,7 @@ function Alert($s, $t="")
 
 function Kill($s, $t="")
 {
-	if($t=="")
+	if(empty($t))
 		$t = __("Error");
 	Alert($s, $t);
 	throw new KillException();
@@ -68,11 +68,23 @@ function QueryURL($url)
 		return $result;
 	}
 	else if (ini_get('allow_url_fopen'))
-	{
 		return file_get_contents($url);
-	}
 	else
 		return FALSE;
+}
+
+function OldRedirect($s,$t,$n)
+{
+	global $acmlmboardLayout;
+	if($acmlmboardLayout !== true) return;
+	RenderTemplate('oldRedirect', array(
+		'action' => $s,
+		'redirectLink' => $t,
+		'n' => $n,
+		'redirectURL' => '<a href="'.$t.'">'.$n.'</a>',
+		'redirectText' => __("You will now be redirected to <a href=\"".$t."\">$n</a>&hellip;"),
+	));
+	throw new KillException();
 }
 
 

@@ -133,7 +133,7 @@ function drawrpglevelbar($totallvlexp, $altsize=0)
 	if($barwidth<0) $barwidth=0;
 	if($barwidth) $baron="<img src=$rpgimagesetlvlbar"."bar-on.gif width=$barwidth height=8>";
 	if($barwidth<$totalwidth) $baroff="<img src=$rpgimagesetlvlbar"."bar-off.gif width=".($totalwidth-$barwidth)." height=8>";
-	$bar="<img src=$rpgimagesetlvlbar"."barleft.gif>$baron$baroff<img src=$rpgimagesetlvlbar"."barright.gif><br>";
+	$bar="<img src=$rpgimagesetlvlbar"."barleft.gif>$baron$baroff<img src=$rpgimagesetlvlbar"."barright.gif>";
 	return $bar;
   } else {
 	if($rpgimageset == '') $rpgimagesetlvlbar = '/gfx/lib/bar/acmlm/';

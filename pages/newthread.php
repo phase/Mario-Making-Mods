@@ -49,9 +49,7 @@ MakeCrumbs(forumCrumbs($forum) + array('' => __("New thread")));
 $attachs = array();
 
 if (isset($_POST['saveuploads']))
-{
 	$attachs = HandlePostAttachments(0, false);
-}
 else if(isset($_POST['actionpreview']))
 {
 	$attachs = HandlePostAttachments(0, false);
@@ -124,7 +122,7 @@ else if(isset($_POST['actionpreview']))
 
 	foreach($loguser as $key => $value)
 		$previewPost['u_'.$key] = $value;
-		
+
 	$previewPost['u_posts']++;
 
 	MakePost($previewPost, POST_SAMPLE);
@@ -137,37 +135,28 @@ else if(isset($_POST['actionpost']))
 	//Now check if the thread is acceptable.
 	$rejected = false;
 
-	if(!trim($_POST['text']))
-	{
+	if(!trim($_POST['text'])) {
 		Alert(__("Enter a message and try again."), __("Your post is empty."));
 		$rejected = true;
-	}
-	else if(!$trimmedTitle)
-	{
+	} else if(!$trimmedTitle) {
 		Alert(__("Enter a thread title and try again."), __("Your thread is unnamed."));
 		$rejected = true;
-	}
-	else if($_POST['poll'])
-	{
+	} else if($_POST['poll']) {
 		$optionCount = 0;
 		foreach ($_POST['pollOption'] as $po)
 			if ($po)
 				$optionCount++;
 
-		if($optionCount < 2)
-		{
+		if($optionCount < 2) {
 			Alert(__("You need to enter at least two options to make a poll."), __("Invalid poll."));
 			$rejected = true;
 		}
 
-		if(!$rejected && !$_POST["pollQuestion"])
-		{
+		if(!$rejected && !$_POST["pollQuestion"]) {
 			Alert(__("You need to enter a poll question to make a poll."), __("Invalid poll."));
 			$rejected = true;
 		}
-	}
-	else
-	{
+	} else {
 		$lastPost = time() - $loguser['lastposttime'];
 		if($lastPost < Settings::get("floodProtectionInterval"))
 		{
@@ -184,9 +173,7 @@ else if(isset($_POST['actionpost']))
 	}
 
 	if(!$rejected)
-	{
 		$bucket = "checkPost"; include(BOARD_ROOT."lib/pluginloader.php");
-	}
 
 	if(!$rejected)
 	{
@@ -244,7 +231,7 @@ else if(isset($_POST['actionpost']))
 		$rFora = Query("update {forums} set numthreads=numthreads+1, numposts=numposts+1, lastpostdate={0}, lastpostuser={1}, lastpostid={2} where id={3} limit 1", time(), $loguserid, $pid, $fid);
 
 		Query("update {threads} set date={2}, firstpostid={0}, lastpostid = {0} where id = {1}", $pid, $tid, time());
-		
+
 		$attachs = HandlePostAttachments($pid, true);
 		Query("UPDATE {posts} SET has_attachments={0} WHERE id={1}", (!empty($attachs))?1:0, $pid);
 
@@ -256,9 +243,11 @@ else if(isset($_POST['actionpost']))
 		$thread['id'] = $tid;
 		$bucket = "newthread"; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: /".actionLink("thread", $tid)));
-	}
-	else
+		if($acmlmboardLayout == true)
+			OldRedirect(__("Posted!"), "/".actionLink("thread", $tid), __("the thread"));
+		else
+			die(header("Location: /".actionLink("thread", $tid)));
+	} else
 		$attachs = HandlePostAttachments(0, false);
 }
 

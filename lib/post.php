@@ -314,11 +314,11 @@ function makePost($post, $type, $params=array()) {
 	$sidebar['lastpost'] = $lastpost;
 	$sidebar['lastview'] = $lastview;
 	$sidebar['posterID'] = $poster['id'];
+	$sidebar['from'] = htmlspecialchars($poster['location']);
 
 	$sidebar['level'] = getstats2($poster['id'])['lvl'];
 	$sidebar['exp'] = getstats2($poster['id'])["exp"];
 	$sidebar['next'] = calcexpleft(getstats2($poster['id'])["exp"]);
-	
 	$sidebar['bar'] = drawrpglevelbar(getstats2($poster['id'])["exp"]);
 
 	if($poster['lastactivity'] > time() - 300)

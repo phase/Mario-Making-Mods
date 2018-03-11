@@ -142,6 +142,16 @@ if ($mobileLayout)
 	$loguser['fontsize'] = 80;
 }
 
+$acmlmboardLayout = false;
+$defaultLayout = false;
+$mobileDetector = false;
+
+if(($loguser['layout'] == 'acmlm' || Settings::get('defaultLayout') == 'acmlm') && !$mobileLayout)
+	$acmlmboardLayout = true;
+else if(($loguser['layout'] == 'bb' || Settings::get('defaultLayout') == 'bb') && !$mobileLayout)
+	$defaultLayout = true;
+else if($loguser['layout'] == 'mobile' || Settings::get('defaultLayout') == 'mobile' || $mobileLayout)
+	$mobileDetector = true;
 
 function setLastActivity() {
 	global $loguserid, $isBot, $lastKnownBrowser, $ipban;

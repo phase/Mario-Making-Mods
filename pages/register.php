@@ -54,18 +54,18 @@ if($_POST['register']) {
 		$newsalt = Shake();
 		$sha = doHash($_POST['pass'].SALT.$newsalt);
 		// New user id generation, based on the 32bit integer limit rng
-        $uid = mt_rand(1, 2147483647);
-        $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
-        $checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
-        while ($checkifnuked == $uid or $UIDexistcheck == $uid) {
-            while ($UIDexistcheck == $uid) {
-                $uid = mt_rand(1, 2147483647);
-                $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
-            }
-            $uid = mt_rand(1, 2147483647);
-            $UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
-            $checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
-        }
+		$uid = mt_rand(1, 2147483647);
+		$UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+		$checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
+		while ($checkifnuked == $uid or $UIDexistcheck == $uid) {
+			while ($UIDexistcheck == $uid) {
+				$uid = mt_rand(1, 2147483647);
+				$UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+			}
+			$uid = mt_rand(1, 2147483647);
+			$UIDexistcheck = FetchResult("SELECT * from {users} where `id` = {0}", $uid);
+			$checkifnuked = FetchResult("SELECT * from {nuked} where `id` = {0}", $uid);
+		}
 
 		$rUsers = Query("insert into {users} (id, name, password, pss, primarygroup, regdate, lastactivity, lastip, email, sex, theme) values ({0}, {1}, {2}, {3}, {4}, {5}, {5}, {6}, {7}, {8}, {9})", 
 			$uid, $_POST['name'], $sha, $newsalt, Settings::get('defaultGroup'), time(), $_SERVER['REMOTE_ADDR'], $_POST['email'], (int)$_POST['sex'], Settings::get("defaultTheme"));
@@ -147,7 +147,26 @@ function MakeOptions($fieldName, $checkedIndex, $choicesList)
 function IsProxy() {
 	if ($_SERVER['HTTP_X_FORWARDED_FOR'] && $_SERVER['HTTP_X_FORWARDED_FOR'] != $_SERVER['REMOTE_ADDR'])
 		return true;
+	
+	$timeout=5; //by default, wait no longer than 5 secs for a response
+	$banOnProbability=0.99; //if getIPIntel returns a value higher than this, function returns true, set to 0.99 by default
 
+	//init and set cURL options
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	//if you're using custom flags (like flags=m), change the URL below
+	curl_setopt($ch, CURLOPT_URL, 'http://check.getipintel.net/check.php?ip='.$_SERVER['REMOTE_ADDR'].'&flags=m');
+	$response=curl_exec($ch);
+
+	curl_close($ch);
+		
+		
+	if ($response > $banOnProbability) {
+		return true;
+	}
+
+	//Stop-Forum-Spam Checks
 	$SFSLink = 'http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].(!empty($_POST['email']) ? .'&email='.$_POST['email']. : '').'&json';
 
 	$SFSpage = file_get_contents($SFSLink.'&notorexit');

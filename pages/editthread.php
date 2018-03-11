@@ -123,12 +123,9 @@ elseif(($_GET['action'] == "trash" && HasPermission('mod.trashthreads', $thread[
 			$forumname = FetchResult("SELECT title FROM {forums} WHERE id={0}", $thread['forum']);
 			
 		die(header("Location: /".actionLink("forum", $thread['forum'], '', $forumname)));
-	}
-	else
+	} else
 		Kill(__("No trash forum set. Check board settings."));
-}
-elseif($_POST['actionedit'])
-{
+} elseif($_POST['actionedit']) {
 	if($thread['forum'] != $_POST['moveTo'] && $canMove)
 	{
 		$moveto = (int)$_POST['moveTo'];

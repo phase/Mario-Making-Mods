@@ -60,15 +60,16 @@
 					{if $post.sidebar.rank}{$post.sidebar.rank}<br>{/if}
 					{$post.sidebar.title}<br>
 					{if $post.sidebar.syndrome}{$post.sidebar.syndrome}<br>{/if}
-					{if $post.sidebar.avatar}{$post.sidebar.avatar}<br>{/if}
-					<br>
 					Level: {$post.sidebar.level}<br />
 					{$post.sidebar.bar}<br>
+					{if $post.sidebar.avatar}{$post.sidebar.avatar}<br>{/if}
+					<br>
+					Posts: {$post.sidebar.posts}<br>
 					EXP: {$post.sidebar.exp}<br />
 					Next: {$post.sidebar.next}<br />
 					<br />
-					Posts: {$post.sidebar.posts}<br>
 					Since: {$post.sidebar.since}<br>
+					From:  {$post.sidebar.from} <br>
 					{foreach $post.sidebar.extra as $item}
 						{if $item}{$item}<br>{/if}
 					{/foreach}

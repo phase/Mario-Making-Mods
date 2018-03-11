@@ -9,4 +9,4 @@ header('Status: 404 Not Found');
 $title = __("404 - Not found");
 
 $tpl->assign('error', (string)$_SERVER['REQUEST_URI']);
-$tpl->display('error.tpl');
+RenderTemplate('error', []);

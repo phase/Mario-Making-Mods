@@ -95,17 +95,12 @@ else if(isset($_POST['actionpost']))
 	{
 		Alert(__("Enter a message and try again."), __("Your post is empty."));
 		$rejected = true;
-	}
-	else if($thread['lastposter']==$loguserid && $thread['lastpostdate']>=time()-86400 && !HasPermission('forum.doublepost', $forum))
-	{
+	} else if($thread['lastposter'] == $loguserid && $thread['lastpostdate'] >= time() - 86400 && !HasPermission('forum.doublepsot', $forum)) {
 		Alert(__("You can't double post until it's been at least one day."), __("Sorry"));
 		$rejected = true;
-	}
-	else
-	{
+	} else {
 		$lastPost = time() - $loguser['lastposttime'];
-		if($lastPost < Settings::get("floodProtectionInterval"))
-		{
+		if($lastPost < Settings::get("floodProtectionInterval")) {
 			//Check for last post the user posted.
 			$lastPost = Fetch(Query("SELECT p.id,p.thread,pt.text FROM {posts} p LEFT JOIN {posts_text} pt ON pt.pid=p.id AND pt.revision=p.currentrevision 
 				WHERE p.user={0} ORDER BY p.date DESC LIMIT 1", $loguserid));
@@ -127,14 +122,17 @@ else if(isset($_POST['actionpost']))
 		$ninja = FetchResult("select id from {posts} where thread={0} order by date desc limit 0, 1", $tid);
 		if(isset($_POST['ninja']) && $_POST['ninja'] != $ninja)
 		{
-			Alert(__("You got ninja'd. You might want to review the post made while you were typing before you submit yours."));
+			Alert(__("Someone posted before you. You might want to review the post made while you were typing before you submit yours."));
 			$rejected = true;
 		}
-		
+	}
+	if(!$rejected)
+		$bucket = "checkPost"; include("./lib/pluginloader.php");
+
+	if(!$rejected)
+	{
 		if(isset($_POST['question']))
 			$question = true;
-
-		$bucket = "checkPost"; include(BOARD_ROOT."lib/pluginloader.php");
 
 		$post = utfmb4String($_POST['text']);
 
@@ -175,7 +173,7 @@ else if(isset($_POST['actionpost']))
 
 		$rThreads = Query("update {threads} set lastposter={0}, lastpostdate={1}, replies=replies+1, lastpostid={2}".$mod." where id={3} limit 1",
 			$loguserid, $now, $pid, $tid);
-			
+
 		$attachs = HandlePostAttachments($pid, true);
 		Query("UPDATE {posts} SET has_attachments={0} WHERE id={1}", (!empty($attachs))?1:0, $pid);
 
@@ -183,7 +181,10 @@ else if(isset($_POST['actionpost']))
 
 		$bucket = "newreply"; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: /".actionLink("post", $pid)));
+		if($acmlmboardLayout == true)
+			OldRedirect(__("Posted!"), "/".actionLink("post", $pid), __("the thread"));
+		else
+			die(header("Location: /".actionLink("post", $pid)));
 	}
 	else
 		$attachs = HandlePostAttachments(0, false);
