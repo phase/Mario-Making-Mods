@@ -165,7 +165,8 @@ function userLink($user, $showMinipic = false, $customID = false) {
 	$fname = ($user['displayname'] ? $user['displayname'] : $user['name']);
 	$fname = htmlspecialchars($fname);
 	$fname = str_replace(" ", "&nbsp;", $fname);
-	
+	$fnameforlink = str_replace("&nbsp;", " ", $fname);
+
 	$isbanned = $fgroup['id'] == Settings::get('bannedGroup');
 
 	$minipic = "";
@@ -200,7 +201,7 @@ function userLink($user, $showMinipic = false, $customID = false) {
 
 	$title = htmlspecialchars($user['name']) . ' ('.$user["id"].') ['.htmlspecialchars($fgroup['title']).']';
 	if ($user['id'] == 0) return "<strong$classing class=\"userlink fake\">$fname</strong>";
-	return actionLinkTag("<span$classing class=\"userlink\" title=\"$title\">$fname</span>", "profile", $user["id"], "", $user["name"]);
+	return actionLinkTag("<span$classing class=\"userlink\" title=\"$title\">$fname</span>", "profile", $user["id"], "", $fnameforlink);
 }
 
 function userLinkById($id) {
