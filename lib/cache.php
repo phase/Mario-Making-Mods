@@ -25,13 +25,24 @@ function cachePut($key, $value, $ttl = 120) {
 			// If it fails due to low diskspace, or other, remove the cache file
 			if (file_put_contents(BOARD_ROOT . 'cache/data/' . $key . '.php', $cache_data, LOCK_EX) !== strlen($cache_data)) {
 				@unlink(BOARD_ROOT . 'cache/data/' . $key . '.php');
-			} else {
 			}
 		}
 	}
 
 	if (function_exists('apc_delete_file'))
    		@apc_delete_file(BOARD_ROOT . 'cache/data/' . $key . '.php');
+}
+
+function cacheDelete($key, $value, $ttl = 120) {
+	$st = microtime();
+
+	$key = md5('mariomods.net' . ' - Blargboard') . '-BB-' . strtr($key, ':/', '-_');
+	$value = $value === null ? null : serialize($value);
+
+	if (function_exists('apc_delete_file'))
+		@apc_delete_file(BOARD_ROOT . 'cache/data/' . $key . '.php');
+	else
+		@unlink(BOARD_ROOT . 'cache/data/' . $key . '.php');
 }
 
 function cacheGet($key, $ttl = 120) {

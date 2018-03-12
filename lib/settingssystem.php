@@ -58,9 +58,8 @@ class Settings
 				self::$settingsArray[$setting['plugin']][$setting['name']] = $setting['value'];
 			}
 			cachePut('siteSettings', self::$settingsArray, 3600);
-		} else {
+		} else
 			self::$settingsArray = $cSettings;
-		}
 	}
 
 	public static function getSettingsFile($pluginname)
@@ -73,9 +72,7 @@ class Settings
 		if($pluginname == "main")
 			include(__DIR__."/settingsfile.php");
 		else
-		{
 			@include(__DIR__."/../plugins/".$plugins[$pluginname]['dir']."/settingsfile.php");
-		}
 		return $settings;
 	}
 
@@ -118,13 +115,14 @@ class Settings
 		Query("insert into {settings} (plugin, name, value) values ({0}, {1}, {2}) ".
 			"on duplicate key update value=VALUES(value)",
 			$pluginname, $settingname, self::$settingsArray[$pluginname][$settingname]);
+		cacheDelete('siteSettings', self::$settingsArray, 3600);
 	}
 
 
 	public static function validate($value, $type, $options = [])
 	{
 		if($type == "boolean" || $type == "integer" || $type == "float" || $type == "user" || $type == "forum" || $type == 'group' || $type == "layout" || $type == "theme" || $type == "language")
-			if(trim($value) == "")
+			if(empty(trim($value)))
 				return false;
 
 		if($type == "boolean")

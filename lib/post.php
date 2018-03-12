@@ -314,7 +314,8 @@ function makePost($post, $type, $params=array()) {
 	$sidebar['lastpost'] = $lastpost;
 	$sidebar['lastview'] = $lastview;
 	$sidebar['posterID'] = $poster['id'];
-	$sidebar['from'] = htmlspecialchars($poster['location']);
+	if(!empty(htmlspecialchars($poster['location'])))
+		$sidebar['from'] = htmlspecialchars($poster['location']);
 
 	$sidebar['level'] = getstats2($poster['id'])['lvl'];
 	$sidebar['exp'] = getstats2($poster['id'])["exp"];

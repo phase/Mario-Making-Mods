@@ -69,7 +69,7 @@
 					Next: {$post.sidebar.next}<br />
 					<br />
 					Since: {$post.sidebar.since}<br>
-					From:  {$post.sidebar.from} <br>
+					{if $post.sidebar.from} From:  {$post.sidebar.from} <br>{/if}
 					{foreach $post.sidebar.extra as $item}
 						{if $item}{$item}<br>{/if}
 					{/foreach}

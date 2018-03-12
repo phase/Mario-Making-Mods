@@ -167,7 +167,7 @@ function IsProxy() {
 	}
 
 	//Stop-Forum-Spam Checks
-	$SFSLink = 'http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].(!empty($_POST['email']) ? .'&email='.$_POST['email']. : '').'&json';
+	$SFSLink = 'http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR'].(!empty($_POST['email']) ? '&email='.$_POST['email'] : '').'&json';
 
 	$SFSpage = file_get_contents($SFSLink.'&notorexit');
 	if($SFSpage) {

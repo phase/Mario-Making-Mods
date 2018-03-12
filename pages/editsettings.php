@@ -19,16 +19,15 @@ if (isset($_GET['field']))
 	$htmlfield = $_GET['field'];
 	if (!isset($settings[$htmlfield])) Kill(__('No.'));
 	if ($settings[$htmlfield]['type'] != 'texthtml') Kill(__('No.'));
-	
+
 	$htmlname = $settings[$htmlfield]['name'];
-}
-else $htmlfield = null;
+} else $htmlfield = null;
 
 if(!ctype_alnum($plugin))
 	Kill(__("No."));
 
 if($plugin == "main")
-	MakeCrumbs(array(actionLink("admin") => __("Admin"), '' => __("Edit settings")));
+	MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("editsettings") => __("Edit settings")));
 else
 	MakeCrumbs(array(actionLink("admin") => __("Admin"), actionLink("pluginmanager") => __("Plugin manager"), '' => $plugins[$plugin]['name']));
 
@@ -40,7 +39,7 @@ if(isset($_POST["_plugin"]))
 {
 	if ($_POST['key'] !== $loguser['token'])
 		Kill(__('No.'));
-		
+
 	//Save the settings.
 	$valid = true;
 

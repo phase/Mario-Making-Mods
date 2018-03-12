@@ -353,7 +353,7 @@ if(NumRows($badgersR))
 	$colors = array("bronze", "silver", "gold", "platinum");
 	while($badger = Fetch($badgersR)){
 		$badgers .= '<tr class="cell1"><td>';
-		if ($badger['color'] == '1' || $badger['color'] == '2' || $badger['color'] == '3' || $badger['color'] == '4')
+		if ($badger['color'] == '0' || $badger['color'] == '1' || $badger['color'] == '2' || $badger['color'] == '3' || $badger['color'] == '4')
 			$badgers .= Format("<span class=\"badge {0}\">{1}</span> ", $colors[$badger['color']], $badger['name']);
 		else
 			$badgers .= Format("<img src=\"{0}\" alt=\"{1}\"> ", $badger['color'], $badger['name']);

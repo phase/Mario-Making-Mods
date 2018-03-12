@@ -10,7 +10,7 @@ function fixyoutube($m) {
 	return '<a href=\"'.htmlspecialchars($url).'\">(video)</a>';
 }
 
-require(__DIR__.'/lib/common.php');
+require(__DIR__.'/../lib/common.php');
 
 header("Content-Type: application/json; charset=UTF-8");
 
