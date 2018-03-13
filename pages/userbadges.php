@@ -26,7 +26,7 @@ if($_POST['action'] == __("Add")) {
 }
 // Fetch badges
 $rBadge = query("SELECT owner, {badges}.name, {badges}.color, {users}.name username, {users}.sex sex, {users}.primarygroup primarygroup FROM {badges} JOIN {users} where owner = id");
-$badgeList = "";
+$badgeList = '';
 while($badges = Fetch($rBadge)) {
 	$cellClass = ($cellClass+1) % 2;
 	$colors = array(__("Bronze"),__("Silver"),__("Gold"),__("Platinum"));

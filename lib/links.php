@@ -169,7 +169,7 @@ function userLink($user, $showMinipic = false, $customID = false) {
 
 	$isbanned = $fgroup['id'] == Settings::get('bannedGroup');
 
-	$minipic = "";
+	$minipic = '';
 	if($showMinipic || Settings::get("alwaysMinipic"))
 		$minipic = getMinipicTag($user);
 
@@ -199,9 +199,9 @@ function userLink($user, $showMinipic = false, $customID = false) {
 	if ($customID)
 		$classing .= " id=\"$customID\"";
 
-	$title = htmlspecialchars($user['name']) . ' ('.$user["id"].') ['.htmlspecialchars($fgroup['title']).']';
+	$title = htmlspecialchars($user['name']) . ' ('.$user['id'].') ['.htmlspecialchars($fgroup['title']).']';
 	if ($user['id'] == 0) return "<strong$classing class=\"userlink fake\">$fname</strong>";
-	return actionLinkTag("<span$classing class=\"userlink\" title=\"$title\">$fname</span>", "profile", $user["id"], "", $fnameforlink);
+	return actionLinkTag("<span$classing class=\"userlink\" title=\"$title\">$fname</span>", "profile", $user['id'], '', $fnameforlink);
 }
 
 function userLinkById($id) {

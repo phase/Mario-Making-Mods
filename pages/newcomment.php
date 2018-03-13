@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - Reply submission/preview page
-//  Access: users
 if (!defined('BLARG')) die();
 
 $sidebarshow = true;
@@ -51,24 +49,16 @@ $isHidden = !HasPermission('forum.viewforum', $fid, true);
 if($thread['closed'] && !HasPermission('mod.closethreads', $fid))
 	Kill(__("This thread is locked."));
 
-$OnlineUsersFid = $fid;
-
 LoadPostToolbar();
 
 $tags = ParseThreadTags($thread['title']);
 $urlname = $isHidden ? '' : $tags[0];
-MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $urlname) => $tags[0], '' => __("New reply")));
-
-if(!$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")))
-	Alert(__("You are about to bump an old thread. This is usually a very bad idea. Please think about what you are about to do before you press the Post button."));
-
+MakeCrumbs(forumCrumbs($forum) + array(actionLink("depotentry", $tid, '', $urlname) => $tags[0], '' => __("New Comment")));
 
 $attachs = array();
 
 if (isset($_POST['saveuploads']))
-{
 	$attachs = HandlePostAttachments(0, false);
-}
 else if(isset($_POST['actionpreview']))
 {
 	$attachs = HandlePostAttachments(0, false);
@@ -181,11 +171,14 @@ else if(isset($_POST['actionpost']))
 		$attachs = HandlePostAttachments($pid, true);
 		Query("UPDATE {posts} SET has_attachments={0} WHERE id={1}", (!empty($attachs))?1:0, $pid);
 
-		Report("New reply by [b]".$loguser['name']."[/] in [b]".$thread['title']."[/] (".$forum['title'].") -> [g]#HERE#?pid=".$pid, $isHidden);
+		Report("New comment by [b]".$loguser['name']."[/] in [b]".$thread['title']."[/] (".$forum['title'].") -> [g]#HERE#?pid=".$pid, $isHidden);
 
 		$bucket = "newreply"; include(BOARD_ROOT."lib/pluginloader.php");
 
-		die(header("Location: /".actionLink("depost", $pid)));
+		if($acmlmboardLayout == true)
+			OldRedirect(__("Commented!"), "/".actionLink("depost", $pid), __("the entry"));
+		else
+			die(header("Location: /".actionLink("depost", $pid)));
 	}
 	else
 		$attachs = HandlePostAttachments(0, false);

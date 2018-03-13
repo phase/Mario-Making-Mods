@@ -73,28 +73,40 @@ if($_GET['action']=="close" && $canClose)
 	$rThread = Query("update {threads} set closed=1 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] closed thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
-	die(header("Location: ".$ref));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Thread closed."), $ref, __("the thread"));
+	else
+		die(header("Location: ".$ref));
 }
 elseif($_GET['action']=="open" && $canClose)
 {
 	$rThread = Query("update {threads} set closed=0 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] opened thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
-	die(header("Location: ".$ref));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Thread opened."), $ref, __("the thread"));
+	else
+		die(header("Location: ".$ref));
 }
 elseif($_GET['action']=="stick" && $canStick)
 {
 	$rThread = Query("update {threads} set sticky=1 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] stickied thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
-	die(header("Location: ".$ref));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Thread stickied."), $ref, __("the thread"));
+	else
+		die(header("Location: ".$ref));
 }
 elseif($_GET['action']=="unstick" && $canStick)
 {
 	$rThread = Query("update {threads} set sticky=0 where id={0}", $tid);
 	Report("[b]".$loguser['name']."[/] unstuck thread [b]".$thread['title']."[/] -> [g]#HERE#?tid=".$tid, $isHidden);
 
-	die(header("Location: ".$ref));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Thread unsticked."), $ref, __("the thread"));
+	else
+		die(header("Location: ".$ref));
 }
 elseif(($_GET['action'] == "trash" && HasPermission('mod.trashthreads', $thread['forum']))
 	|| ($_GET['action'] == 'delete' && HasPermission('mod.deletethreads', $thread['forum'])))
@@ -130,7 +142,10 @@ elseif(($_GET['action'] == "trash" && HasPermission('mod.trashthreads', $thread[
 		if (HasPermission('forum.viewforum', $thread['forum'], true))
 			$forumname = FetchResult("SELECT title FROM {forums} WHERE id={0}", $thread['forum']);
 			
-		die(header("Location: /".actionLink("forum", $thread['forum'], '', $forumname)));
+		if($acmlmboardLayout == true)
+			OldRedirect(__("Thread ".$verb."."), actionLink("forum", $thread['forum'], '', $forumname), __("the forum"));
+		else
+			die(header("Location: /".actionLink("forum", $thread['forum'], '', $forumname)));
 	}
 	else
 		Kill(__("No trash forum set. Check board settings."));
@@ -208,7 +223,11 @@ elseif($_POST['actionedit'])
 		
 		$tags = ParseThreadTags($thread['title']);
 		$urlname = $isHidden?'':$tags[0];
-		die(header("Location: ".$ref));
+
+		if($acmlmboardLayout == true)
+			OldRedirect(__("Edited!"), $ref, __("the thread"));
+		else
+			die(header("Location: ".$ref));
 	}
 	else
 		Alert(__("Your thread title is empty. Enter a title and try again."));

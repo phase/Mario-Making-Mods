@@ -1,4 +1,5 @@
 <?php
+if (!defined('BLARG')) die();
 
 if($_GET['id'])
 	$u = (int)$_GET['id'];

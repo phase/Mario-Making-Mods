@@ -1,17 +1,17 @@
 <?php
 
-  $rdmsg="";
+  $rdmsg='';
 
 $rURPG = Query("select * from {usersrpg} where id = {0}",$loguserid);
 if(!NumRows($rURPG))
 	Query("INSERT INTO {usersrpg} (id) VALUES ($loguserid)");
 
-  $action = $_GET[action];
-  if ($_POST[action] == "save" && HasPermission('admin.manage-shop-items')) {
-	checknumeric($_GET[id]);
-	$set = "";
+  $action = $_GET['action'];
+  if ($_POST['action'] == "save" && HasPermission('admin.manage-shop-items')) {
+	checknumeric($_GET['id']);
+	$set = '';
 	$id = $_GET['id'];
-	$stype = "";
+	$stype = '';
 	if ($_GET['id'] != -1) {
 		for($i=0;$i<9;$i++) {
 			$stype.=(preg_match('/^x/', $_POST[$stat[$i]])?'m':'a');
@@ -31,14 +31,14 @@ if(!NumRows($rURPG))
 		query("INSERT INTO items ($names) VALUES ($vals)");
 				$id = insertid();
 	}
-	header("location: /shop?action=desc&id=$id");       
+	die(header("location: /shop?action=desc&id=$id"));       
   }
 
 
   if(!$loguserid)
 	  kill('You need to be logged on, in order to buy items from the shop.');
 
-  $cat = $_GET[cat];
+  $cat = $_GET['cat'];
   checknumeric($cat);
 $f = fopen("shop-ref.log","a");
 fwrite($f,"[".date("m-d-y H:i:s")."] ".$ref."\n");
@@ -47,7 +47,7 @@ fclose($f);
   if(!HasPermission('user.editprofile')){
 	$title = 'Item shop';
 	kill("You have no permissions to do this!<br> <a href=./>Back to main</a>");
-  } elseif (($_GET[action]=='edit' || $_GET[action]=='save' || $_GET[action]=='delete') && !HasPermission('admin.manage-shop-items')) { //Added (Sukasa)
+  } elseif (($_GET['action'] == 'edit' || $_GET['action'] == 'save' || $_GET['action']=='delete') && !HasPermission('admin.manage-shop-items')) { //Added (Sukasa)
 	$title = 'Item shop';
 	kill("You have no permissions to do this!<br> <a href=./>Back to main</a>");
   } else {
@@ -65,8 +65,8 @@ fclose($f);
 
 	switch($action){
 		case 'delete': //Added (Sukasa)
-			checknumeric($_GET[id]);
-			if ($_GET[id]) { //Can't delete nothing
+			checknumeric($_GET['id']);
+			if ($_GET['id']) { //Can't delete nothing
 				query("DELETE FROM items WHERE id='$_GET[id]'");
 				for ($i=1;$i<7;$i++)
 					query("UPDATE usersrpg SET `eq$i` = 0 WHERE `eq$i`='$_GET[id]'");
@@ -90,8 +90,6 @@ fclose($f);
 ";
 			$title = 'Item shop';
 			print "<img src=gfx/rpgstatus.php?u=$loguserid>";
-			if($_COOKIE['pstbon'])
-				print $rdmsg;
 print       "<br>
 ".            "<table cellspacing=\"0\" class=\"outline margin\">
 ".            "  <tr class=\"header1\">
@@ -182,7 +180,7 @@ print       "<br>
 				}
 				$itst=$item["s$stat[$i]"];
 				$eqst=$eqitem["s$stat[$i]"];
-				$edit="";
+				$edit='';
 				if (HasPermission('admin.manage-shop-items')) //Added (Sukasa)
 					$edit=" [<a href='/shop?action=edit&id=$item[id]'>Edit</a>] [<a href='shop.php?action=delete&id=$item[id]'>Delete</a>]";
 				if(!$color){
@@ -270,7 +268,7 @@ print       "<br>
 ".            "    <th class=\"b h\" width=6%><img src=img/coin2.gif></th>
 ";
 
-        while($item=fetch($items)){
+        while($item = fetch($items)){
           $buy = "<a href=/shop?action=buy&id=$item[id]>Buy</a>";
           $sell = "<a href=/shop?action=sell&cat=$cat>Sell</a>";
           $preview = "<a href='javascript:;' onclick=\"preview($loguserid,$item[id],$cat,'".addslashes($item[name])."')\">Preview <noscript>JavaScript Required</noscript></a>";
@@ -320,11 +318,11 @@ print       "<br>
 ";
       break;
       case 'buy':
-        if(!strstr($_SERVER['HTTP_REFERER'],"/shop?action=items&cat=") || time()-$loguser[lastview]<1) die();
+        if(!strstr($_SERVER['HTTP_REFERER'],"/shop?action=items&cat=") || time()-$loguser['lastview']<1) die();
 
-        $id=$_GET[id];
+        $id=$_GET['id'];
         checknumeric($id);
-        $item=fetch(query("SELECT * FROM items WHERE id=$id"));
+        $item = fetch(query("SELECT * FROM items WHERE id=$id"));
 
         if($item[coins] <= $GP && $item[coins2] <=0 && $item[cat]) { //FIXME
           $pitem=fetch(query("SELECT coins FROM items WHERE id=".$user['eq'.$item[cat]]));
@@ -333,7 +331,10 @@ print       "<br>
                      ."SET eq$item[cat]=$id, spent=spent-$pitem[coins]*0.6+$item[coins] "
                      ."WHERE id=$loguserid");
 
-                  die(header("Location: ".actionLink("shop")));
+			if($acmlmboardLayout == true)
+				OldRedirect(__("The $item[name] has been bought and equipped!"), actionLink("shop"), __("the shop"));
+			else
+				die(header("Location: ".actionLink("shop")));
         }
       break;
       case 'sell':
@@ -342,7 +343,11 @@ print       "<br>
         query("UPDATE usersrpg "
                    ."SET eq$cat=0, spent=spent-$pitem[coins]*0.6 "
                    ."WHERE id=$loguserid");
-                  die(header("Location: ".actionLink("shop")));
+
+			if($acmlmboardLayout == true)
+				OldRedirect(__("The $pitem[name] has been unequipped and sold."), actionLink("shop"), __("the shop"));
+			else
+				die(header("Location: ".actionLink("shop")));
       break;
       default:
     }

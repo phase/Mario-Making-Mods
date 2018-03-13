@@ -78,7 +78,10 @@ if((int)$_GET['delete'] == 1)
 	}
 	$rPosts = Query("update {posts} set deleted=1,deletedby={0},reason={1} where id={2} limit 1", $loguserid, $_GET['reason'], $pid);
 
-	die(header("Location: /".actionLink("post", $pid)));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Deleted!"), actionLink("post", $pid), __("the thread"));
+	else
+		die(header("Location: /".actionLink("post", $pid)));
 }
 else if((int)$_GET['delete'] == 2)
 {
@@ -88,7 +91,10 @@ else if((int)$_GET['delete'] == 2)
 		Kill(__("You're not allowed to undelete posts."));
 	$rPosts = Query("update {posts} set deleted=0 where id={0} limit 1", $pid);
 
-	die(header("Location: /".actionLink("post", $pid)));
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Restored!"), actionLink("post", $pid), __("the thread"));
+	else
+		die(header("Location: /".actionLink("post", $pid)));
 }
 elseif((int)$_GET['delete'] == 3)
 {
@@ -100,7 +106,7 @@ elseif((int)$_GET['delete'] == 3)
 
 	$rPosts = Query("DELETE FROM {posts} where id={0} limit 1", $pid);
 
-	Kill(__("This post has been deleted."));
+	Kill(__("This post has been wiped successfully."));
 }
 
 if ($post['deleted'])
@@ -120,8 +126,7 @@ MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $isHidden?
 LoadPostToolbar();
 
 $attachs = array();
-if ($post['has_attachments'])
-{
+if ($post['has_attachments']) {
 	$res = Query("SELECT id,filename 
 		FROM {uploadedfiles}
 		WHERE parenttype={0} AND parentid={1} AND deldate=0
@@ -132,9 +137,7 @@ if ($post['has_attachments'])
 }
 
 if (isset($_POST['saveuploads']))
-{
 	$attachs = HandlePostAttachments(0, false);
-}
 else if(isset($_POST['actionpreview']))
 {
 	$attachs = HandlePostAttachments(0, false);
@@ -204,6 +207,9 @@ else if(isset($_POST['actionpost']))
 		Report("Post edited by [b]".$loguser['name']."[/] in [b]".$thread['title']."[/] (".$forum['title'].") -> [g]#HERE#?pid=".$pid, $isHidden);
 		$bucket = 'editpost'; include(BOARD_ROOT."lib/pluginloader.php");
 
+	if($acmlmboardLayout == true)
+		OldRedirect(__("Edited!"), actionLink("post", $pid), __("the thread"));
+	else
 		die(header("Location: /".actionLink("post", $pid)));
 	}
 	else

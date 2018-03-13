@@ -170,7 +170,10 @@ if($_POST['actionsend'] || $_POST['actionsave'])
 						$pid, 0, $loguserid, $convStart, time(), $_SERVER['REMOTE_ADDR'], 1, $_POST['to']);
 				}
 
-				die(header("Location: ".actionLink("private", "", "show=2")));
+				if($acmlmboardLayout == true)
+					OldRedirect(__("Draft saved!"), actionLink("private", "", "show=2"), __("your drafts box"));
+				else
+					die(header("Location: ".actionLink("private", "", "show=2")));
 			}
 			else
 			{
@@ -196,18 +199,15 @@ if($_POST['actionsend'] || $_POST['actionsave'])
 					SendNotification('pm', $pid, $recipient);
 				}
 
-				die(header("Location: ".actionLink("private", "", "show=1")));
+				if($acmlmboardLayout == true)
+					OldRedirect(__("PM sent!"), actionLink("private", "", "show=1") , __("your PM outbox"));
+				else
+					die(header("Location: ".actionLink("private", "", "show=1")));
 			}
-		} 
-		else
-		{
+		} else
 			Alert(__("Enter a message and try again."), __("Your PM is empty."));
-		}
-	} 
-	else
-	{
+	} else 
 		Alert(__("Enter a title and try again."), __("Your PM is untitled."));
-	}
 }
 
 if($_POST['text']) $prefill = $_POST['text'];

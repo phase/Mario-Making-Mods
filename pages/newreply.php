@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - Reply submission/preview page
-//  Access: users
 if (!defined('BLARG')) die();
 
 require(BOARD_ROOT.'lib/upload.php');
@@ -54,18 +52,11 @@ $tags = ParseThreadTags($thread['title']);
 $urlname = $isHidden ? '' : $tags[0];
 MakeCrumbs(forumCrumbs($forum) + array(actionLink("thread", $tid, '', $urlname) => $tags[0], '' => __("New reply")));
 
-if(!$thread['sticky'] && Settings::get("oldThreadThreshold") > 0 && $thread['lastpostdate'] < time() - (2592000 * Settings::get("oldThreadThreshold")))
-	Alert(__("You are about to bump an old thread. This is usually a very bad idea. Please think about what you are about to do before you press the Post button."));
-
-
 $attachs = array();
 
 if (isset($_POST['saveuploads']))
-{
 	$attachs = HandlePostAttachments(0, false);
-}
-else if(isset($_POST['actionpreview']))
-{
+else if(isset($_POST['actionpreview'])) {
 	$attachs = HandlePostAttachments(0, false);
 	
 	$previewPost['text'] = $_POST["text"];
@@ -85,9 +76,7 @@ else if(isset($_POST['actionpreview']))
 	$previewPost['u_posts']++;
 
 	MakePost($previewPost, POST_SAMPLE);
-}
-else if(isset($_POST['actionpost']))
-{
+} else if(isset($_POST['actionpost'])) {
 	//Now check if the post is acceptable.
 	$rejected = false;
 

@@ -53,7 +53,7 @@ if(!$snoop && $pm['userto'] == $loguserid) {
 }
 
 
-MakeCrumbs(array(actionLink("private") => __("Private messages"), '' => htmlspecialchars($pm['title'])), $links);
+MakeCrumbs(array(actionLink("private") => __("Private messages"), actionLink('showprivate', $pmid) => htmlspecialchars($pm['title'])), $links);
 
 $pm['num'] = 0;
 $pm['posts'] = $user['posts'];

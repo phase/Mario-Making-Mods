@@ -1,5 +1,4 @@
 <?php
-//Mario Making Mods: Github Page
 if (!defined('BLARG')) die();
 
 $rawPost = NULL;

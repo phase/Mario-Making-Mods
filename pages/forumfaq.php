@@ -1,6 +1,4 @@
 <?php
-//  AcmlmBoard XD - Frequently Asked Questions page
-//  Access: all
 if (!defined('BLARG')) die();
 
 $title = __("FAQ");
