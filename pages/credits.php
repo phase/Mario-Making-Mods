@@ -25,19 +25,24 @@ I also have a website that you can play some retro games on with the Nesbox emul
 	I hack both SMM and NSMBU.
 	Programming languages I know: Python, Cython, C.
 	If you have any questions you think I may be able to answer, don\'t hesitate to ask!</td></tr>
+
 	<tr class="header1"><th>Software Credits</th></tr>
-	<tr class="cell1"><td>-Repflez: URL Code & TimeAgo plugin
-	-[user=23]: Randomized UID code & Multi-Language support.
-	-StapleButter: Original Blargboard code
-	-[user=1]: Makerboard.
-	-PickPen: Making the Depot theme icons.
-	-[user=91] & [user=171]: Themes (they gave me permission to use their theme)
-	-[user=171] & [user=14]: Italian Translation
-	-RedDucks: JSON download API
-	-[user=57]: Ranksets
-	-Phase: MySQL 5.7 "fix", & Sub-forum layout
-	-[user=3]: Port both a WIP RPG system (from acmlmboard2) as well as all the ABXD plugins over to Blargboard
-	-[user=109]: Making the new Logo/Icon</td></tr>
+	<tr class="cell1"><td>
+	<ul>
+	  <li>Repflez: URL Code & TimeAgo plugin</li>
+	  <li>[user=23]: Randomized UID code & Multi-Language support.</li>
+	  <li><a href="http://kuribo64.net/board/profile.php?id=1">StapleButter</a>: Original Blargboard code</li>
+	  <li>[user=1]: Makerboard.</li>
+	  <li>PickPen: Making the Depot theme icons.</li>
+	  <li>[user=91] & [user=171]: Themes (they gave me permission to use their theme)</li>
+	  <li>[user=171] & [user=14]: Italian Translation</li>
+	  <li>RedDucks: JSON download API</li>
+	  <li>[user=57]: Ranksets</li>
+	  <li><a href="https://github.com/phase">Phase</a>: MySQL 5.7 "fix", & Sub-forum layout</li>
+	  <li>[user=3]: Port both a WIP RPG system (from acmlmboard2) as well as all the ABXD plugins over to Blargboard</li>
+	  <li>[user=109]: Making the new Logo/Icon</li>
+	</ul>
+	</td></tr>
 </table>';
 
 echo parseBBCode($credits);
